@@ -5,21 +5,20 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
-
 import authRoutes from "./routes/auth.js";
 import appointmentRoutes from "./routes/appointments.js";
 
-//  Calcola il path assoluto della cartella backend
+// ðŸŸ¢ Calcola il path assoluto della cartella backend
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Forza il path completo del file .env
+// ðŸŸ¢ Forza il path completo del file .env
 dotenv.config({ path: join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// CORS configurato correttamente per accettare richieste da Vercel
+// âœ… CORS configurato correttamente per accettare richieste da Vercel
 app.use(
   cors({
     origin: "https://prenotazioni-app.vercel.app", 
@@ -28,7 +27,6 @@ app.use(
 );
 
 app.use(express.json());
-app.use(passport.initialize());
 
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
