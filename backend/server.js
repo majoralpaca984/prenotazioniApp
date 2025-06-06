@@ -4,8 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import "./config/passport.js";
-import passport from "passport";
+
 
 import authRoutes from "./routes/auth.js";
 import appointmentRoutes from "./routes/appointments.js";
