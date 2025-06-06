@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 
-// ✅ Google OAuth Redirect Flow
+// âœ… Google OAuth Redirect Flow
 router.get("/google", passport.authenticate("google", {
   scope: ["profile", "email"],
   prompt: "select_account"

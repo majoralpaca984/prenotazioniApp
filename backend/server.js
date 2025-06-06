@@ -10,17 +10,17 @@ import passport from "passport";
 import authRoutes from "./routes/auth.js";
 import appointmentRoutes from "./routes/appointments.js";
 
-// 🟢 Calcola il path assoluto della cartella backend
+//  Calcola il path assoluto della cartella backend
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 🟢 Forza il path completo del file .env
+// Forza il path completo del file .env
 dotenv.config({ path: join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// ✅ CORS configurato correttamente per accettare richieste da Vercel
+// CORS configurato correttamente per accettare richieste da Vercel
 app.use(
   cors({
     origin: "https://prenotazioni-app.vercel.app", 
@@ -40,9 +40,9 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`🚀 Backend running on http://localhost:${PORT}`);
+      console.log(`ðŸš€ Backend running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+    console.error("âŒ MongoDB connection error:", err);
   });

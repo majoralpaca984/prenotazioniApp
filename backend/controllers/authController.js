@@ -60,7 +60,7 @@ export const register = async (req, res) => {
   }
   let user = await User.findOne({ email });
   if (user) {
-    return res.status(400).json({ message: "Email già registrata" });
+    return res.status(400).json({ message: "Email giÃ  registrata" });
   }
   // HASH DELLA PASSWORD! 
   const hashedPassword = await bcrypt.hash(password, 10);
