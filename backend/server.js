@@ -15,11 +15,17 @@ const __dirname = dirname(__filename);
 // 🟢 Forza il path completo del file .env
 dotenv.config({ path: join(__dirname, ".env") });
 
-// ⬇️ Avvio server
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+// ✅ CORS configurato correttamente per accettare richieste da Vercel
+app.use(
+  cors({
+    origin: "https://prenotazioni-app.vercel.app", 
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.use("/auth", authRoutes);
@@ -27,7 +33,8 @@ app.use("/appointments", appointmentRoutes);
 
 app.get("/ping", (req, res) => res.json({ message: "pong!" }));
 
-mongoose.connect(process.env.MONGO_URL)
+mongoose
+  .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`🚀 Backend running on http://localhost:${PORT}`);
