@@ -11,12 +11,18 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
-
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        // cerca per googleId
         let user = await User.findOne({ googleId: profile.id });
 
+        // 🔁 Se non lo trova, cerca per email
+        if (!user && profile.emails?.[0]?.value) {
+          user = await User.findOne({ email: profile.emails[0].value });
+        }
+
+        // 🔁 Se non esiste ancora, lo crea
         if (!user) {
           user = await User.create({
             googleId: profile.id,
@@ -32,6 +38,7 @@ passport.use(
     }
   )
 );
+
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
