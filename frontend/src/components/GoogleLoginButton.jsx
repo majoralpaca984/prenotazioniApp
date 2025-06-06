@@ -1,28 +1,50 @@
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_URL = import.meta.env.VITE_API_URL;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 function GoogleLoginButton() {
-  const handleGoogleLogin = () => {
-    // Reindirizza al backend per iniziare il login Google
-    window.location.href = `${API_URL}/auth/google`;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+
+      window.google.accounts.id.renderButton(
+        document.getElementById("google-login"),
+        {
+          theme: "outline",
+          size: "large",
+          width: "100%",
+        }
+      );
+    }
+  }, []);
+
+  const handleCredentialResponse = async (response) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      if (!res.ok) throw new Error("Login fallito");
+
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Errore login Google:", err);
+    }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginBottom: "1rem",
-      }}
-    >
-      <button
-        onClick={handleGoogleLogin}
-        className="btn btn-outline-danger w-100"
-      >
-        <i className="fab fa-google me-2"></i> Accedi con Google
-      </button>
-    </div>
+    <div id="google-login" style={{ marginBottom: "1rem", textAlign: "center" }} />
   );
 }
 

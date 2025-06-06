@@ -5,23 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AppointmentPro - Manage Your Appointments</title>
-    
+
     <!-- Font Awesome -->
     <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ✅ Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <style>
-      
       #root {
         min-height: 100vh;
       }
-      
+
       /* Loading screen */
       .loading-screen {
         position: fixed;
@@ -35,12 +41,12 @@
         align-items: center;
         z-index: 9999;
       }
-      
+
       .loading-content {
         text-align: center;
         color: white;
       }
-      
+
       .loading-spinner {
         width: 50px;
         height: 50px;
@@ -50,12 +56,15 @@
         animation: spin 1s ease-in-out infinite;
         margin: 0 auto 1rem;
       }
-      
+
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
+
   <body>
     <div id="root">
       <div class="loading-screen">
@@ -66,7 +75,8 @@
         </div>
       </div>
     </div>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- 👇 Vite entrypoint -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
