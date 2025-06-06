@@ -10,7 +10,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://prenotazioniapp.onrender.com/auth/google/callback", // oppure usa process.env.CALLBACK_URL se preferisci
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
