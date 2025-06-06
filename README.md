@@ -14,7 +14,7 @@ Prenota, modifica e gestisci gli appuntamenti in modo semplice e rapido.
 
 ## 📸 Anteprima
 
-![screenshot](./screenshots/homepage.png)
+![screenshot](./screenshots/homePage.png)
 
 
 
