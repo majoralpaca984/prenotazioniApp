@@ -1,16 +1,16 @@
 // src/views/Search/DoctorCard.jsx
-import { Card, Button, Col, Row } from "react-bootstrap";
+import { Card, Button, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../../style/DoctorCard.css";
 
-// ✅ Import immagini dai tuoi asset
+// ✅ Import immagini
 import dottRossi from "../../assets/dott.rossi.jpg";
 import dottSa from "../../assets/dott.sa.jpg";
 
-// ✅ Mappa immagine -> file importato
+// ✅ Mappa nome medico -> immagine
 const doctorImages = {
-  "dott.rossi.jpg": dottRossi,
-  "dott.sa.jpg": dottSa,
+  "Dr. Maria Rossi": dottSa,
+  "Dr. Marco Bianchi": dottRossi,
 };
 
 const DoctorCard = ({ doctor }) => {
@@ -21,21 +21,20 @@ const DoctorCard = ({ doctor }) => {
     { label: "Martedì", short: "mar" },
     { label: "Mercoledì", short: "mer" },
     { label: "Giovedì", short: "gio" },
-    { label: "Venerdì", short: "ven" }
+    { label: "Venerdì", short: "ven" },
   ];
 
   const handleSlotClick = (date, time) => {
     navigate(`/booking/${doctor._id}?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`);
   };
 
-  // ✅ Determina l'immagine corretta da mostrare
-  const imageSrc = doctorImages[doctor.image] || "/default-doctor.jpg";
+  const imageSrc = doctorImages[doctor.name] || "/default-doctor.jpg";
 
   return (
     <Col md={12} className="mb-4">
       <Card className="doctor-card shadow-sm">
         <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-start">
-          {/* Sezione Sinistra */}
+          {/* 🔵 Sezione sinistra */}
           <div className="d-flex flex-column align-items-start mb-3 mb-md-0" style={{ minWidth: "250px" }}>
             <div className="d-flex align-items-center mb-2">
               <img
@@ -62,7 +61,7 @@ const DoctorCard = ({ doctor }) => {
             </Button>
           </div>
 
-          {/* Sezione Orari */}
+          {/* 🔵 Sezione disponibilità */}
           <div className="availability-grid">
             {weekDays.map((day, index) => {
               const date = doctor.availability?.[index];
