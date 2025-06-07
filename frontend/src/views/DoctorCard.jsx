@@ -16,9 +16,9 @@ const DoctorCard = ({ doctor }) => {
 
   const weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
-  const handleSlotClick = (date, time) => {
-    navigate(`/booking/${doctor._id}?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`);
-  };
+  const handleSlotClick = () => {
+  navigate("/login");
+};
 
   const imageSrc = doctorImages[doctor.image] || "/default-doctor.jpg";
 
@@ -65,8 +65,8 @@ const DoctorCard = ({ doctor }) => {
             })}
           </div>
 
-          <button className="btn btn-primary mt-3" onClick={() => navigate(`/booking/${doctor._id}`)}>
-            Prenota Appuntamento
+          <button className="btn btn-primary mt-3" onClick={() => navigate("/login")}>
+          Prenota Appuntamento
           </button>
         </div>
       </Card>
