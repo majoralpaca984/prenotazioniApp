@@ -1,9 +1,9 @@
 // src/views/Search/DoctorCard.jsx
 import { Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../../style/DoctorCard.css";
-import dottRossi from "../../assets/dott.rossi.jpg";
-import dottSa from "../../assets/dott.sa.jpg";
+import "../style/DoctorCard.css";
+import dottRossi from "../assets/dott.rossi.jpg";
+import dottSa from "../assets/dott.sa.jpg";
 
 // Mappa delle immagini
 const doctorImages = {
