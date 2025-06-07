@@ -45,24 +45,22 @@ function Navigation() {
           </Nav>
 
           <Nav className="d-flex align-items-center gap-3">
-            {!isLogged ? (
-              <>
-                <Nav.Link as={LinkContainer} to="/login">
-                  <i className="fas fa-sign-in-alt me-1"></i> Login
-                </Nav.Link>
-                <Nav.Link as={LinkContainer} to="/register">
-                  <i className="fas fa-user-plus me-1"></i> Register
-                </Nav.Link>
-              </>
-            ) : (
-              <Button variant="primary" size="sm" onClick={handleLogout}>
-                <i className="fas fa-sign-out-alt me-1"></i> Logout
-              </Button>
-            )}
-
-            {/* Toggle tema nella navbar in alto a destra */}
-            <ThemeToggle />
-          </Nav>
+  {!isLogged ? (
+    <>
+      <Nav.Link as={LinkContainer} to="/login">
+        <i className="fas fa-sign-in-alt me-1"></i> Login
+      </Nav.Link>
+      <Nav.Link as={LinkContainer} to="/register">
+        <i className="fas fa-user-plus me-1"></i> Register
+      </Nav.Link>
+    </>
+  ) : (
+    <Button variant="primary" size="sm" onClick={handleLogout}>
+      <i className="fas fa-sign-out-alt me-1"></i> Logout
+    </Button>
+  )}
+  <ThemeToggle />
+    </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

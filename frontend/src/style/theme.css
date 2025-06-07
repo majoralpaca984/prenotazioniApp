@@ -370,8 +370,11 @@ body {
 }
 
 /* ========== Pulsante di cambio tema ========== */
-.theme-toggle-button {
-  font-size: 0.75rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
+.theme-toggle-btn {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  margin-left: 0.5rem;
+  margin-top: 2px;
+  white-space: nowrap;
 }
+
