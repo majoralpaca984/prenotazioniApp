@@ -86,42 +86,6 @@ function Dashboard() {
         </Col>
       </Row>
 
-      <Row className="mb-4">
-        <Col md={4}>
-          <Card className="text-center shadow">
-            <Card.Body>
-              <h4>
-                <i className="fas fa-calendar-check me-2 text-primary"></i>
-                {appointments.length}
-              </h4>
-              <div className="text-muted mb-0">Total Appointments</div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="text-center shadow">
-            <Card.Body>
-              <h4>
-                <i className="fas fa-clock me-2 text-success"></i>
-                {appointments.filter(a => a.status === "scheduled").length}
-              </h4>
-              <div className="text-muted mb-0">Upcoming</div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="text-center shadow">
-            <Card.Body>
-              <h4>
-                <i className="fas fa-check-circle me-2 text-secondary"></i>
-                {appointments.filter(a => a.status === "completed").length}
-              </h4>
-              <div className="text-muted mb-0">Completed</div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
       <Card className="shadow">
         <Card.Header>
           <i className="fas fa-calendar-alt me-2"></i>
