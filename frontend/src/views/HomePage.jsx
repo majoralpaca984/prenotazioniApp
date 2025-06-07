@@ -10,9 +10,11 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handlePrestazioneSubmit = (e) => {
-    e.preventDefault();
-    navigate("/search");
-  };
+  e.preventDefault();
+  if (prestazione.trim()) {
+    navigate(`/search?speciality=${encodeURIComponent(prestazione.trim())}`);
+  }
+};
 
   const handleDataSubmit = (e) => {
     e.preventDefault();
