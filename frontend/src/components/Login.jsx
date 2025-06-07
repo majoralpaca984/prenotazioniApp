@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, Form, Button, Alert, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
-import sfondoLogin from "../assets/sfondoceleste.jpg";
+import sfondoLogin from "../assets/sfondoceleste.jpg"; 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -43,85 +43,90 @@ function Login() {
 
   return (
     <div
-      className="login-page"
       style={{
         backgroundImage: `url(${sfondoLogin})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        padding: "2rem"
       }}
     >
-      <Card className="shadow" style={{ width: "100%", maxWidth: "400px", backgroundColor: "white" }}>
-        <Card.Body className="p-4">
-          <h3 className="mb-4 text-center">
-            <i className="fas fa-sign-in-alt me-2"></i>Login
-          </h3>
-          {error && <Alert variant="danger">{error}</Alert>}
+      <Row className="justify-content-center w-100" style={{ maxWidth: "500px" }}>
+        <Col xs={12}>
+          <Card className="shadow">
+            <Card.Body className="p-4">
+              <h3 className="mb-4 text-center">
+                <i className="fas fa-sign-in-alt me-2"></i>Login
+              </h3>
+              {error && <Alert variant="danger">{error}</Alert>}
 
-          <GoogleLoginButton />
+              <GoogleLoginButton />
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                autoFocus
-              />
-            </Form.Group>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    autoFocus
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-4">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
+                <Form.Group className="mb-4">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
 
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={loading}
-              className="w-100"
-            >
-              {loading ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2"></span>
-                  Logging in...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-sign-in-alt me-2"></i>
-                  Login
-                </>
-              )}
-            </Button>
-          </Form>
-          <div className="mt-3 text-center">
-            <small>
-              Don't have an account? {" "}
-              <span
-                role="button"
-                style={{ color: "#007bff", cursor: "pointer" }}
-                onClick={() => navigate("/register")}
-              >
-                Register
-              </span>
-            </small>
-          </div>
-        </Card.Body>
-      </Card>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={loading}
+                  className="w-100"
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Logging in...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-sign-in-alt me-2"></i>
+                      Login
+                    </>
+                  )}
+                </Button>
+              </Form>
+              <div className="mt-3 text-center">
+                <small>
+                  Don't have an account?{" "}
+                  <span
+                    role="button"
+                    style={{ color: "#007bff", cursor: "pointer" }}
+                    onClick={() => navigate("/register")}
+                  >
+                    Register
+                  </span>
+                </small>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }
