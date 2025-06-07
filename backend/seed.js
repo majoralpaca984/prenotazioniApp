@@ -11,7 +11,7 @@ const seedDoctors = [
   {
     name: "Dr. Maria Rossi",
     speciality: "Ecografia",
-    image: "https://via.placeholder.com/300x200?text=Dr+Rossi",
+    image: "/assets/dott.sa.jpg",
     availability: ["10 Giugno", "12 Giugno", "14 Giugno"]
   },
   {

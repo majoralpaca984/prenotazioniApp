@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TextCarousel from "../components/TextCarousel"; 
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import "../style/theme.css"; 
 
 const HomePage = () => {
   const [prestazione, setPrestazione] = useState("");
@@ -10,55 +11,55 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   const handlePrestazioneSubmit = (e) => {
-  e.preventDefault();
-  if (prestazione.trim()) {
-    navigate(`/search?speciality=${encodeURIComponent(prestazione.trim())}`);
-  }
-};
-
-  const handleDataSubmit = (e) => {
     e.preventDefault();
-    navigate("/calendar");
+    if (prestazione.trim()) {
+      navigate(`/search?speciality=${encodeURIComponent(prestazione.trim())}`);
+    }
   };
 
   return (
-    <div className="py-5 text-center">
+    <div className="homepage">
+      {/* Hero con immagine di sfondo */}
+      <div className="hero-section text-white text-center">
+        <Container>
+          <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
+          <p className="lead mb-4">
+            Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
+          </p>
+
+          <div className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75">
+            <form className="row g-2 align-items-center" onSubmit={handlePrestazioneSubmit}>
+              <div className="col-md-5">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Cerca prestazione..."
+                  value={prestazione}
+                  onChange={(e) => setPrestazione(e.target.value)}
+                />
+              </div>
+              <div className="col-md-4">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                />
+              </div>
+              <div className="col-md-3 d-flex gap-2">
+                <button type="submit" className="btn btn-primary w-100">
+                  Cerca Prestazione
+                </button>
+              </div>
+            </form>
+          </div>
+        </Container>
+      </div>
+
       <Container>
-        <h1 className="main-title">Prenota Esami e Visite Online</h1>
-        <p className="lead mb-4">
-          Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
-        </p>
-
-        <div className="search-bar p-3 rounded-4 shadow-sm">
-          <form className="row g-2 align-items-center" onSubmit={handlePrestazioneSubmit}>
-            <div className="col-md-5">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Cerca prestazione..."
-                value={prestazione}
-                onChange={(e) => setPrestazione(e.target.value)}
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                type="date"
-                className="form-control"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-              />
-            </div>
-            <div className="col-md-3 d-flex gap-2">
-              <button type="submit" className="btn btn-primary w-100">
-                Cerca Prestazione
-              </button>
-            </div>
-          </form>
-        </div>
-
+        {/* Carousel + motivazioni */}
         <div className="text-center mt-5">
           <TextCarousel />
-
           <div className="section-box text-center">
             <ul className="list-unstyled">
               <h3 className="subtitle mb-4">Perché scegliere il nostro servizio?</h3>
@@ -70,6 +71,7 @@ const HomePage = () => {
           </div>
         </div>
 
+        {/* Servizi */}
         <section className="section-box bg-light-green text-center py-5">
           <div className="container">
             <h2 className="mb-4 text-primary">Servizio Medico</h2>
@@ -82,7 +84,7 @@ const HomePage = () => {
                   <p className="mb-3">Hai bisogno urgente di parlare con un medico?</p>
                   <ul className="text-start list-unstyled">
                     <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 24/7</li>
+                    <li>✅ Disponibile 12/7</li>
                     <li>✅ Anche nei festivi</li>
                   </ul>
                   <button className="btn btn-primary mt-2">Come funziona</button>
@@ -97,7 +99,7 @@ const HomePage = () => {
                   <p className="mb-3">Hai bisogno del consiglio di un pediatra?</p>
                   <ul className="text-start list-unstyled">
                     <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 24/7</li>
+                    <li>✅ Disponibile 12/7</li>
                     <li>✅ Anche nei festivi</li>
                   </ul>
                   <button className="btn btn-primary mt-2">Come funziona</button>
@@ -107,6 +109,7 @@ const HomePage = () => {
           </div>
         </section>
 
+        {/* Footer */}
         <div className="footer mt-5 py-4">
           <Container>
             <Row>
@@ -117,7 +120,6 @@ const HomePage = () => {
                   info@tuosito.it
                 </p>
               </Col>
-
               <Col md={3}>
                 <h6 className="footer-text fw-bold">Visite richieste</h6>
                 <ul className="footer-links">
@@ -126,7 +128,6 @@ const HomePage = () => {
                   <li>Visita Dermatologica</li>
                 </ul>
               </Col>
-
               <Col md={3}>
                 <h6 className="footer-text fw-bold">Esami richiesti</h6>
                 <ul className="footer-links">
@@ -135,7 +136,6 @@ const HomePage = () => {
                   <li>Tc Torace</li>
                 </ul>
               </Col>
-
               <Col md={3}>
                 <h6 className="footer-text fw-bold">Link Utili</h6>
                 <ul className="footer-links">

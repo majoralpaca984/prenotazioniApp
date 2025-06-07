@@ -330,3 +330,25 @@ body {
   }
   .day-header { font-size: 0.95rem; }
 }
+/* ======== Hero Homepage con sfondo ======== */
+.hero-section {
+  background-image: url("../assets/sfondo1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 6rem 2rem;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.homepage {
+  background-color: var(--bg-main);
+}
+.hero-title {
+  color: var(--color-title);
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
