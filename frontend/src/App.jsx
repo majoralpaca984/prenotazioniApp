@@ -7,7 +7,6 @@ import AppointmentForm from "./components/AppointmentForm";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Homepage from "./views/HomePage";
-import ThemeToggle from "./components/ThemeToggle"; 
 import "./style/theme.css"; 
 import SearchResults from "./views/SearchResults";  
 
@@ -30,7 +29,7 @@ function App() {
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route path="/appointment/new" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
           <Route path="/appointment/edit/:id" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
-          <Route path="/search" element={<SearchResults/>} />
+          <Route path="/search" element={<SearchResults />} />
 
           {/* Autenticazione */}
           <Route path="/login" element={<Login />} />
@@ -40,9 +39,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
-
-      {/* Bottone per cambiare tema */}
-      <ThemeToggle />
     </Router>
   );
 }
