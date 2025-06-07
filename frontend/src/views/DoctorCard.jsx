@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import "../style/DoctorCard.css";
 
 // ✅ Import immagini
-import dottRossi from "../../assets/dott.rossi.jpg";
-import dottSa from "../../assets/dott.sa.jpg";
+import dottRossi from "../assets/dott.rossi.jpg";
+import dottSa from "../assets/dott.sa.jpg";
+
 
 // ✅ Mappa nome medico -> immagine
 const doctorImages = {
