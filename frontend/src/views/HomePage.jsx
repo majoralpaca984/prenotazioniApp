@@ -19,16 +19,13 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* Tema Toggle sopra navbar */}
-      <div className="position-absolute top-0 end-0 p-3 z-3">
-        <button className="btn btn-primary">Dark Mode</button>
-      </div>
-
       {/* Hero con immagine di sfondo full width */}
       <div className="hero-section text-white text-center">
         <div className="hero-overlay container">
           <div className="hero-text-box mb-4">
-            <h1 className="main-title display-5 fw-bold mb-2">Prenota Esami e Visite Online</h1>
+            <h1 className="main-title display-5 fw-bold mb-2">
+              Prenota Esami e Visite Online
+            </h1>
             <p className="lead mb-0">
               Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
             </p>
