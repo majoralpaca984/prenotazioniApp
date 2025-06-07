@@ -16,7 +16,7 @@ const seedDoctors = [
   },
   {
     name: "Dr. Marco Bianchi",
-    speciality: "Ecografia",
+    speciality: "Radiologia",
     image: "https://via.placeholder.com/300x200?text=Dr+Bianchi",
     availability: ["11 Giugno", "13 Giugno", "15 Giugno"]
   },
@@ -25,7 +25,20 @@ const seedDoctors = [
     speciality: "Cardiologia",
     image: "https://via.placeholder.com/300x200?text=Dr+Verdi",
     availability: ["10 Giugno", "17 Giugno"]
-  }
+  },
+  {
+  name: "Dr. Giulia Neri",
+  speciality: "Ginecologia",
+  image: "https://via.placeholder.com/300x200?text=Dr+Neri",
+  availability: ["17 Giugno", "18 Giugno"]
+},
+{
+  name: "Dr. Paolo Ricci",
+  speciality: "Cardiologia",
+  image: "https://via.placeholder.com/300x200?text=Dr+Ricci",
+  availability: ["19 Giugno", "21 Giugno"]
+}
+
 ];
 
 const seedDB = async () => {
@@ -40,5 +53,8 @@ const seedDB = async () => {
     process.exit(1);
   }
 };
+
+
+
 
 seedDB();
