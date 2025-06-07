@@ -3,8 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TextCarousel from "../components/TextCarousel"; 
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../style/theme.css"; 
-import sfondo1 from "../assets/sfondo1.jpg";
+import "../style/theme.css";
+import sfondo from "../assets/sfondo1.jpg";
 
 const HomePage = () => {
   const [prestazione, setPrestazione] = useState("");
@@ -20,24 +20,31 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* Hero con immagine di sfondo inline style */}
+      {/* Hero con immagine di sfondo */}
       <div
-        className="hero-section text-white text-center"
+        className="hero-section text-white text-center d-flex align-items-center justify-content-center"
         style={{
-          backgroundImage: `url(${sfondo1})`,
+          backgroundImage: `url(${sfondo})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          padding: "6rem 2rem",
-          minHeight: "70vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          minHeight: "85vh",
+          position: "relative",
         }}
       >
-        <Container>
-          <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
-          <p className="lead mb-4">
+        <div
+          className="overlay w-100 h-100 position-absolute top-0 start-0"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            zIndex: 1,
+          }}
+        ></div>
+
+        <Container style={{ zIndex: 2 }}>
+          <h1 className="main-title display-5 fw-bold text-white">
+            Prenota Esami e Visite Online
+          </h1>
+          <p className="lead mb-4 text-white">
             Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
           </p>
 
@@ -71,6 +78,7 @@ const HomePage = () => {
       </div>
 
       <Container>
+        {/* Carousel + motivazioni */}
         <div className="text-center mt-5">
           <TextCarousel />
           <div className="section-box text-center">
@@ -84,6 +92,7 @@ const HomePage = () => {
           </div>
         </div>
 
+        {/* Servizi */}
         <section className="section-box bg-light-green text-center py-5">
           <div className="container">
             <h2 className="mb-4 text-primary">Servizio Medico</h2>
@@ -121,6 +130,7 @@ const HomePage = () => {
           </div>
         </section>
 
+        {/* Footer */}
         <div className="footer mt-5 py-4">
           <Container>
             <Row>
