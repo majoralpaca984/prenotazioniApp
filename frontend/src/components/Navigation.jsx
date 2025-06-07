@@ -1,162 +1,76 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import TextCarousel from "../components/TextCarousel";
-import { Container, Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "../style/theme.css";
+import React from "react";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import LinkContainer from "./LinkContainer";
+import logo from "../assets/logoEasyCare.png";
+import ThemeToggle from "./ThemeToggle";
 
-const HomePage = () => {
-  const [prestazione, setPrestazione] = useState("");
-  const [data, setData] = useState("");
+function Navigation() {
   const navigate = useNavigate();
+  const isLogged = !!localStorage.getItem("token");
 
-  const handlePrestazioneSubmit = (e) => {
-    e.preventDefault();
-    if (prestazione.trim()) {
-      navigate(`/search?speciality=${encodeURIComponent(prestazione.trim())}`);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
-    <div className="homepage">
-      {/* Hero con immagine di sfondo full width */}
-      <div className="hero-section text-white text-center">
-        <div className="hero-overlay container">
-          <div className="hero-text-box mb-4 bg-white bg-opacity-75 rounded-4 p-3">
-            <h1 className="main-title display-5 fw-bold mb-2 text-primary">
-              Prenota Esami e Visite Online
-            </h1>
-            <p className="lead fw-semibold mb-0 text-dark">
-              Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
-            </p>
-          </div>
-
-          <div
-            className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75 mx-auto"
-            style={{ maxWidth: "900px" }}
-          >
-            <form className="row g-2 align-items-center" onSubmit={handlePrestazioneSubmit}>
-              <div className="col-md-5">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Cerca prestazione..."
-                  value={prestazione}
-                  onChange={(e) => setPrestazione(e.target.value)}
-                />
-              </div>
-              <div className="col-md-4">
-                <input
-                  type="date"
-                  className="form-control"
-                  value={data}
-                  onChange={(e) => setData(e.target.value)}
-                />
-              </div>
-              <div className="col-md-3 d-flex gap-2">
-                <button type="submit" className="btn btn-primary w-100">
-                  Cerca Prestazione
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <>
+      {/* Pulsante tema in alto a destra */}
+      <div className="position-absolute top-0 end-0 p-3 z-3">
+        <ThemeToggle />
       </div>
 
-      <Container>
-        {/* Carousel + motivazioni */}
-        <div className="text-center mt-5">
-          <TextCarousel />
-          <div className="section-box text-center">
-            <ul className="list-unstyled">
-              <h3 className="subtitle mb-4">Perché scegliere il nostro servizio?</h3>
-              <li>🔹 Prenotazioni rapide 24/7</li>
-              <li>🔹 Nessuna attesa al telefono</li>
-              <li>🔹 Prezzi trasparenti e accessibili</li>
-              <li>🔹 Recensioni verificate degli utenti</li>
-            </ul>
-          </div>
-        </div>
+      <Navbar expand="md" className="my-navbar sticky-top shadow-sm px-3">
+        <Container fluid className="d-flex justify-content-between align-items-center">
+          {/* LOGO + BRAND */}
+          <Navbar.Brand as={Link} to="/" className="d-flex align-items-center gap-2">
+            <img
+              src={logo}
+              alt="EasyCare Logo"
+              height="40"
+              width="40"
+              style={{ borderRadius: "8px", objectFit: "contain" }}
+            />
+            <span className="fw-bold fs-4 text-primary">EasyCare</span>
+          </Navbar.Brand>
 
-        {/* Servizi */}
-        <section className="section-box bg-light-green text-center py-5">
-          <div className="container">
-            <h2 className="mb-4 text-primary">Servizio Medico</h2>
-            <div className="row justify-content-center">
-              <div className="col-md-5 mb-4">
-                <div className="service-card p-4">
-                  <h4 className="text-primary">
-                    Pronto <strong>Dottore</strong> <span className="text-muted">h24</span>
-                  </h4>
-                  <p className="mb-3">Hai bisogno urgente di parlare con un medico?</p>
-                  <ul className="text-start list-unstyled">
-                    <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 12/7</li>
-                    <li>✅ Anche nei festivi</li>
-                  </ul>
-                  <button className="btn btn-primary mt-2">Come funziona</button>
-                </div>
-              </div>
+          <Navbar.Toggle aria-controls="main-navbar-nav" />
+          <Navbar.Collapse id="main-navbar-nav">
+            <Nav className="me-auto d-flex gap-3">
+              {isLogged && (
+                <>
+                  <Nav.Link as={LinkContainer} to="/dashboard" className="text-primary fw-medium">
+                    <i className="fas fa-tachometer-alt me-1"></i> Dashboard
+                  </Nav.Link>
+                  <Nav.Link as={LinkContainer} to="/calendar" className="text-primary fw-medium">
+                    <i className="fas fa-calendar me-1"></i> Calendario
+                  </Nav.Link>
+                </>
+              )}
+            </Nav>
 
-              <div className="col-md-5 mb-4">
-                <div className="service-card p-4">
-                  <h4 className="text-primary">
-                    Pronto <strong>Pediatra</strong> <span className="text-muted">h24</span>
-                  </h4>
-                  <p className="mb-3">Hai bisogno del consiglio di un pediatra?</p>
-                  <ul className="text-start list-unstyled">
-                    <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 12/7</li>
-                    <li>✅ Anche nei festivi</li>
-                  </ul>
-                  <button className="btn btn-primary mt-2">Come funziona</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <div className="footer mt-5 py-4">
-          <Container>
-            <Row>
-              <Col md={3}>
-                <p className="small footer-text mb-2">
-                  © 2025 PrenotaFacile
-                  <br /> P.IVA 01234567890
-                  <br /> info@easycare.it
-                </p>
-              </Col>
-              <Col md={3}>
-                <h6 className="footer-text fw-bold">Visite richieste</h6>
-                <ul className="footer-links">
-                  <li>Visita Ginecologica</li>
-                  <li>Visita Cardiologica</li>
-                  <li>Visita Dermatologica</li>
-                </ul>
-              </Col>
-              <Col md={3}>
-                <h6 className="footer-text fw-bold">Esami richiesti</h6>
-                <ul className="footer-links">
-                  <li>Ecografia Addome</li>
-                  <li>RMN Ginocchio</li>
-                  <li>Tc Torace</li>
-                </ul>
-              </Col>
-              <Col md={3}>
-                <h6 className="footer-text fw-bold">Link Utili</h6>
-                <ul className="footer-links">
-                  <li>Privacy Policy</li>
-                  <li>Cookie Policy</li>
-                  <li>Termini e Condizioni</li>
-                </ul>
-              </Col>
-            </Row>
-          </Container>
-        </div>
-      </Container>
-    </div>
+            <Nav className="d-flex align-items-center gap-3">
+              {!isLogged ? (
+                <>
+                  <Nav.Link as={LinkContainer} to="/login">
+                    <i className="fas fa-sign-in-alt me-1"></i> Login
+                  </Nav.Link>
+                  <Nav.Link as={LinkContainer} to="/register">
+                    <i className="fas fa-user-plus me-1"></i> Register
+                  </Nav.Link>
+                </>
+              ) : (
+                <Button variant="primary" size="sm" onClick={handleLogout}>
+                  <i className="fas fa-sign-out-alt me-1"></i> Logout
+                </Button>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </>
   );
-};
+}
 
-export default HomePage;
+export default Navigation;
