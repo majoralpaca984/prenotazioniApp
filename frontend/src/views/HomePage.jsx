@@ -4,6 +4,7 @@ import TextCarousel from "../components/TextCarousel";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../style/theme.css"; 
+import sfondo1 from "../assets/sfondo1.jpg";
 
 const HomePage = () => {
   const [prestazione, setPrestazione] = useState("");
@@ -19,8 +20,21 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* Hero con immagine di sfondo */}
-      <div className="hero-section text-white text-center">
+      {/* Hero con immagine di sfondo inline style */}
+      <div
+        className="hero-section text-white text-center"
+        style={{
+          backgroundImage: `url(${sfondo1})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          padding: "6rem 2rem",
+          minHeight: "70vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         <Container>
           <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
           <p className="lead mb-4">
@@ -57,7 +71,6 @@ const HomePage = () => {
       </div>
 
       <Container>
-        {/* Carousel + motivazioni */}
         <div className="text-center mt-5">
           <TextCarousel />
           <div className="section-box text-center">
@@ -71,7 +84,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Servizi */}
         <section className="section-box bg-light-green text-center py-5">
           <div className="container">
             <h2 className="mb-4 text-primary">Servizio Medico</h2>
@@ -109,7 +121,6 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* Footer */}
         <div className="footer mt-5 py-4">
           <Container>
             <Row>
