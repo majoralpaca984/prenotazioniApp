@@ -3,8 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TextCarousel from "../components/TextCarousel"; 
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../style/theme.css";
-import sfondo from "../assets/sfondo1.jpg";
+import "../style/theme.css"; 
 
 const HomePage = () => {
   const [prestazione, setPrestazione] = useState("");
@@ -20,35 +19,15 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* Hero con immagine di sfondo */}
-      <div
-        className="hero-section text-white text-center d-flex align-items-center justify-content-center"
-        style={{
-          backgroundImage: `url(${sfondo})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          minHeight: "85vh",
-          position: "relative",
-        }}
-      >
-        <div
-          className="overlay w-100 h-100 position-absolute top-0 start-0"
-          style={{
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-            zIndex: 1,
-          }}
-        ></div>
-
-        <Container style={{ zIndex: 2 }}>
-          <h1 className="main-title display-5 fw-bold text-white">
-            Prenota Esami e Visite Online
-          </h1>
-          <p className="lead mb-4 text-white">
+      {/* Hero con immagine di sfondo full width */}
+      <div className="hero-section text-white text-center">
+        <div className="hero-overlay">
+          <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
+          <p className="lead mb-4">
             Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
           </p>
 
-          <div className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75">
+          <div className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75 mx-auto" style={{ maxWidth: "900px" }}>
             <form className="row g-2 align-items-center" onSubmit={handlePrestazioneSubmit}>
               <div className="col-md-5">
                 <input
@@ -74,7 +53,7 @@ const HomePage = () => {
               </div>
             </form>
           </div>
-        </Container>
+        </div>
       </div>
 
       <Container>

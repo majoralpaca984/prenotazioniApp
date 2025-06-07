@@ -1,74 +1,54 @@
 // src/views/Search/DoctorCard.jsx
-import { Card, Button, Col } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../style/DoctorCard.css";
+import "../../style/DoctorCard.css";
+import dottRossi from "../../assets/dott.rossi.jpg";
+import dottSa from "../../assets/dott.sa.jpg";
 
-// ✅ Import immagini
-import dottRossi from "../assets/dott.rossi.jpg";
-import dottSa from "../assets/dott.sa.jpg";
-
-
-// ✅ Mappa nome medico -> immagine
+// Mappa delle immagini
 const doctorImages = {
-  "Dr. Maria Rossi": dottSa,
-  "Dr. Marco Bianchi": dottRossi,
+  "dott.rossi.jpg": dottRossi,
+  "dott.sa.jpg": dottSa,
 };
 
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
 
-  const weekDays = [
-    { label: "Lunedì", short: "lun" },
-    { label: "Martedì", short: "mar" },
-    { label: "Mercoledì", short: "mer" },
-    { label: "Giovedì", short: "gio" },
-    { label: "Venerdì", short: "ven" },
-  ];
+  const weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
   const handleSlotClick = (date, time) => {
     navigate(`/booking/${doctor._id}?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`);
   };
 
-  const imageSrc = doctorImages[doctor.name] || "/default-doctor.jpg";
+  const imageSrc = doctorImages[doctor.image] || "/default-doctor.jpg";
 
   return (
     <Col md={12} className="mb-4">
-      <Card className="doctor-card shadow-sm">
-        <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-start">
-          {/* 🔵 Sezione sinistra */}
-          <div className="d-flex flex-column align-items-start mb-3 mb-md-0" style={{ minWidth: "250px" }}>
-            <div className="d-flex align-items-center mb-2">
-              <img
-                src={imageSrc}
-                alt={doctor.name}
-                className="rounded-circle me-3"
-                style={{ width: 60, height: 60, objectFit: "cover" }}
-              />
-              <div>
-                <h5 className="mb-0 fw-bold text-primary">{doctor.name}</h5>
-                <div className="text-muted small">{doctor.speciality}</div>
-              </div>
-            </div>
-            <div className="text-muted small">
-              <i className="fas fa-map-marker-alt me-2"></i>
-              Via Roma 1, 00100 Roma
-            </div>
-            <div className="text-muted small mt-1">
-              <i className="fas fa-stethoscope me-2"></i>
-              Prima visita (nuovo paziente)
-            </div>
-            <Button variant="primary" className="mt-3" href="/login">
-              PRENOTA APPUNTAMENTO
-            </Button>
-          </div>
+      <Card className="doctor-card shadow-sm p-3 d-flex flex-column flex-md-row align-items-start">
+        {/* Immagine grande a sinistra */}
+        <div className="me-4">
+          <img
+            src={imageSrc}
+            alt={doctor.name}
+            className="doctor-image"
+            style={{ width: 120, height: 120, borderRadius: "50%", objectFit: "cover" }}
+          />
+        </div>
 
-          {/* 🔵 Sezione disponibilità */}
-          <div className="availability-grid">
-            {weekDays.map((day, index) => {
-              const date = doctor.availability?.[index];
+        {/* Info + orari */}
+        <div className="flex-grow-1 w-100">
+          <h5 className="fw-bold text-primary">{doctor.name}</h5>
+          <p className="mb-1 text-muted">{doctor.speciality}</p>
+          <p className="text-muted small">
+            <i className="fas fa-map-marker-alt me-1"></i> Roma, Via Roma 1
+          </p>
+
+          <div className="availability-grid mt-3">
+            {weekDays.map((day, i) => {
+              const date = doctor.availability?.[i];
               return (
-                <div key={index} className="day-column">
-                  <div className="day-header">{day.label}</div>
+                <div key={day} className="day-column">
+                  <div className="day-header">{day}</div>
                   <div className="day-date">{date || "-"}</div>
                   {date &&
                     ["10:20", "10:40", "11:00", "11:20"].map((time) => (
@@ -84,7 +64,11 @@ const DoctorCard = ({ doctor }) => {
               );
             })}
           </div>
-        </Card.Body>
+
+          <button className="btn btn-primary mt-3" onClick={() => navigate(`/booking/${doctor._id}`)}>
+            Prenota Appuntamento
+          </button>
+        </div>
       </Card>
     </Col>
   );
