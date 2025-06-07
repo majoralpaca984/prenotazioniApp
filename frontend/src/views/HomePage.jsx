@@ -11,7 +11,7 @@ const HomePage = () => {
 
   const handlePrestazioneSubmit = (e) => {
     e.preventDefault();
-    navigate("/esami");
+    navigate("/search");
   };
 
   const handleDataSubmit = (e) => {
@@ -49,9 +49,6 @@ const HomePage = () => {
             <div className="col-md-3 d-flex gap-2">
               <button type="submit" className="btn btn-primary w-100">
                 Cerca Prestazione
-              </button>
-              <button type="button" className="btn btn-outline-primary w-100" onClick={handleDataSubmit}>
-                Vai al Calendario
               </button>
             </div>
           </form>

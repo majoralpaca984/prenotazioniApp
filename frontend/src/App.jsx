@@ -9,7 +9,7 @@ import Register from "./components/Register";
 import Homepage from "./views/HomePage";
 import ThemeToggle from "./components/ThemeToggle"; 
 import "./style/theme.css"; 
-import ExamsPage from "./views/ExamsPage";  
+import SearchResults from "./views/SearchResults";  
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ function App() {
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route path="/appointment/new" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
           <Route path="/appointment/edit/:id" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
-          <Route path="/esami" element={<ExamsPage />} />
+          <Route path="/search" element={<SearchResults/>} />
 
           {/* Autenticazione */}
           <Route path="/login" element={<Login />} />
