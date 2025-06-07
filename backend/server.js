@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -6,6 +7,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 // Importa le routes
+import "./config/passport.js"; // Configurazione Passport per Google OAuth
 import authRoutes from "./routes/auth.js";
 import appointmentRoutes from "./routes/appointments.js";
 import doctorRoutes from "./routes/doctors.js"; 
