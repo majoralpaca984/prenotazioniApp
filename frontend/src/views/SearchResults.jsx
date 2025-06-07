@@ -10,6 +10,7 @@ function useQuery() {
 const SearchResults = () => {
   const query = useQuery();
   const speciality = query.get("speciality");
+  console.log("📌 Specialità ricevuta dalla URL:", speciality);
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
