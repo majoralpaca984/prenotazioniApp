@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import TextCarousel from "../components/TextCarousel"; 
+import TextCarousel from "../components/TextCarousel";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../style/theme.css"; 
+import "../style/theme.css";
 
 const HomePage = () => {
   const [prestazione, setPrestazione] = useState("");
@@ -19,15 +19,25 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
+      {/* Tema Toggle sopra navbar */}
+      <div className="position-absolute top-0 end-0 p-3 z-3">
+        <button className="btn btn-primary">Dark Mode</button>
+      </div>
+
       {/* Hero con immagine di sfondo full width */}
       <div className="hero-section text-white text-center">
         <div className="hero-overlay container">
-          <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
-          <p className="lead mb-4">
-            Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
-          </p>
+          <div className="hero-text-box mb-4">
+            <h1 className="main-title display-5 fw-bold mb-2">Prenota Esami e Visite Online</h1>
+            <p className="lead mb-0">
+              Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
+            </p>
+          </div>
 
-          <div className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75 mx-auto" style={{ maxWidth: "900px" }}>
+          <div
+            className="search-bar p-3 rounded-4 shadow-sm bg-light bg-opacity-75 mx-auto"
+            style={{ maxWidth: "900px" }}
+          >
             <form className="row g-2 align-items-center" onSubmit={handlePrestazioneSubmit}>
               <div className="col-md-5">
                 <input
@@ -115,9 +125,9 @@ const HomePage = () => {
             <Row>
               <Col md={3}>
                 <p className="small footer-text mb-2">
-                  © 2025 PrenotaFacile<br />
-                  P.IVA 01234567890<br />
-                  info@tuosito.it
+                  © 2025 PrenotaFacile
+                  <br /> P.IVA 01234567890
+                  <br /> info@easycare.it
                 </p>
               </Col>
               <Col md={3}>
