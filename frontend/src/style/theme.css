@@ -330,22 +330,27 @@ body {
   }
   .day-header { font-size: 0.95rem; }
 }
+/* ======== Hero Homepage con sfondo ======== */
 .hero-section {
-  background-image: url("../assets/sfondo1.jpg");
+  background-image: url("/src/assets/sfondo1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  position: relative;
-  width: 100%;
+  width: 100vw;
   min-height: 85vh;
+  position: relative;
+  margin-left: calc(-50vw + 50%);
+  left: 0;
+  right: 0;
 }
 
 .hero-overlay {
-  background-color: rgba(0, 0, 0, 0.4); /* per rendere lo sfondo più leggibile */
-  padding: 6rem 2rem;
+  background-color: rgba(0, 0, 0, 0.4); /* rende lo sfondo leggibile */
   min-height: 85vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 6rem 2rem;
 }

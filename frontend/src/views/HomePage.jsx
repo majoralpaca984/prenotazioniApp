@@ -21,7 +21,7 @@ const HomePage = () => {
     <div className="homepage">
       {/* Hero con immagine di sfondo full width */}
       <div className="hero-section text-white text-center">
-        <div className="hero-overlay">
+        <div className="hero-overlay container">
           <h1 className="main-title display-5 fw-bold">Prenota Esami e Visite Online</h1>
           <p className="lead mb-4">
             Prenota le tue visite mediche e gli esami diagnostici in modo semplice e veloce, senza code o attese.
