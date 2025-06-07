@@ -1,7 +1,7 @@
 // src/views/Search/DoctorCard.jsx
 import { Card, Button, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../../style/DoctorCard.css";
+import "../style/DoctorCard.css";
 
 // ✅ Import immagini
 import dottRossi from "../../assets/dott.rossi.jpg";
