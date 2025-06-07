@@ -13,12 +13,16 @@ const doctorImages = {
 
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
-
+  const isLogged = !!localStorage.getItem("token");
   const weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
-  const handleSlotClick = () => {
-  navigate("/login");
-};
+  const handleSlotClick = (date, time) => {
+    if (!isLogged) {
+      navigate("/login");
+    } else {
+      navigate(`/appointment/new?doctor=${doctor._id}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`);
+    }
+  };
 
   const imageSrc = doctorImages[doctor.image] || "/default-doctor.jpg";
 
@@ -65,8 +69,17 @@ const DoctorCard = ({ doctor }) => {
             })}
           </div>
 
-          <button className="btn btn-primary mt-3" onClick={() => navigate("/login")}>
-          Prenota Appuntamento
+          <button
+            className="btn btn-primary mt-3"
+            onClick={() => {
+              if (!isLogged) {
+                navigate("/login");
+              } else {
+                navigate(`/appointment/new?doctor=${doctor._id}`);
+              }
+            }}
+          >
+            Prenota Appuntamento
           </button>
         </div>
       </Card>
