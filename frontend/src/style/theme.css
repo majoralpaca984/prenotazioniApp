@@ -210,159 +210,7 @@ body {
   100% { opacity: 1; }
 }
 
-/* ========== Calendario ========== */
-/* .calendar-container {
-  max-width: 950px;
-  margin: 2.5rem auto 0 auto;
-  background: var(--bg-calendar);
-  border-radius: 18px;
-  box-shadow: var(--box-shadow);
-  padding: 32px 20px;
-}
 
-.calendar-header,
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-
-
-.calendar-day {
-  background: var(--bg-calendar-day);
-  border-radius: 12px;
-  min-height: 76px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-  cursor: pointer;
-  border: 2px solid transparent;
-  padding: 6px 2px 8px 2px;
-  transition: background 0.2s, border 0.2s;
-  box-shadow: 0 1px 4px rgba(120, 85, 189, 0.05);
-}
-
-.calendar-day:hover {
-  border: 2px solid var(--color-title);
-  background: var(--bg-highlight);
-}
-
-.calendar-day.today {
-  border: 2px solid var(--color-accent-light);
-  background: #e3e9f8;
-}
-
-.calendar-day.has-appointments {
-  background: var(--bg-highlight);
-  box-shadow: 0 2px 8px rgba(118, 75, 162, 0.13);
-} */
-.calendar-container {
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.calendar-header, .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-}
-
-.calendar-day {
-  min-height: 100px;
-  background: #f9f9f9;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.calendar-day:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
-}
-
-.today {
-  background-color: #e0f7fa !important;
-  border: 2px solid #00bcd4;
-}
-
-.appt-pill {
-  font-size: 0.75rem;
-  padding: 2px 4px;
-  border-radius: 0.25rem;
-}
-
-.day-number {
-  font-size: 1.13rem;
-  font-weight: 600;
-  margin-top: 4px;
-  margin-bottom: 6px;
-  color: var(--color-text);
-}
-
-.day-header {
-  font-weight: 700;
-  font-size: 1.15rem;
-  text-align: center;
-  color: var(--color-title);
-  background: none;
-  padding: 4px 0 10px 0;
-  border-radius: 6px;
-}
-
-.appointments-indicator {
-  margin-top: 2px;
-  display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.appointment-dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 100%;
-  border: 2px solid #fff;
-  margin-bottom: 2px;
-  box-shadow: 0 1px 2px rgba(120, 85, 189, 0.12);
-}
-
-.appointment-dot.bg-primary   { background: var(--color-accent-light); }
-.appointment-dot.bg-success   { background: #43cb7c; }
-.appointment-dot.bg-danger    { background: #f56c6c; }
-.appointment-dot.bg-secondary { background: #cfd8dc; }
-
-.more-appointments {
-  color: #666;
-  font-size: 0.95em;
-  margin-left: 3px;
-  font-weight: 500;
-}
-
-.section-box {
-  background-color: var(--bg-container);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  padding: 2rem;
-  margin: 2.5rem 0;
-}
-
-
-/* ========== Responsive ========== */
-@media (max-width: 600px) {
-  .calendar-header,
-  .calendar-grid {
-    gap: 2px;
-  }
-  .calendar-container {
-    padding: 0.4rem;
-  }
-  .calendar-day {
-    min-height: 45px;
-    font-size: 0.97em;
-    padding: 2px 1px 3px 1px;
-  }
-  .day-header { font-size: 0.95rem; }
-}
 /* ======== Hero Homepage con sfondo ======== */
 .hero-section {
   background-image: url("/src/assets/sfondo1.jpg");
@@ -411,3 +259,118 @@ body {
   white-space: nowrap;
 }
 
+/* ========== Calendario ========== */
+.calendar-container {
+  max-width: 950px;
+  margin: 2.5rem auto;
+  background: var(--bg-calendar);
+  border-radius: 18px;
+  box-shadow: var(--box-shadow);
+  padding: 32px 20px;
+}
+
+.calendar-header,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.day-header {
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-align: center;
+  color: var(--color-title);
+  background: none;
+  padding: 4px 0 10px 0;
+  border-radius: 6px;
+}
+
+.calendar-day {
+  background: var(--bg-calendar-day);
+  border-radius: 12px;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 6px 2px 8px 2px;
+  transition: background 0.2s, border 0.2s, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(120, 85, 189, 0.05);
+}
+
+.calendar-day:hover {
+  transform: scale(1.02);
+  border: 2px solid var(--color-title);
+  background: var(--bg-highlight);
+}
+
+.calendar-day.today {
+  border: 2px solid var(--color-accent-light);
+  background: #e3e9f8;
+}
+
+.calendar-day.has-appointments {
+  background: var(--bg-highlight);
+  box-shadow: 0 2px 8px rgba(118, 75, 162, 0.13);
+}
+
+.day-number {
+  font-size: 1.13rem;
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  color: var(--color-text);
+}
+
+.appointments-indicator {
+  margin-top: 2px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.appointment-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  border: 2px solid #fff;
+  margin-bottom: 2px;
+  box-shadow: 0 1px 2px rgba(120, 85, 189, 0.12);
+}
+
+.appointment-dot.bg-primary   { background: var(--color-accent-light); }
+.appointment-dot.bg-success   { background: #43cb7c; }
+.appointment-dot.bg-danger    { background: #f56c6c; }
+.appointment-dot.bg-secondary { background: #cfd8dc; }
+
+.more-appointments {
+  color: #666;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 600px) {
+  .calendar-header,
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-container {
+    padding: 0.4rem;
+  }
+
+  .calendar-day {
+    min-height: 45px;
+    font-size: 0.95em;
+    padding: 2px 1px 3px 1px;
+  }
+
+  .day-header {
+    font-size: 0.95rem;
+  }
+}
