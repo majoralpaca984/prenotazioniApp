@@ -97,7 +97,8 @@ const HomePage = () => {
           <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
             Come funziona
           </button>
-        </div> 
+        </div> {/* ✅ CHIUSO correttamente */}
+      </div>
 
       <div className="col-md-5 mb-4">
         <div className="service-card p-4">
@@ -118,6 +119,7 @@ const HomePage = () => {
     </div>
   </div>
 </section>
+
 
 
         {/* Footer */}
