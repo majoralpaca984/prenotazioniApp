@@ -22,13 +22,13 @@ export const sendConfirmationEmail = async (toEmail, appointment) => {
       <div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 20px;">
         <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
           
-          <!-- Logo -->
+         
           <div style="background-color: #007bff; padding: 20px; text-align: center;">
             <img src="https://i.postimg.cc/cCtTbhKC/logoEasyCare.png" alt="EasyCare Logo" width="100" style="margin-bottom: 10px;" />
             <h1 style="color: #ffffff; font-size: 24px; margin: 0;">Conferma Appuntamento</h1>
           </div>
 
-          <!-- Contenuto -->
+          
           <div style="padding: 30px;">
             <p style="font-size: 16px; color: #333;">Ciao! 🎉 La tua prenotazione è andata a buon fine. Ecco i dettagli:</p>
             <ul style="list-style: none; padding: 0; font-size: 16px; color: #333;">
@@ -37,7 +37,7 @@ export const sendConfirmationEmail = async (toEmail, appointment) => {
               <li><strong>🔬 Esame:</strong> ${doctor}</li>
             </ul>
 
-            <!-- Bottone disdetta -->
+            
             <div style="margin-top: 30px; text-align: center;">
               <a href="${process.env.FRONTEND_URL || "https://easycare.it"}/appointment/cancel/${_id}" 
                  style="background-color: #dc3545; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
