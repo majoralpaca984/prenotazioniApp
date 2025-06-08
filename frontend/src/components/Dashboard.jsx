@@ -117,28 +117,34 @@ function Dashboard() {
         <Col md={6}>
           <Card className="calendar-card p-4 h-100">
             <Card.Body>
-              <h5 className="fw-bold text-accent mb-4">🗓️ Settimana Corrente</h5>
-              <div className="d-flex justify-content-between flex-wrap text-center">
-                {weekDays.map((day, idx) => {
-                  const match = appointments.find((a) =>
-                    isSameDay(new Date(`${a.date}T${a.time}`), day)
-                  );
-                  return (
-                    <div
-                      key={idx}
-                      className={`calendar-day-mini ${match ? "has-appointment" : ""}`}
-                      onClick={() => handleDayClick(day)}
-                    >
-                      <div className="fw-bold">{day.toLocaleDateString("it-IT", { weekday: "short" })}</div>
-                      <div className="small">{day.getDate()}/{day.getMonth() + 1}</div>
-                      <div className="text-muted small mt-1">
-                        {match ? match.time : "-"}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card.Body>
+  <h5 className="fw-bold text-accent mb-4">🗓️ Mese Corrente</h5>
+  <div className="d-flex flex-wrap gap-2">
+    {monthDays.map((day, idx) => {
+      const match = appointments.find((a) =>
+        isSameDay(new Date(`${a.date}T${a.time}`), day)
+      );
+      return (
+        <div
+          key={idx}
+          className={`calendar-day-mini text-center p-2 rounded ${match ? "has-appointment" : ""}`}
+          style={{
+            width: "80px",
+            background: "#f8f9fa",
+            border: "1px solid #dee2e6",
+          }}
+          onClick={() => handleDayClick(day)}
+        >
+          <div className="fw-semibold">{day.toLocaleDateString("it-IT", { weekday: "short" })}</div>
+          <div>{day.getDate()}/{day.getMonth() + 1}</div>
+          <div className="small text-muted">
+            {match?.time || <span style={{ opacity: 0.4 }}>Nessuno</span>}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</Card.Body>
+
           </Card>
         </Col>
       </Row>
