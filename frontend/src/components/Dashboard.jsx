@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
+// Utility per confronto date
 function isSameDay(d1, d2) {
   return (
     d1.getFullYear() === d2.getFullYear() &&
@@ -12,12 +13,24 @@ function isSameDay(d1, d2) {
   );
 }
 
+// Utility: genera tutti i giorni del mese corrente
+function generateMonthDays() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0-based
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  return Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
+}
+
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDayAppointments, setSelectedDayAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const monthDays = generateMonthDays();
 
   useEffect(() => {
     fetchAppointments();
@@ -65,12 +78,6 @@ function Dashboard() {
       year: "numeric",
     });
 
-  const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(today.getDate() + i);
-    return date;
-  });
-
   const handleDayClick = (day) => {
     const found = appointments.filter((a) =>
       isSameDay(new Date(`${a.date}T${a.time}`), day)
@@ -96,7 +103,8 @@ function Dashboard() {
 
       {appointmentTomorrow && (
         <Alert variant="warning">
-          Hai un appuntamento domani alle {appointmentTomorrow.time} con <strong>{appointmentTomorrow.title}</strong> ⏰
+          Hai un appuntamento domani alle {appointmentTomorrow.time} con{" "}
+          <strong>{appointmentTomorrow.title}</strong> ⏰
         </Alert>
       )}
 
@@ -106,9 +114,21 @@ function Dashboard() {
           <Card className="summary-card p-4 h-100">
             <Card.Body>
               <h5 className="fw-bold text-accent mb-4">📊 Riepilogo Appuntamenti</h5>
-              <p><span>📋</span> <strong>Totali:</strong> {appointments.length}</p>
-              <p><span>🕒</span> <strong>Prossimo:</strong> {nextAppointment ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}` : "Nessuno"}</p>
-              <p><span>✅</span> <strong>Ultimo:</strong> {lastAppointment ? `${lastAppointment.title} il ${formatDate(lastAppointment.date)} alle ${lastAppointment.time}` : "Nessuno"}</p>
+              <p>
+                <span>📋</span> <strong>Totali:</strong> {appointments.length}
+              </p>
+              <p>
+                <span>🕒</span> <strong>Prossimo:</strong>{" "}
+                {nextAppointment
+                  ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}`
+                  : "Nessuno"}
+              </p>
+              <p>
+                <span>✅</span> <strong>Ultimo:</strong>{" "}
+                {lastAppointment
+                  ? `${lastAppointment.title} il ${formatDate(lastAppointment.date)} alle ${lastAppointment.time}`
+                  : "Nessuno"}
+              </p>
             </Card.Body>
           </Card>
         </Col>
@@ -117,34 +137,38 @@ function Dashboard() {
         <Col md={6}>
           <Card className="calendar-card p-4 h-100">
             <Card.Body>
-  <h5 className="fw-bold text-accent mb-4">🗓️ Mese Corrente</h5>
-  <div className="d-flex flex-wrap gap-2">
-    {monthDays.map((day, idx) => {
-      const match = appointments.find((a) =>
-        isSameDay(new Date(`${a.date}T${a.time}`), day)
-      );
-      return (
-        <div
-          key={idx}
-          className={`calendar-day-mini text-center p-2 rounded ${match ? "has-appointment" : ""}`}
-          style={{
-            width: "80px",
-            background: "#f8f9fa",
-            border: "1px solid #dee2e6",
-          }}
-          onClick={() => handleDayClick(day)}
-        >
-          <div className="fw-semibold">{day.toLocaleDateString("it-IT", { weekday: "short" })}</div>
-          <div>{day.getDate()}/{day.getMonth() + 1}</div>
-          <div className="small text-muted">
-            {match?.time || <span style={{ opacity: 0.4 }}>Nessuno</span>}
-          </div>
-        </div>
-      );
-    })}
-  </div>
-</Card.Body>
-
+              <h5 className="fw-bold text-accent mb-4">🗓️ Mese Corrente</h5>
+              <div className="d-flex flex-wrap gap-2">
+                {monthDays.map((day, idx) => {
+                  const match = appointments.find((a) =>
+                    isSameDay(new Date(`${a.date}T${a.time}`), day)
+                  );
+                  return (
+                    <div
+                      key={idx}
+                      className={`calendar-day-mini text-center p-2 rounded ${match ? "has-appointment" : ""}`}
+                      style={{
+                        width: "80px",
+                        background: "#f8f9fa",
+                        border: "1px solid #dee2e6",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleDayClick(day)}
+                    >
+                      <div className="fw-semibold">
+                        {day.toLocaleDateString("it-IT", { weekday: "short" })}
+                      </div>
+                      <div>
+                        {day.getDate()}/{day.getMonth() + 1}
+                      </div>
+                      <div className="small text-muted">
+                        {match?.time || <span style={{ opacity: 0.4 }}>Nessuno</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card.Body>
           </Card>
         </Col>
       </Row>
@@ -168,7 +192,9 @@ function Dashboard() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Chiudi</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Chiudi
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
