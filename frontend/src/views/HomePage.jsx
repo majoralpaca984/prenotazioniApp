@@ -80,45 +80,45 @@ const HomePage = () => {
 
         {/* Servizi */}
         <section className="section-box bg-light-green text-center py-5">
-          <div className="container">
-            <h2 className="mb-4 text-primary">Servizio Medico</h2>
-            <div className="row justify-content-center">
-              <div className="col-md-5 mb-4">
-                <div className="service-card p-4">
-                  <h4 className="text-primary">
-                    Pronto <strong>Dottore</strong> <span className="text-muted">h24</span>
-                  </h4>
-                  <p className="mb-3">Hai bisogno urgente di parlare con un medico?</p>
-                  <ul className="text-start list-unstyled">
-                    <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 12/7</li>
-                    <li>✅ Anche nei festivi</li>
-                  </ul>
-                  <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
-                   Come funziona
-                  </button>
-              </div>
+  <div className="container">
+    <h2 className="mb-4 text-primary">Servizio Medico</h2>
+    <div className="row justify-content-center">
+      <div className="col-md-5 mb-4">
+        <div className="service-card p-4">
+          <h4 className="text-primary">
+            Pronto <strong>Dottore</strong> <span className="text-muted">h24</span>
+          </h4>
+          <p className="mb-3">Hai bisogno urgente di parlare con un medico?</p>
+          <ul className="text-start list-unstyled">
+            <li>✅ Consulto entro 30 minuti</li>
+            <li>✅ Disponibile 12/7</li>
+            <li>✅ Anche nei festivi</li>
+          </ul>
+          <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
+            Come funziona
+          </button>
+        </div> 
 
-              <div className="col-md-5 mb-4">
-                <div className="service-card p-4">
-                  <h4 className="text-primary">
-                    Pronto <strong>Pediatra</strong> <span className="text-muted">h24</span>
-                  </h4>
-                  <p className="mb-3">Hai bisogno del consiglio di un pediatra?</p>
-                  <ul className="text-start list-unstyled">
-                    <li>✅ Consulto entro 30 minuti</li>
-                    <li>✅ Disponibile 12/7</li>
-                    <li>✅ Anche nei festivi</li>
-                  </ul>
-                  <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
-                   Come funziona
-                  </button>
+      <div className="col-md-5 mb-4">
+        <div className="service-card p-4">
+          <h4 className="text-primary">
+            Pronto <strong>Pediatra</strong> <span className="text-muted">h24</span>
+          </h4>
+          <p className="mb-3">Hai bisogno del consiglio di un pediatra?</p>
+          <ul className="text-start list-unstyled">
+            <li>✅ Consulto entro 30 minuti</li>
+            <li>✅ Disponibile 12/7</li>
+            <li>✅ Anche nei festivi</li>
+          </ul>
+          <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
+            Come funziona
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Footer */}
         <div className="footer mt-5 py-4">
