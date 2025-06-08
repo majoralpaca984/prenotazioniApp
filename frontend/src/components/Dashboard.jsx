@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
-// Utility per confronto date
 function isSameDay(d1, d2) {
   return (
     d1.getFullYear() === d2.getFullYear() &&
@@ -13,11 +12,10 @@ function isSameDay(d1, d2) {
   );
 }
 
-// Utility: genera tutti i giorni del mese corrente
 function generateMonthDays() {
   const today = new Date();
   const year = today.getFullYear();
-  const month = today.getMonth(); // 0-based
+  const month = today.getMonth();
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   return Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
@@ -197,6 +195,22 @@ function Dashboard() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* FOOTER FISSO */}
+      <footer className="dashboard-footer">
+        <Link to="/">
+          <i className="fas fa-home"></i>
+        </Link>
+        <Link to="/calendar">
+          <i className="fas fa-calendar-alt"></i>
+        </Link>
+        <button disabled style={{ background: "none", border: "none", opacity: 0.4 }}>
+          <i className="fas fa-user"></i>
+        </button>
+        <button disabled style={{ background: "none", border: "none", opacity: 0.4 }}>
+          <i className="fas fa-cog"></i>
+        </button>
+      </footer>
     </div>
   );
 }
