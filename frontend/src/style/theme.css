@@ -402,3 +402,7 @@ body {
   background-color: #89abdd;
 }
 
+.calendar-day-mini.has-appointment {
+  border: 2px solid var(--accent-color, #0d6efd);
+  background-color: #e6f0ff;
+}
