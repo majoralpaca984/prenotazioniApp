@@ -25,10 +25,16 @@ export const googleLogin = async (req, res) => {
       });
     }
     const token = jwt.sign(
-      { userId: user._id, role: user.role, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+  {
+    userId: user._id,
+    name: user.name, 
+    email: user.email,
+    role: user.role,
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "7d" }
+);
+
     res.json({ token });
   } catch (err) {
     console.error("Google login error", err);
