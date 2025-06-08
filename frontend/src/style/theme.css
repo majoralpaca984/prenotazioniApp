@@ -376,17 +376,35 @@ body {
 }
 
 /* ========== dashboard ========== */
-.summary-box {
+.summary-card, .calendar-card {
   background-color: var(--bg-highlight);
   border-radius: 16px;
   box-shadow: var(--box-shadow);
-  color: var(--color-text);
   transition: transform 0.3s ease;
+  color: var(--color-text);
+}
+.summary-card:hover,
+.calendar-card:hover {
+  transform: translateY(-4px);
 }
 
-.summary-box:hover {
-  transform: translateY(-2px);
+.calendar-day-mini {
+  width: 80px;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: var(--bg-calendar-day);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
 }
-.summary-box h3 {
-  color: var(--color-title);
+
+.calendar-day-mini:hover {
+  background-color: var(--bg-highlight);
+  border: 1px solid var(--color-accent-light);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.calendar-day-mini.has-appointment {
+  background-color: #e0f7fa;
+  border-left: 4px solid var(--color-accent);
 }

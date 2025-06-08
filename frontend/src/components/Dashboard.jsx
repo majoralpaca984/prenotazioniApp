@@ -4,17 +4,6 @@ import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
-function getUserRole() {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) return "user";
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.role || "user";
-  } catch {
-    return "user";
-  }
-}
-
 function isSameDay(d1, d2) {
   return (
     d1.getFullYear() === d2.getFullYear() &&
@@ -30,63 +19,77 @@ function Dashboard() {
   const [selectedDayAppointments, setSelectedDayAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const role = getUserRole();
-
   useEffect(() => {
     fetchAppointments();
   }, []);
 
   const fetchAppointments = async () => {
     try {
-      const response = await fetch(`${API_URL}/appointments`, {
+      const res = await fetch(`${API_URL}/appointments`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
-      const data = await response.json();
+      const data = await res.json();
       setAppointments(data);
     } catch (err) {
-      console.error("Errore durante il recupero degli appuntamenti", err);
-      setError("Errore durante il recupero degli appuntamenti.");
-      setAppointments([]);
+      setError("Errore nel caricamento.");
     } finally {
       setLoading(false);
     }
   };
 
+  const today = new Date();
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const appointmentTomorrow = appointments.find(a => {
-    const apptDate = new Date(`${a.date}T${a.time}`);
-    return isSameDay(apptDate, tomorrow);
-  });
+  tomorrow.setDate(today.getDate() + 1);
 
-  const futureAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) >= new Date());
-  const pastAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) < new Date());
-  const nextAppointment = futureAppointments.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))[0];
-  const lastAppointment = pastAppointments.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`))[0];
+  const appointmentTomorrow = appointments.find((a) =>
+    isSameDay(new Date(`${a.date}T${a.time}`), tomorrow)
+  );
 
-  const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString("it-IT", {
+  const future = appointments.filter((a) => new Date(`${a.date}T${a.time}`) >= new Date());
+  const past = appointments.filter((a) => new Date(`${a.date}T${a.time}`) < new Date());
+
+  const nextAppointment = future.sort(
+    (a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`)
+  )[0];
+
+  const lastAppointment = past.sort(
+    (a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`)
+  )[0];
+
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString("it-IT", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     });
 
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    return date;
+  });
+
+  const handleDayClick = (day) => {
+    const found = appointments.filter((a) =>
+      isSameDay(new Date(`${a.date}T${a.time}`), day)
+    );
+    setSelectedDayAppointments(found);
+    setShowModal(true);
+  };
+
   return (
     <div>
-      <Row className="mb-4">
+      <Row className="mb-4 align-items-center">
         <Col md={8}>
-          <h2>
-            <i className="fas fa-tachometer-alt me-2"></i>
-            Dashboard
+          <h2 className="main-title">
+            <i className="fas fa-tachometer-alt me-2"></i> Dashboard
           </h2>
         </Col>
-        <Col md={4} className="text-md-end">
+        <Col md={4} className="text-end">
           <Button as={Link} to="/appointment/new" variant="primary">
-            <i className="fas fa-plus me-2"></i>
-            Nuovo Appuntamento
+            <i className="fas fa-plus me-2"></i> Nuovo Appuntamento
           </Button>
         </Col>
       </Row>
@@ -97,30 +100,50 @@ function Dashboard() {
         </Alert>
       )}
 
-      <Card className="summary-box p-4 mb-4 shadow-sm border-0">
-        <Card.Body>
-          <h5 className="mb-4 text-primary-emphasis fw-bold">
-            📅 Riepilogo Appuntamenti
-          </h5>
-          <p className="mb-2">
-            <strong>Totale prenotazioni:</strong> {appointments.length}
-          </p>
-          <p className="mb-2">
-            <strong>Prossimo appuntamento:</strong>{" "}
-            {nextAppointment
-              ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}`
-              : "Nessuno"}
-          </p>
-          <p>
-            <strong>Ultimo appuntamento effettuato:</strong>{" "}
-            {lastAppointment
-              ? `${lastAppointment.title} il ${formatDate(lastAppointment.date)} alle ${lastAppointment.time}`
-              : "Nessuno"}
-          </p>
-        </Card.Body>
-      </Card>
+      <Row className="gy-4">
+        {/* CARD RIEPILOGO */}
+        <Col md={6}>
+          <Card className="summary-card p-4 h-100">
+            <Card.Body>
+              <h5 className="fw-bold text-accent mb-4">📊 Riepilogo Appuntamenti</h5>
+              <p><span>📋</span> <strong>Totali:</strong> {appointments.length}</p>
+              <p><span>🕒</span> <strong>Prossimo:</strong> {nextAppointment ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}` : "Nessuno"}</p>
+              <p><span>✅</span> <strong>Ultimo:</strong> {lastAppointment ? `${lastAppointment.title} il ${formatDate(lastAppointment.date)} alle ${lastAppointment.time}` : "Nessuno"}</p>
+            </Card.Body>
+          </Card>
+        </Col>
 
-      {/* MODAL opzionale per future espansioni */}
+        {/* CARD MINI CALENDARIO */}
+        <Col md={6}>
+          <Card className="calendar-card p-4 h-100">
+            <Card.Body>
+              <h5 className="fw-bold text-accent mb-4">🗓️ Settimana Corrente</h5>
+              <div className="d-flex justify-content-between flex-wrap text-center">
+                {weekDays.map((day, idx) => {
+                  const match = appointments.find((a) =>
+                    isSameDay(new Date(`${a.date}T${a.time}`), day)
+                  );
+                  return (
+                    <div
+                      key={idx}
+                      className={`calendar-day-mini ${match ? "has-appointment" : ""}`}
+                      onClick={() => handleDayClick(day)}
+                    >
+                      <div className="fw-bold">{day.toLocaleDateString("it-IT", { weekday: "short" })}</div>
+                      <div className="small">{day.getDate()}/{day.getMonth() + 1}</div>
+                      <div className="text-muted small mt-1">
+                        {match ? match.time : "-"}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* MODAL GIORNO SELEZIONATO */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Appuntamenti del giorno</Modal.Title>
@@ -139,9 +162,7 @@ function Dashboard() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Chiudi
-          </Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Chiudi</Button>
         </Modal.Footer>
       </Modal>
     </div>
