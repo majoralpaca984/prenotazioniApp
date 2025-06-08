@@ -1,30 +1,28 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./Calendar.css";
 
 function Calendar({ year, month, appointments, isAdmin }) {
   const navigate = useNavigate();
 
-  // Calcola i giorni del mese e il primo giorno della settimana
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDay = new Date(year, month, 1).getDay();
 
-  // Crea l'array dei giorni con offset iniziale
   const daysArray = [];
   for (let i = 0; i < firstDay; i++) daysArray.push(null);
   for (let d = 1; d <= daysInMonth; d++) daysArray.push(d);
   while (daysArray.length % 7 !== 0) daysArray.push(null);
 
-  // Raggruppa gli appuntamenti per giorno
   const apptsByDay = {};
   if (appointments && appointments.length) {
     appointments.forEach(app => {
-      const d = new Date(app.date).getDate();
-      if (!apptsByDay[d]) apptsByDay[d] = [];
-      apptsByDay[d].push(app);
+      const dateObj = new Date(app.date);
+      const key = `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}`;
+      if (!apptsByDay[key]) apptsByDay[key] = [];
+      apptsByDay[key].push(app);
     });
   }
 
-  // Evidenzia il giorno attuale
   const today = new Date();
   const isToday = (day) =>
     day &&
@@ -35,52 +33,45 @@ function Calendar({ year, month, appointments, isAdmin }) {
   return (
     <div className="calendar-container">
       <div className="calendar-header">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d, i) => (
+        {["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"].map((d, i) => (
           <div className="day-header" key={i}>{d}</div>
         ))}
       </div>
 
       <div className="calendar-grid">
-        {daysArray.map((day, i) =>
-          day ? (
+        {daysArray.map((day, i) => {
+          if (!day) return <div className="calendar-day calendar-empty" key={i}></div>;
+
+          const dateKey = `${year}-${month}-${day}`;
+          const appts = apptsByDay[dateKey] || [];
+
+          return (
             <div
               key={i}
-              className={`calendar-day${isToday(day) ? " today" : ""}${
-                apptsByDay[day] ? " has-appointments" : ""
-              }`}
+              className={`calendar-day rounded shadow-sm p-2 position-relative transition ${
+                isToday(day) ? "today" : ""
+              } ${appts.length ? "has-appointments" : ""}`}
+              onClick={() => appts.length && navigate(`/appointment/edit/${appts[0]._id}`)}
             >
-              <div className="day-number">{day}</div>
-              <div className="appointments-indicator">
-                {(apptsByDay[day] || []).map((appt, idx) => (
+              <div className="day-number fw-bold">{day}</div>
+              <div className="appointments-indicator mt-2">
+                {appts.slice(0, 3).map((appt, idx) => (
                   <div
-                    className="appt-badge"
+                    className="badge bg-primary-subtle text-primary-emphasis mb-1 w-100 text-truncate appt-pill"
                     key={idx}
-                    title={appt.title}
-                    onClick={() => navigate(`/appointment/edit/${appt._id}`)}
-                    style={{ cursor: "pointer" }}
+                    title={`📅 ${new Date(appt.date).toLocaleDateString("it-IT")} ⏰ ${appt.time}`}
                   >
-                    {isAdmin ? (
-                      <>
-                        <i className="fa-solid fa-user me-1 text-primary"></i>
-                        {appt.title || "Senza titolo"}
-                      </>
-                    ) : (
-                      appt.title || "Senza titolo"
-                    )}
+                    {isAdmin ? `👤 ${appt.title}` : appt.title || "(Senza titolo)"}
                   </div>
                 ))}
 
-                {apptsByDay[day] && apptsByDay[day].length > 4 && (
-                  <span className="more-appointments">
-                    +{apptsByDay[day].length - 4}
-                  </span>
+                {appts.length > 3 && (
+                  <div className="text-muted small text-end">+{appts.length - 3} altro</div>
                 )}
               </div>
             </div>
-          ) : (
-            <div className="calendar-day calendar-empty" key={i}></div>
-          )
-        )}
+          );
+        })}
       </div>
     </div>
   );

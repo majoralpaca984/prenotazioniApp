@@ -211,7 +211,7 @@ body {
 }
 
 /* ========== Calendario ========== */
-.calendar-container {
+/* .calendar-container {
   max-width: 950px;
   margin: 2.5rem auto 0 auto;
   background: var(--bg-calendar);
@@ -227,15 +227,6 @@ body {
   gap: 8px;
 }
 
-.day-header {
-  font-weight: 700;
-  font-size: 1.15rem;
-  text-align: center;
-  color: var(--color-title);
-  background: none;
-  padding: 4px 0 10px 0;
-  border-radius: 6px;
-}
 
 .calendar-day {
   background: var(--bg-calendar-day);
@@ -266,6 +257,38 @@ body {
 .calendar-day.has-appointments {
   background: var(--bg-highlight);
   box-shadow: 0 2px 8px rgba(118, 75, 162, 0.13);
+} */
+.calendar-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.calendar-header, .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  min-height: 100px;
+  background: #f9f9f9;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.calendar-day:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.today {
+  background-color: #e0f7fa !important;
+  border: 2px solid #00bcd4;
+}
+
+.appt-pill {
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: 0.25rem;
 }
 
 .day-number {
@@ -274,6 +297,16 @@ body {
   margin-top: 4px;
   margin-bottom: 6px;
   color: var(--color-text);
+}
+
+.day-header {
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-align: center;
+  color: var(--color-title);
+  background: none;
+  padding: 4px 0 10px 0;
+  border-radius: 6px;
 }
 
 .appointments-indicator {
