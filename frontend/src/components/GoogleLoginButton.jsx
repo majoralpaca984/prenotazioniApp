@@ -12,6 +12,8 @@ function GoogleLoginButton() {
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
+        auto_select: false,               // ✅ disabilita "Accedi come"
+        cancel_on_tap_outside: true,     // ✅ chiudi se clic fuori
       });
 
       window.google.accounts.id.renderButton(
