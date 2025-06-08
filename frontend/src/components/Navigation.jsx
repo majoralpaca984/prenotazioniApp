@@ -9,6 +9,20 @@ function Navigation() {
   const navigate = useNavigate();
   const isLogged = !!localStorage.getItem("token");
 
+  // 🧠 Estrai nome dal token
+  const getUserName = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.name || "Utente";
+    } catch {
+      return "Utente";
+    }
+  };
+
+  const userName = getUserName();
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -45,22 +59,28 @@ function Navigation() {
           </Nav>
 
           <Nav className="d-flex align-items-center gap-3">
-  {!isLogged ? (
-    <>
-      <Nav.Link as={LinkContainer} to="/login">
-        <i className="fas fa-sign-in-alt me-1"></i> Login
-      </Nav.Link>
-      <Nav.Link as={LinkContainer} to="/register">
-        <i className="fas fa-user-plus me-1"></i> Register
-      </Nav.Link>
-    </>
-  ) : (
-    <Button variant="primary" size="sm" onClick={handleLogout}>
-      <i className="fas fa-sign-out-alt me-1"></i> Logout
-    </Button>
-  )}
-  <ThemeToggle />
-    </Nav>
+            {isLogged && (
+              <span className="fw-semibold text-primary">
+                👋 Ciao, {userName}
+              </span>
+            )}
+
+            {!isLogged ? (
+              <>
+                <Nav.Link as={LinkContainer} to="/login">
+                  <i className="fas fa-sign-in-alt me-1"></i> Login
+                </Nav.Link>
+                <Nav.Link as={LinkContainer} to="/register">
+                  <i className="fas fa-user-plus me-1"></i> Register
+                </Nav.Link>
+              </>
+            ) : (
+              <Button variant="primary" size="sm" onClick={handleLogout}>
+                <i className="fas fa-sign-out-alt me-1"></i> Logout
+              </Button>
+            )}
+            <ThemeToggle />
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
