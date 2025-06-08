@@ -94,8 +94,9 @@ const HomePage = () => {
                     <li>✅ Disponibile 12/7</li>
                     <li>✅ Anche nei festivi</li>
                   </ul>
-                  <button className="btn btn-primary mt-2">Come funziona</button>
-                </div>
+                  <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
+                   Come funziona
+                  </button>
               </div>
 
               <div className="col-md-5 mb-4">
@@ -109,7 +110,10 @@ const HomePage = () => {
                     <li>✅ Disponibile 12/7</li>
                     <li>✅ Anche nei festivi</li>
                   </ul>
-                  <button className="btn btn-primary mt-2">Come funziona</button>
+                  <button className="btn btn-primary mt-2" onClick={() => navigate("/DoctorCard")}>
+                   Come funziona
+                  </button>
+
                 </div>
               </div>
             </div>
