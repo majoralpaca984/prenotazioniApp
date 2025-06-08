@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Row, Col, ListGroup, Alert } from "react-bootstrap";
+import { Card, Button, Row, Col, ListGroup, Alert, Table, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
-// Utility per il ruolo (decodifica JWT)
 function getUserRole() {
   try {
     const token = localStorage.getItem("token");
@@ -20,6 +19,8 @@ function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedDayAppointments, setSelectedDayAppointments] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const role = getUserRole();
 
@@ -34,10 +35,11 @@ function Dashboard() {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      if (!response.ok) throw new Error("Errore durante il recupero appuntamenti");
+      if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
       const data = await response.json();
       setAppointments(data);
     } catch (err) {
+      console.error("Errore durante il recupero degli appuntamenti", err);
       setError("Errore durante il recupero degli appuntamenti.");
       setAppointments([]);
     } finally {
@@ -45,7 +47,6 @@ function Dashboard() {
     }
   };
 
-  // DELETE per users (e admin se vuoi)
   const deleteAppointment = async (id) => {
     if (!window.confirm("Sei sicuro di voler eliminare questo appuntamento?")) return;
     try {
@@ -56,18 +57,39 @@ function Dashboard() {
         },
       });
       if (!response.ok) throw new Error("Errore durante l'eliminazione");
-      // Ricarica la lista
       fetchAppointments();
     } catch (err) {
       alert("Errore durante l'eliminazione dell'appuntamento.");
     }
   };
 
-  // Mostra solo i futuri
   const upcomingAppointments = appointments
     .filter(a => new Date(`${a.date}T${a.time}`) >= new Date())
     .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))
     .slice(0, 5);
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const appointmentTomorrow = appointments.find(a => {
+    const apptDate = new Date(`${a.date}T${a.time}`);
+    return apptDate.toDateString() === tomorrow.toDateString();
+  });
+
+  const today = new Date();
+  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+    const day = new Date();
+    day.setDate(today.getDate() + i);
+    return day;
+  });
+
+  const handleDayClick = (day) => {
+    const matches = appointments.filter((a) => {
+      const d = new Date(`${a.date}T${a.time}`);
+      return d.toDateString() === day.toDateString();
+    });
+    setSelectedDayAppointments(matches);
+    setShowModal(true);
+  };
 
   return (
     <div>
@@ -85,6 +107,50 @@ function Dashboard() {
           </Button>
         </Col>
       </Row>
+
+      {appointmentTomorrow && (
+        <Alert variant="warning">
+          Hai un appuntamento domani alle {appointmentTomorrow.time} con {appointmentTomorrow.title} ⏰
+        </Alert>
+      )}
+
+      <Card className="mb-4 shadow">
+        <Card.Header>
+          <i className="fas fa-calendar-week me-2"></i>
+          Settimana Corrente
+        </Card.Header>
+        <Card.Body>
+          <Table responsive borderless className="text-center">
+            <thead>
+              <tr>
+                {daysOfWeek.map((day, idx) => (
+                  <th key={idx}>{day.toLocaleDateString("it-IT", { weekday: "short", day: "numeric" })}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {daysOfWeek.map((day, idx) => {
+                  const found = appointments.find(a => {
+                    const d = new Date(`${a.date}T${a.time}`);
+                    return d.toDateString() === day.toDateString();
+                  });
+                  return (
+                    <td
+                      key={idx}
+                      onClick={() => handleDayClick(day)}
+                      className={found ? "bg-light border rounded text-success cursor-pointer" : "text-muted cursor-pointer"}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {found ? `${found.time}` : "-"}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
 
       <Card className="shadow">
         <Card.Header>
@@ -104,18 +170,18 @@ function Dashboard() {
               <div>No upcoming appointments</div>
             </div>
           ) : (
-            <ListGroup>
+            <ListGroup className="d-grid gap-2">
               {upcomingAppointments.map((a) => (
                 <ListGroup.Item
                   key={a._id}
-                  className="d-flex justify-content-between align-items-center"
+                  className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2"
                   {...(role === "admin" ? { as: Link, to: `/appointment/edit/${a._id}`, action: true } : {})}
                 >
                   <div>
                     <div className="fw-bold">{a.title}</div>
                     <small className="text-muted">
                       <i className="fas fa-calendar me-1"></i>
-                      {new Date(a.date).toLocaleDateString()}{" "}
+                      {new Date(a.date).toLocaleDateString()} {" "}
                       <i className="fas fa-clock ms-2 me-1"></i>
                       {a.time}
                     </small>
@@ -136,6 +202,30 @@ function Dashboard() {
           )}
         </Card.Body>
       </Card>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Appuntamenti del giorno</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedDayAppointments.length === 0 ? (
+            <p>Nessun appuntamento per questo giorno.</p>
+          ) : (
+            <ListGroup>
+              {selectedDayAppointments.map((a) => (
+                <ListGroup.Item key={a._id}>
+                  <strong>{a.title}</strong> alle {a.time}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Chiudi
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
