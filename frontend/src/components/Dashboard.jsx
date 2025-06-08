@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Row, Col, ListGroup, Alert, Table, Modal } from "react-bootstrap";
+import { Card, Button, Row, Col, Alert, Modal, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -62,26 +62,17 @@ function Dashboard() {
     return isSameDay(apptDate, tomorrow);
   });
 
-  const today = new Date();
-  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
-    const day = new Date();
-    day.setDate(today.getDate() + i);
-    return day;
-  });
-
-  const handleDayClick = (day) => {
-    const matches = appointments.filter((a) => {
-      const d = new Date(`${a.date}T${a.time}`);
-      return isSameDay(d, day);
-    });
-    setSelectedDayAppointments(matches);
-    setShowModal(true);
-  };
-
   const futureAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) >= new Date());
   const pastAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) < new Date());
   const nextAppointment = futureAppointments.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))[0];
   const lastAppointment = pastAppointments.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`))[0];
+
+  const formatDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString("it-IT", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
 
   return (
     <div>
@@ -95,67 +86,41 @@ function Dashboard() {
         <Col md={4} className="text-md-end">
           <Button as={Link} to="/appointment/new" variant="primary">
             <i className="fas fa-plus me-2"></i>
-            New Appointment
+            Nuovo Appuntamento
           </Button>
         </Col>
       </Row>
 
       {appointmentTomorrow && (
         <Alert variant="warning">
-          Hai un appuntamento domani alle {appointmentTomorrow.time} con {appointmentTomorrow.title} ⏰
+          Hai un appuntamento domani alle {appointmentTomorrow.time} con <strong>{appointmentTomorrow.title}</strong> ⏰
         </Alert>
       )}
 
-      <Card className="mb-4 shadow">
-        <Card.Header>
-          <i className="fas fa-calendar-week me-2"></i>
-          Settimana Corrente
-        </Card.Header>
+      <Card className="summary-box p-4 mb-4 shadow-sm border-0">
         <Card.Body>
-          <Table responsive borderless className="text-center">
-            <thead>
-              <tr>
-                {daysOfWeek.map((day, idx) => (
-                  <th key={idx}>{day.toLocaleDateString("it-IT", { weekday: "short", day: "numeric" })}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {daysOfWeek.map((day, idx) => {
-                  const found = appointments.find(a => {
-                    const d = new Date(`${a.date}T${a.time}`);
-                    return isSameDay(d, day);
-                  });
-                  return (
-                    <td
-                      key={idx}
-                      onClick={() => handleDayClick(day)}
-                      className={found ? "bg-light border rounded text-success cursor-pointer" : "text-muted cursor-pointer"}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {found ? `${found.time}` : "-"}
-                    </td>
-                  );
-                })}
-              </tr>
-            </tbody>
-          </Table>
+          <h5 className="mb-4 text-primary-emphasis fw-bold">
+            📅 Riepilogo Appuntamenti
+          </h5>
+          <p className="mb-2">
+            <strong>Totale prenotazioni:</strong> {appointments.length}
+          </p>
+          <p className="mb-2">
+            <strong>Prossimo appuntamento:</strong>{" "}
+            {nextAppointment
+              ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}`
+              : "Nessuno"}
+          </p>
+          <p>
+            <strong>Ultimo appuntamento effettuato:</strong>{" "}
+            {lastAppointment
+              ? `${lastAppointment.title} il ${formatDate(lastAppointment.date)} alle ${lastAppointment.time}`
+              : "Nessuno"}
+          </p>
         </Card.Body>
       </Card>
 
-      <Card className="mb-4 shadow">
-        <Card.Header>
-          <i className="fas fa-chart-line me-2"></i>
-          Riepilogo Appuntamenti
-        </Card.Header>
-        <Card.Body>
-          <p><strong>Totale prenotazioni:</strong> {appointments.length}</p>
-          <p><strong>Prossimo appuntamento:</strong> {nextAppointment ? `${nextAppointment.title} il ${new Date(nextAppointment.date).toLocaleDateString()} alle ${nextAppointment.time}` : "Nessuno"}</p>
-          <p><strong>Ultimo appuntamento effettuato:</strong> {lastAppointment ? `${lastAppointment.title} il ${new Date(lastAppointment.date).toLocaleDateString()} alle ${lastAppointment.time}` : "Nessuno"}</p>
-        </Card.Body>
-      </Card>
-
+      {/* MODAL opzionale per future espansioni */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Appuntamenti del giorno</Modal.Title>
