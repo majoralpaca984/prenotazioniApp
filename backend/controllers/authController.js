@@ -14,6 +14,7 @@ export const googleLogin = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
+
     let user = await User.findOne({ email: payload.email });
     if (!user) {
       user = await User.create({
@@ -21,19 +22,20 @@ export const googleLogin = async (req, res) => {
         email: payload.email,
         password: "google-oauth",
         avatar: payload.picture,
-        role: "user", 
+        role: "user",
       });
     }
+
     const token = jwt.sign(
-  {
-    userId: user._id,
-    name: user.name, 
-    email: user.email,
-    role: user.role,
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: "7d" }
-);
+      {
+        userId: user._id,
+        name: user.name,             
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
     res.json({ token });
   } catch (err) {
@@ -46,30 +48,41 @@ export const googleLogin = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (!user) return res.status(401).json({ message: "Credenziali non valide" });
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ message: "Credenziali non valide" });
-  
+
   const token = jwt.sign(
-    { userId: user._id, role: user.role, email: user.email },
+    {
+      userId: user._id,
+      name: user.name,             
+      role: user.role,
+    },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
+
   res.json({ token });
 };
 
-// ---- REGISTER----
+// ---- REGISTER ----
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
+
   if (!email || !password || !name) {
     return res.status(400).json({ message: "Tutti i campi sono obbligatori" });
   }
+
   let user = await User.findOne({ email });
   if (user) {
-    return res.status(400).json({ message: "Email giÃ  registrata" });
+    return res.status(400).json({ message: "Email già registrata" });
   }
-  // HASH DELLA PASSWORD! 
+
   const hashedPassword = await bcrypt.hash(password, 10);
+
   user = await User.create({ name, email, password: hashedPassword });
+
   res.status(201).json({ message: "Registrazione ok!" });
 };
