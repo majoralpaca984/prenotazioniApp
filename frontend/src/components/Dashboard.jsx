@@ -15,6 +15,14 @@ function getUserRole() {
   }
 }
 
+function isSameDay(d1, d2) {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,32 +55,11 @@ function Dashboard() {
     }
   };
 
-  const deleteAppointment = async (id) => {
-    if (!window.confirm("Sei sicuro di voler eliminare questo appuntamento?")) return;
-    try {
-      const response = await fetch(`${API_URL}/appointments/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      if (!response.ok) throw new Error("Errore durante l'eliminazione");
-      fetchAppointments();
-    } catch (err) {
-      alert("Errore durante l'eliminazione dell'appuntamento.");
-    }
-  };
-
-  const upcomingAppointments = appointments
-    .filter(a => new Date(`${a.date}T${a.time}`) >= new Date())
-    .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))
-    .slice(0, 5);
-
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const appointmentTomorrow = appointments.find(a => {
     const apptDate = new Date(`${a.date}T${a.time}`);
-    return apptDate.toDateString() === tomorrow.toDateString();
+    return isSameDay(apptDate, tomorrow);
   });
 
   const today = new Date();
@@ -85,11 +72,16 @@ function Dashboard() {
   const handleDayClick = (day) => {
     const matches = appointments.filter((a) => {
       const d = new Date(`${a.date}T${a.time}`);
-      return d.toDateString() === day.toDateString();
+      return isSameDay(d, day);
     });
     setSelectedDayAppointments(matches);
     setShowModal(true);
   };
+
+  const futureAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) >= new Date());
+  const pastAppointments = appointments.filter(a => new Date(`${a.date}T${a.time}`) < new Date());
+  const nextAppointment = futureAppointments.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))[0];
+  const lastAppointment = pastAppointments.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`))[0];
 
   return (
     <div>
@@ -133,7 +125,7 @@ function Dashboard() {
                 {daysOfWeek.map((day, idx) => {
                   const found = appointments.find(a => {
                     const d = new Date(`${a.date}T${a.time}`);
-                    return d.toDateString() === day.toDateString();
+                    return isSameDay(d, day);
                   });
                   return (
                     <td
@@ -152,54 +144,15 @@ function Dashboard() {
         </Card.Body>
       </Card>
 
-      <Card className="shadow">
+      <Card className="mb-4 shadow">
         <Card.Header>
-          <i className="fas fa-calendar-alt me-2"></i>
-          Upcoming Appointments
+          <i className="fas fa-chart-line me-2"></i>
+          Riepilogo Appuntamenti
         </Card.Header>
         <Card.Body>
-          {loading ? (
-            <div className="text-center">
-              <span className="spinner-border text-primary"></span>
-            </div>
-          ) : error ? (
-            <Alert variant="danger">{error}</Alert>
-          ) : upcomingAppointments.length === 0 ? (
-            <div className="text-center text-muted py-3">
-              <i className="fas fa-calendar-times fa-2x mb-3"></i>
-              <div>No upcoming appointments</div>
-            </div>
-          ) : (
-            <ListGroup className="d-grid gap-2">
-              {upcomingAppointments.map((a) => (
-                <ListGroup.Item
-                  key={a._id}
-                  className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2"
-                  {...(role === "admin" ? { as: Link, to: `/appointment/edit/${a._id}`, action: true } : {})}
-                >
-                  <div>
-                    <div className="fw-bold">{a.title}</div>
-                    <small className="text-muted">
-                      <i className="fas fa-calendar me-1"></i>
-                      {new Date(a.date).toLocaleDateString()} {" "}
-                      <i className="fas fa-clock ms-2 me-1"></i>
-                      {a.time}
-                    </small>
-                  </div>
-                  <div className="d-flex gap-2 align-items-center">
-                    <span className={`badge bg-${a.status === "completed" ? "success" : a.status === "cancelled" ? "danger" : "primary"}`}>
-                      {a.status}
-                    </span>
-                    {role === "user" && (
-                      <Button variant="danger" size="sm" onClick={() => deleteAppointment(a._id)}>
-                        <i className="fas fa-trash"></i>
-                      </Button>
-                    )}
-                  </div>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
+          <p><strong>Totale prenotazioni:</strong> {appointments.length}</p>
+          <p><strong>Prossimo appuntamento:</strong> {nextAppointment ? `${nextAppointment.title} il ${new Date(nextAppointment.date).toLocaleDateString()} alle ${nextAppointment.time}` : "Nessuno"}</p>
+          <p><strong>Ultimo appuntamento effettuato:</strong> {lastAppointment ? `${lastAppointment.title} il ${new Date(lastAppointment.date).toLocaleDateString()} alle ${lastAppointment.time}` : "Nessuno"}</p>
         </Card.Body>
       </Card>
 
