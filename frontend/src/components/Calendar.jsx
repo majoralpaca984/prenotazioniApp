@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./Calendar.css";
+import "./theme.css";
 
 function Calendar({ year, month, appointments, isAdmin }) {
   const navigate = useNavigate();
