@@ -116,7 +116,7 @@ Appuntamenti-booking-app/
 
 **Nome:** Eleonora Troiani  
 **Email:** codwithele@gmail.com  
-**GitHub:** [@TUO-USERNAME](https://github.com/TUO-USERNAME)
+**GitHub:** [majoralpaca984](https://github.com/TUO-USERNAME)
 
 ---
 
