@@ -25,8 +25,9 @@ function App() {
           <Route path="/" element={<Homepage />} />
 
           {/* Rotte protette */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/appointment/new" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
           <Route path="/appointment/edit/:id" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
           <Route path="/search" element={<SearchResults />} />
