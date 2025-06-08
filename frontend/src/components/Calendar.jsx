@@ -48,25 +48,22 @@ function Calendar({ year, month, appointments, isAdmin }) {
           return (
             <div
               key={i}
-              className={`calendar-day rounded shadow-sm p-2 position-relative transition ${
-                isToday(day) ? "today" : ""
-              } ${appts.length ? "has-appointments" : ""}`}
+              className={`calendar-day ${isToday(day) ? "today" : ""} ${appts.length ? "has-appointments" : ""}`}
               onClick={() => appts.length && navigate(`/appointment/edit/${appts[0]._id}`)}
             >
-              <div className="day-number fw-bold">{day}</div>
-              <div className="appointments-indicator mt-2">
+              <div className="day-number">{day}</div>
+              <div className="appointments-indicator">
                 {appts.slice(0, 3).map((appt, idx) => (
                   <div
-                    className="badge bg-primary-subtle text-primary-emphasis mb-1 w-100 text-truncate appt-pill"
                     key={idx}
-                    title={`📅 ${new Date(appt.date).toLocaleDateString("it-IT")} ⏰ ${appt.time}`}
-                  >
-                    {isAdmin ? `👤 ${appt.title}` : appt.title || "(Senza titolo)"}
-                  </div>
+                    className="appointment-dot bg-primary"
+                    title={`📅 ${new Date(appt.date).toLocaleDateString("it-IT")} ⏰ ${appt.time} ${appt.title ? "🔔 " + appt.title : ""}`}
+                  ></div>
                 ))}
-
                 {appts.length > 3 && (
-                  <div className="text-muted small text-end">+{appts.length - 3} altro</div>
+                  <span className="more-appointments">
+                    +{appts.length - 3}
+                  </span>
                 )}
               </div>
             </div>
