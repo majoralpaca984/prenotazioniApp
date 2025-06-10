@@ -29,7 +29,7 @@
 /* Tema scuro */
 .dark {
   --bg-main: #0f172a;
-  --bg-container: #1e293b;
+  --bg-container: #273549;
   --bg-navbar: rgba(30, 41, 59, 0.95);
   --bg-highlight: #1a1a1a;
   --bg-carousel: #302848;
@@ -108,7 +108,7 @@ body {
 }
 
 .my-navbar .btn {
-  background-color: var(--color-accent) !important;
+  background-color: var(--color-accent-light) !important;
   border: none;
   color: white;
 }
@@ -141,6 +141,7 @@ body {
   border-radius: 15px;
   box-shadow: var(--box-shadow);
   transition: transform 0.3s ease;
+  color: var(--color-title);
 }
 
 .card:hover {
@@ -222,7 +223,7 @@ body {
 
 /* ======== Hero Homepage con sfondo ======== */
 .hero-section {
-  background-image: url("/src/assets/sfondo1.jpg");
+  background-image: url("/src/assets/sfondo3.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -418,7 +419,7 @@ body {
   left: 0;
   right: 0;
   height: 60px;
-  background-color: var(--bg-container);
+  background-color: var(--color-accent-light);
   border-top: 1px solid #ccc;
   display: flex;
   justify-content: space-around;
@@ -458,4 +459,44 @@ body {
 
 .timeline-item .text-muted {
   font-size: 0.85rem;
+}
+.card,
+.summary-card,
+.calendar-card {
+  color: var(--color-text);
+  background-color: var(--bg-container);
+}
+
+.card h5,
+.card .fw-bold {
+  color: var(--color-title);
+}
+
+.my-navbar .btn,
+.dashboard-footer a {
+  color: var(--color-button-text);
+}
+
+.dark {
+  --bg-container: #273549;
+}
+
+
+/* Fix dark mode contrast issues */
+
+.card,
+.summary-card,
+.calendar-card {
+  color: var(--color-text);
+  background-color: var(--bg-container);
+}
+
+.card h5,
+.card .fw-bold {
+  color: var(--color-title);
+}
+
+.my-navbar .btn,
+.dashboard-footer a {
+  color: var(--color-button-text);
 }

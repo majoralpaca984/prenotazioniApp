@@ -116,7 +116,7 @@ function Dashboard() {
                 <span>📋</span> <strong>Totali:</strong> {appointments.length}
               </p>
               <p>
-                <span>🕒</span> <strong>Prossimo:</strong>{" "}
+                <span>🕒</span> <strong>Promemoria:</strong>{" "}
                 {nextAppointment
                   ? `${nextAppointment.title} il ${formatDate(nextAppointment.date)} alle ${nextAppointment.time}`
                   : "Nessuno"}
