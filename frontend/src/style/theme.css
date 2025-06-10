@@ -27,31 +27,96 @@
 }
 
 /* Tema scuro */
+/* Aggiungi queste regole al tuo CSS principale per migliorare il tema scuro */
+
+/* ========== MIGLIORAMENTI TEMA SCURO ========== */
+
+/* Fix per il tema scuro - colori container più contrastati */
 .dark {
-  --bg-main: #0f172a;
-  --bg-container: #283b67;
-  --bg-navbar: rgba(30, 41, 59, 0.95);
-  --bg-highlight: #1a1a1a;
-  --bg-carousel: #302848;
-  --bg-calendar: #1e293b;
-  --bg-calendar-day: #1a1a2e;
+  --bg-container: #1e293b;  /* Più scuro per maggior contrasto */
+  --bg-calendar-day: #334155; /* Più chiaro per i giorni del calendario */
+  --bg-highlight: #475569;   /* Più visibile per gli highlight */
+}
 
-  --color-text: #f1f5f9;
-  --color-title: #c084fc;
-  --color-subtitle: #38bdf8;
-  --color-accent: #6366f1;
-  --color-accent-light: #818cf8;
-  --color-accent-dark: #4f46e5;
+/* Assicurarsi che tutti i testi siano leggibili nel tema scuro */
+.dark .card,
+.dark .summary-card,
+.dark .calendar-card,
+.dark .doctor-card {
+  background-color: var(--bg-container);
+  color: var(--color-text);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Bordo sottile per definire meglio le card */
+}
 
-  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+/* Migliorare i titoli nel tema scuro */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: var(--color-title);
+}
 
-  --dashboard-gradient: linear-gradient(135deg, #1a1a1a 0%, #1e293b 100%);
+/* Fix per i pulsanti nel tema scuro */
+.dark .btn-primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-button-text);
+}
 
-  --bg-today: #334155;
-  --bg-calendar-hover: #475569;
-  --bg-calendar-appointment: #1e293b;
-  --calendar-border-color: #818cf8;
-  --color-button-text: #ffffff;
+.dark .btn-primary:hover {
+  background-color: var(--color-accent-dark);
+  border-color: var(--color-accent-dark);
+}
+
+/* Migliorare la visibilità degli input nel tema scuro */
+.dark .form-control,
+.dark .form-select {
+  background-color: var(--bg-container);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text);
+}
+
+.dark .form-control:focus,
+.dark .form-select:focus {
+  background-color: var(--bg-container);
+  border-color: var(--color-accent-light);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+  color: var(--color-text);
+}
+
+/* Placeholder text nel tema scuro */
+.dark .form-control::placeholder {
+  color: rgba(241, 245, 249, 0.6);
+}
+
+/* Migliorare la navbar nel tema scuro */
+.dark .my-navbar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Footer nel tema scuro */
+.dark .dashboard-footer {
+  background-color: var(--bg-container);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .dashboard-footer a,
+.dark .dashboard-footer button {
+  color: var(--color-accent-light);
+}
+
+.dark .dashboard-footer a:hover,
+.dark .dashboard-footer button:hover {
+  color: var(--color-title);
+}
+
+/* Hero section nel tema scuro */
+.dark .hero-text-box {
+  background-color: rgba(30, 41, 59, 0.8);
+  color: var(--color-text);
+}
+
+/* Timeline nel tema scuro */
+.dark .timeline-item {
+  background: var(--bg-container);
+  border-left-color: var(--color-accent-light);
 }
 
 /* ========== LAYOUT PRINCIPALE ========== */
