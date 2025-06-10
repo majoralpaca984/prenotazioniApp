@@ -27,8 +27,6 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [selectedDayAppointments, setSelectedDayAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  
-  // 🚀 NUOVI STATI per ottimizzazioni
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
@@ -102,52 +100,17 @@ function Dashboard() {
     };
   }, [fetchAppointments, lastUpdate]);
 
-  // 📊 STATISTICHE CALCOLATE con useMemo e DEBUG
+  // 📊 STATISTICHE CALCOLATE con useMemo - METODO CORRETTO
   const stats = useMemo(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // 🐛 DEBUG: Log per capire il problema
-    console.log('🐛 DEBUG Stats Calculation:');
-    console.log('🐛 Now:', now);
-    console.log('🐛 Today:', today);
-    console.log('🐛 Tomorrow:', tomorrow);
-    console.log('🐛 Appointments raw:', appointments);
-
-    // Analizza ogni appuntamento
-    appointments.forEach((a, i) => {
-      const appointmentDateTime = new Date(a.date);
-      const appointmentWithTime = new Date(`${a.date}T${a.time}`);
-      
-      console.log(`🐛 Appointment ${i}:`, {
-        title: a.title,
-        dateRaw: a.date,
-        timeRaw: a.time,
-        dateOnly: appointmentDateTime,
-        dateWithTime: appointmentWithTime,
-        isFuture: appointmentWithTime >= now,
-        isToday: isSameDay(appointmentDateTime, today),
-        isTomorrow: isSameDay(appointmentDateTime, tomorrow)
-      });
-    });
-
-    // Prova diversi metodi di parsing
-    const future1 = appointments.filter((a) => new Date(`${a.date}T${a.time}`) >= now);
-    const future2 = appointments.filter((a) => new Date(a.date) >= today);
-    const todayAppts1 = appointments.filter((a) => isSameDay(new Date(`${a.date}T${a.time}`), today));
-    const todayAppts2 = appointments.filter((a) => isSameDay(new Date(a.date), today));
-
-    console.log('🐛 Future method 1 (with time):', future1.length);
-    console.log('🐛 Future method 2 (date only):', future2.length);
-    console.log('🐛 Today method 1 (with time):', todayAppts1.length);
-    console.log('🐛 Today method 2 (date only):', todayAppts2.length);
-
-    // Usa il metodo che sembra funzionare meglio
+    // ✅ METODO CORRETTO: Confronta solo date, non tempo
     const future = appointments.filter((a) => {
       const appDate = new Date(a.date);
-      return appDate >= today; // Confronta solo le date, non il tempo
+      return appDate >= today;
     });
 
     const past = appointments.filter((a) => {
@@ -165,7 +128,7 @@ function Dashboard() {
       return isSameDay(appDate, tomorrow);
     });
 
-    const result = {
+    return {
       total: appointments.length,
       future: future.length,
       today: todayAppts.length,
@@ -174,9 +137,6 @@ function Dashboard() {
       lastAppointment: past.sort((a, b) => new Date(b.date) - new Date(a.date))[0],
       futureList: future.sort((a, b) => new Date(a.date) - new Date(b.date))
     };
-
-    console.log('🐛 Final stats:', result);
-    return result;
   }, [appointments]);
 
   // 🔄 REFRESH MANUALE
@@ -245,21 +205,6 @@ function Dashboard() {
             ) : (
               <i className="fas fa-sync-alt"></i>
             )}
-          </Button>
-
-          {/* 🐛 PULSANTE DEBUG TEMPORANEO */}
-          <Button 
-            variant="outline-warning" 
-            size="sm"
-            onClick={() => {
-              console.log('🐛 MANUAL DEBUG:');
-              console.log('Appointments:', appointments);
-              console.log('Stats:', stats);
-              console.log('Current time:', new Date());
-            }}
-            className="me-2"
-          >
-            🐛 Debug
           </Button>
           
           <Button as={Link} to="/appointment/new" variant="primary">
