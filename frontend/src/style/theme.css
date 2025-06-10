@@ -615,3 +615,167 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.95rem;
   }
 }
+/* ========== FIX TEMA SCURO - Aggiungi al tuo theme.css ========== */
+
+/* Fix per le parti bianche nel tema scuro */
+.dark {
+  /* Assicurati che tutto il background sia scuro */
+  background-color: var(--bg-main) !important;
+}
+
+/* Fix per container e sezioni principali */
+.dark .container,
+.dark .container-fluid {
+  background-color: var(--bg-main) !important;
+  color: var(--color-text) !important;
+}
+
+/* Fix per Bootstrap containers */
+.dark .row,
+.dark .col,
+.dark [class*="col-"] {
+  color: var(--color-text);
+}
+
+/* Fix per le sezioni bianche della homepage */
+.dark .hero-section {
+  background-color: var(--bg-main) !important;
+}
+
+.dark .hero-overlay {
+  background-color: rgba(15, 23, 42, 0.8) !important; /* bg-main con trasparenza */
+}
+
+/* Fix per sezioni sotto l'hero */
+.dark section,
+.dark .section {
+  background-color: var(--bg-main) !important;
+  color: var(--color-text) !important;
+}
+
+/* Fix per tutti i div principali */
+.dark div:not(.card):not(.alert):not(.modal-content) {
+  color: var(--color-text);
+}
+
+/* Fix specifico per la parte "Ricevi conferma immediata via email" */
+.dark .bg-white,
+.dark .bg-light {
+  background-color: var(--bg-container) !important;
+  color: var(--color-text) !important;
+}
+
+/* Fix per text e paragrafi */
+.dark p,
+.dark span,
+.dark div,
+.dark li {
+  color: var(--color-text);
+}
+
+/* Fix per liste */
+.dark ul,
+.dark ol {
+  color: var(--color-text);
+}
+
+/* Fix per Bootstrap utility classes */
+.dark .text-dark {
+  color: var(--color-text) !important;
+}
+
+.dark .text-muted {
+  color: var(--color-text) !important;
+  opacity: 0.7;
+}
+
+/* Fix per sezioni con background specifici */
+.dark .bg-primary {
+  background-color: var(--color-accent) !important;
+  color: var(--color-button-text) !important;
+}
+
+.dark .bg-secondary {
+  background-color: var(--bg-highlight) !important;
+  color: var(--color-text) !important;
+}
+
+.dark .bg-info {
+  background-color: var(--color-accent-light) !important;
+  color: var(--color-button-text) !important;
+}
+
+/* Fix per il wrapper principale dell'app */
+.dark #root {
+  background-color: var(--bg-main) !important;
+  color: var(--color-text) !important;
+}
+
+.dark .App {
+  background-color: var(--bg-main) !important;
+  color: var(--color-text) !important;
+}
+
+/* Fix per homepage specifico */
+.dark .homepage-section {
+  background-color: var(--bg-main) !important;
+}
+
+/* Fix per le card di servizi */
+.dark .service-card {
+  background-color: var(--bg-container) !important;
+  color: var(--color-text) !important;
+}
+
+/* Fix per Bootstrap rows e columns */
+.dark .row {
+  color: var(--color-text);
+}
+
+/* Fix per il main content */
+.dark main {
+  background-color: var(--bg-main) !important;
+  color: var(--color-text) !important;
+}
+
+/* Override per qualsiasi background bianco */
+.dark * {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark *:not(.btn):not(.alert):not(.badge) {
+  background-color: transparent;
+}
+
+/* Fix per link */
+.dark a {
+  color: var(--color-accent-light);
+}
+
+.dark a:hover {
+  color: var(--color-title);
+}
+
+/* Fix per input e form nel tema scuro */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--bg-container) !important;
+  color: var(--color-text) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Fix per modali */
+.dark .modal-content {
+  background-color: var(--bg-container) !important;
+  color: var(--color-text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .modal-footer {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
