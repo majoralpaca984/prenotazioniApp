@@ -16,11 +16,17 @@ const ThemeToggle = () => {
     }
   }, [isDark]);
 
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
+
   return (
     <button
-      onClick={() => setIsDark(!isDark)}
-      className="btn btn-primary btn-sm theme-toggle-button">
-        
+      onClick={toggleTheme}
+      className="btn btn-primary btn-sm theme-toggle-btn"
+      type="button"
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+    >
       {isDark ? '🌞 Light' : '🌙 Dark'}
     </button>
   );

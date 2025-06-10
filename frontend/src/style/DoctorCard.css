@@ -6,16 +6,23 @@
   box-shadow: var(--box-shadow);
   color: var(--color-text);
   transition: transform 0.3s ease;
+  border: none;
 }
 
 .doctor-card:hover {
   transform: translateY(-2px);
 }
 
+/* Fix per il tema scuro */
+.dark .doctor-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Titoli e testi nella card */
 .doctor-card h3,
 .doctor-card h4,
 .doctor-card h5,
+.doctor-card h6,
 .doctor-card .fw-bold {
   color: var(--color-title);
 }
@@ -23,6 +30,10 @@
 .doctor-card p,
 .doctor-card .text-muted {
   color: var(--color-text);
+}
+
+.doctor-card .text-muted {
+  opacity: 0.7;
 }
 
 .availability-grid {
@@ -72,11 +83,13 @@
   border: none;
   width: 100%;
   font-weight: 500;
+  display: block;
 }
 
 .time-slot:hover {
   background-color: var(--color-accent-dark);
   transform: scale(1.02);
+  color: var(--color-button-text);
 }
 
 .time-slot:active {
@@ -94,6 +107,7 @@
 .time-slot.unavailable:hover {
   background-color: var(--bg-calendar-day);
   transform: none;
+  color: var(--color-text);
 }
 
 /* Slot selezionato */
@@ -101,6 +115,32 @@
   background-color: var(--color-accent);
   color: var(--color-button-text);
   border: 2px solid var(--color-accent-dark);
+}
+
+.time-slot.selected:hover {
+  background-color: var(--color-accent);
+  color: var(--color-button-text);
+}
+
+/* Fix per Bootstrap button classes nel tema scuro */
+.dark .time-slot {
+  background-color: var(--color-accent-light);
+  color: var(--color-button-text);
+}
+
+.dark .time-slot:hover {
+  background-color: var(--color-accent-dark);
+  color: var(--color-button-text);
+}
+
+.dark .time-slot.unavailable {
+  background-color: var(--bg-calendar-day);
+  color: var(--color-text);
+}
+
+.dark .time-slot.unavailable:hover {
+  background-color: var(--bg-calendar-day);
+  color: var(--color-text);
 }
 
 /* Responsive */

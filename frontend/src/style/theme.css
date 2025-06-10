@@ -26,97 +26,32 @@
   --color-button-text: #ffffff;
 }
 
-/* Tema scuro */
-/* Aggiungi queste regole al tuo CSS principale per migliorare il tema scuro */
-
-/* ========== MIGLIORAMENTI TEMA SCURO ========== */
-
-/* Fix per il tema scuro - colori container più contrastati */
+/* ========== TEMA SCURO ========== */
 .dark {
-  --bg-container: #1e293b;  /* Più scuro per maggior contrasto */
-  --bg-calendar-day: #334155; /* Più chiaro per i giorni del calendario */
-  --bg-highlight: #475569;   /* Più visibile per gli highlight */
-}
+  --bg-main: #0f172a;
+  --bg-container: #1e293b;
+  --bg-navbar: rgba(30, 41, 59, 0.95);
+  --bg-highlight: #334155;
+  --bg-carousel: #302848;
+  --bg-calendar: #1e293b;
+  --bg-calendar-day: #334155;
 
-/* Assicurarsi che tutti i testi siano leggibili nel tema scuro */
-.dark .card,
-.dark .summary-card,
-.dark .calendar-card,
-.dark .doctor-card {
-  background-color: var(--bg-container);
-  color: var(--color-text);
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Bordo sottile per definire meglio le card */
-}
+  --color-text: #f1f5f9;
+  --color-title: #c084fc;
+  --color-subtitle: #38bdf8;
+  --color-accent: #6366f1;
+  --color-accent-light: #818cf8;
+  --color-accent-dark: #4f46e5;
 
-/* Migliorare i titoli nel tema scuro */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: var(--color-title);
-}
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
-/* Fix per i pulsanti nel tema scuro */
-.dark .btn-primary {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-button-text);
-}
+  --dashboard-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 
-.dark .btn-primary:hover {
-  background-color: var(--color-accent-dark);
-  border-color: var(--color-accent-dark);
-}
-
-/* Migliorare la visibilità degli input nel tema scuro */
-.dark .form-control,
-.dark .form-select {
-  background-color: var(--bg-container);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--color-text);
-}
-
-.dark .form-control:focus,
-.dark .form-select:focus {
-  background-color: var(--bg-container);
-  border-color: var(--color-accent-light);
-  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
-  color: var(--color-text);
-}
-
-/* Placeholder text nel tema scuro */
-.dark .form-control::placeholder {
-  color: rgba(241, 245, 249, 0.6);
-}
-
-/* Migliorare la navbar nel tema scuro */
-.dark .my-navbar {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Footer nel tema scuro */
-.dark .dashboard-footer {
-  background-color: var(--bg-container);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark .dashboard-footer a,
-.dark .dashboard-footer button {
-  color: var(--color-accent-light);
-}
-
-.dark .dashboard-footer a:hover,
-.dark .dashboard-footer button:hover {
-  color: var(--color-title);
-}
-
-/* Hero section nel tema scuro */
-.dark .hero-text-box {
-  background-color: rgba(30, 41, 59, 0.8);
-  color: var(--color-text);
-}
-
-/* Timeline nel tema scuro */
-.dark .timeline-item {
-  background: var(--bg-container);
-  border-left-color: var(--color-accent-light);
+  --bg-today: #475569;
+  --bg-calendar-hover: #475569;
+  --bg-calendar-appointment: #334155;
+  --calendar-border-color: #818cf8;
+  --color-button-text: #ffffff;
 }
 
 /* ========== LAYOUT PRINCIPALE ========== */
@@ -127,9 +62,14 @@ body {
   background-color: var(--bg-main);
   min-height: 100vh;
   color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ========== Titoli ========== */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-title);
+}
+
 .main-title {
   color: var(--color-title);
   font-size: 2.5rem;
@@ -175,12 +115,17 @@ body {
 .my-navbar .btn {
   background-color: var(--color-accent-light) !important;
   border: none;
-  color: white;
+  color: var(--color-button-text) !important;
 }
 
 .navbar-brand img {
   object-fit: contain;
   box-shadow: none;
+}
+
+/* Fix navbar tema scuro */
+.dark .my-navbar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ========== Pulsanti ========== */
@@ -193,7 +138,7 @@ body {
 .btn-primary {
   background-color: var(--color-accent);
   border: none;
-  color: white;
+  color: var(--color-button-text);
 }
 
 .btn-primary:hover {
@@ -206,11 +151,22 @@ body {
   border-radius: 15px;
   box-shadow: var(--box-shadow);
   transition: transform 0.3s ease;
-  color: var(--color-title);
+  color: var(--color-text);
+  border: none;
 }
 
 .card:hover {
   transform: translateY(-2px);
+}
+
+.card h5,
+.card .fw-bold {
+  color: var(--color-title);
+}
+
+/* Fix card tema scuro */
+.dark .card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ========== Footer ========== */
@@ -218,6 +174,7 @@ body {
   color: var(--color-title);
   text-decoration: none;
 }
+
 .footer a:hover {
   text-decoration: underline;
 }
@@ -286,7 +243,7 @@ body {
   100% { opacity: 1; }
 }
 
-/* ======== Hero Homepage con sfondo ======== */
+/* ========== Hero Homepage ========== */
 .hero-section {
   background-image: url("/src/assets/sfondo 8.jpg");
   background-size: cover;
@@ -310,13 +267,16 @@ body {
   align-items: center;
   padding: 6rem 2rem;
 }
+
 .hero-section .lead {
   color: var(--color-text);
 }
+
 .dark .hero-section .lead {
-  color: #4338ca; 
+  color: #c084fc; 
   font-weight: bold;
 }
+
 .hero-text-box {
   background-color: rgba(255, 255, 255, 0.65);
   border-radius: 12px;
@@ -325,7 +285,12 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* ========== Pulsante di cambio tema ========== */
+.dark .hero-text-box {
+  background-color: rgba(30, 41, 59, 0.8);
+  color: var(--color-text);
+}
+
+/* ========== Pulsante Cambio Tema ========== */
 .theme-toggle-btn {
   font-size: 0.85rem;
   padding: 4px 10px;
@@ -374,6 +339,7 @@ body {
   padding: 6px 2px 8px 2px;
   transition: background 0.2s, border 0.2s, transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 1px 4px rgba(120, 85, 189, 0.05);
+  position: relative;
 }
 
 .calendar-day:hover {
@@ -385,6 +351,11 @@ body {
 .calendar-day.today {
   border: 2px solid var(--color-accent-light);
   background: var(--bg-today);
+}
+
+.calendar-day.selected {
+  border: 2px solid var(--color-accent);
+  background: var(--bg-highlight);
 }
 
 .calendar-day.has-appointments {
@@ -428,29 +399,41 @@ body {
   font-weight: 500;
 }
 
-/* ========== Responsive ========== */
-@media (max-width: 600px) {
-  .calendar-header,
-  .calendar-grid {
-    gap: 2px;
-  }
-
-  .calendar-container {
-    padding: 0.4rem;
-  }
-
-  .calendar-day {
-    min-height: 45px;
-    font-size: 0.95em;
-    padding: 2px 1px 3px 1px;
-  }
-
-  .day-header {
-    font-size: 0.95rem;
-  }
+.dark .more-appointments {
+  color: #94a3b8;
 }
 
-/* ========== dashboard ========== */
+/* Badges per calendario ottimizzato */
+.day-badges {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: flex;
+  gap: 2px;
+}
+
+.badge-today {
+  color: var(--color-accent);
+  font-size: 1.2rem;
+}
+
+.badge-count {
+  background: var(--color-accent);
+  color: white;
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 50%;
+  min-width: 14px;
+  text-align: center;
+}
+
+.calendar-stats {
+  padding: 10px;
+  border-top: 1px solid var(--bg-highlight);
+  padding-top: 1rem;
+}
+
+/* ========== Dashboard ========== */
 .summary-card, .calendar-card {
   background: var(--dashboard-gradient);
   border-radius: 16px;
@@ -477,7 +460,8 @@ body {
   border: 2px solid var(--calendar-border-color);
   background-color: var(--bg-calendar-appointment);
 }
-/* ========== Dashboard footer========== */
+
+/* ========== Dashboard Footer ========== */
 .dashboard-footer {
   position: fixed;
   bottom: 0;
@@ -495,11 +479,26 @@ body {
 
 .dashboard-footer a,
 .dashboard-footer button {
-  color: var(--color-accent);
+  color: var(--color-button-text);
   font-size: 1.3rem;
   text-decoration: none;
   background: none;
   border: none;
+}
+
+.dark .dashboard-footer {
+  background-color: var(--bg-container);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .dashboard-footer a,
+.dark .dashboard-footer button {
+  color: var(--color-accent-light);
+}
+
+.dark .dashboard-footer a:hover,
+.dark .dashboard-footer button:hover {
+  color: var(--color-title);
 }
 
 @media (min-width: 768px) {
@@ -524,44 +523,95 @@ body {
 
 .timeline-item .text-muted {
   font-size: 0.85rem;
-}
-.card,
-.summary-card,
-.calendar-card {
   color: var(--color-text);
+  opacity: 0.7;
+}
+
+.dark .timeline-item {
+  background: var(--bg-container);
+  border-left-color: var(--color-accent-light);
+}
+
+/* ========== Form Controls ========== */
+.form-control,
+.form-select {
   background-color: var(--bg-container);
-}
-
-.card h5,
-.card .fw-bold {
-  color: var(--color-title);
-}
-
-.my-navbar .btn,
-.dashboard-footer a {
-  color: var(--color-button-text);
-}
-
-.dark {
-  --bg-container: #273549;
-}
-
-
-/* Fix dark mode contrast issues */
-
-.card,
-.summary-card,
-.calendar-card {
+  border-color: rgba(70, 71, 229, 0.3);
   color: var(--color-text);
+}
+
+.form-control:focus,
+.form-select:focus {
   background-color: var(--bg-container);
+  border-color: var(--color-accent-light);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+  color: var(--color-text);
 }
 
-.card h5,
-.card .fw-bold {
-  color: var(--color-title);
+.form-control::placeholder {
+  color: rgba(31, 41, 55, 0.6);
 }
 
-.my-navbar .btn,
-.dashboard-footer a {
-  color: var(--color-button-text);
+.dark .form-control,
+.dark .form-select {
+  background-color: var(--bg-container);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text);
+}
+
+.dark .form-control:focus,
+.dark .form-select:focus {
+  background-color: var(--bg-container);
+  border-color: var(--color-accent-light);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+  color: var(--color-text);
+}
+
+.dark .form-control::placeholder {
+  color: rgba(241, 245, 249, 0.6);
+}
+
+/* ========== Text e Alert ========== */
+.text-muted {
+  color: var(--color-text) !important;
+  opacity: 0.7;
+}
+
+.alert {
+  background-color: var(--bg-highlight);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.dark .alert {
+  background-color: var(--bg-highlight);
+  border-color: var(--color-accent-light);
+  color: var(--color-text);
+}
+
+/* ========== Utility Classes ========== */
+.position-relative {
+  position: relative;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 600px) {
+  .calendar-header,
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-container {
+    padding: 0.4rem;
+  }
+
+  .calendar-day {
+    min-height: 45px;
+    font-size: 0.95em;
+    padding: 2px 1px 3px 1px;
+  }
+
+  .day-header {
+    font-size: 0.95rem;
+  }
 }
