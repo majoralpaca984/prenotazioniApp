@@ -36,7 +36,7 @@
 
 .time-slot {
   background-color: var(--color-accent-light);
-  color: #fff;
+  color: var(--color-button-text, #ffffff); 
   border-radius: 6px;
   padding: 5px 10px;
   margin-bottom: 4px;

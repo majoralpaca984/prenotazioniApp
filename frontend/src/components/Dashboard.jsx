@@ -131,45 +131,38 @@ function Dashboard() {
           </Card>
         </Col>
 
-        {/* CARD MINI CALENDARIO */}
+        {/* timeline app */}
         <Col md={6}>
-          <Card className="calendar-card p-4 h-100">
-            <Card.Body>
-              <h5 className="fw-bold text-accent mb-4">🗓️ Mese Corrente</h5>
-              <div className="d-flex flex-wrap gap-2">
-                {monthDays.map((day, idx) => {
-                  const match = appointments.find((a) =>
-                    isSameDay(new Date(`${a.date}T${a.time}`), day)
-                  );
-                  return (
-                    <div
-                      key={idx}
-                      className={`calendar-day-mini text-center p-2 rounded ${match ? "has-appointment" : ""}`}
-                      style={{
-                        width: "80px",
-                        background: "#f8f9fa",
-                        border: "1px solid #dee2e6",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleDayClick(day)}
-                    >
-                      <div className="fw-semibold">
-                        {day.toLocaleDateString("it-IT", { weekday: "short" })}
-                      </div>
-                      <div>
-                        {day.getDate()}/{day.getMonth() + 1}
-                      </div>
-                      <div className="small text-muted">
-                        {match?.time || <span style={{ opacity: 0.4 }}>Nessuno</span>}
-                      </div>
-                    </div>
-                  );
-                })}
+  <Card className="calendar-card p-4 h-100">
+    <Card.Body>
+      <h5 className="fw-bold text-accent mb-4">📅 Prossimi Appuntamenti</h5>
+      {future.length === 0 ? (
+        <p>Nessun appuntamento futuro.</p>
+      ) : (
+        <div className="timeline-list">
+          {future
+            .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))
+            .map((a) => (
+              <div key={a._id} className="timeline-item mb-3">
+                <div className="small fw-bold text-muted">
+                  {new Date(a.date).toLocaleDateString("it-IT", {
+                    weekday: "long",
+                    day: "2-digit",
+                    month: "long",
+                  })}{" "}
+                  alle {a.time}
+                </div>
+                <div>
+                  <strong>{a.title}</strong> — {a.doctor?.name || "Medico"}
+                </div>
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            ))}
+        </div>
+      )}
+    </Card.Body>
+  </Card>
+</Col>
+</Row>
 
       {/* MODAL GIORNO SELEZIONATO */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>

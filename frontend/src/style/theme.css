@@ -18,6 +18,12 @@
   --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
   --dashboard-gradient: linear-gradient(135deg, #ede7fa 0%, #f0f4f8 100%);
+
+  --bg-today: #e3e9f8;
+  --bg-calendar-hover: #adc2d8;
+  --bg-calendar-appointment: #e6f0ff;
+  --calendar-border-color: #0d6efd;
+  --color-button-text: #ffffff;
 }
 
 /* Tema scuro */
@@ -40,6 +46,12 @@
   --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
   --dashboard-gradient: linear-gradient(135deg, #1a1a1a 0%, #1e293b 100%);
+
+  --bg-today: #334155;
+  --bg-calendar-hover: #475569;
+  --bg-calendar-appointment: #1e293b;
+  --calendar-border-color: #818cf8;
+  --color-button-text: #ffffff;
 }
 
 /* ========== LAYOUT PRINCIPALE ========== */
@@ -306,7 +318,7 @@ body {
 
 .calendar-day.today {
   border: 2px solid var(--color-accent-light);
-  background: #e3e9f8;
+  background: var(--bg-today);
 }
 
 .calendar-day.has-appointments {
@@ -334,7 +346,7 @@ body {
   width: 15px;
   height: 15px;
   border-radius: 100%;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-button-text);
   margin-bottom: 2px;
   box-shadow: 0 1px 2px rgba(120, 85, 189, 0.12);
 }
@@ -392,12 +404,12 @@ body {
 }
 
 .calendar-day-mini:hover {
-  background-color: #adc2d8;
+  background-color: var(--bg-calendar-hover);
 }
 
 .calendar-day-mini.has-appointment {
-  border: 2px solid var(--accent-color, #0d6efd);
-  background-color: #e6f0ff;
+  border: 2px solid var(--calendar-border-color);
+  background-color: var(--bg-calendar-appointment);
 }
 /* ========== Dashboard footer========== */
 .dashboard-footer {
@@ -428,4 +440,22 @@ body {
   .dashboard-footer {
     display: none;
   }
+}
+
+/* ========== Timeline ========== */
+.timeline-item {
+  padding: 0.75rem;
+  background: var(--bg-container);
+  border-radius: 10px;
+  border-left: 4px solid var(--color-accent);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.timeline-item:hover {
+  transform: translateX(4px);
+}
+
+.timeline-item .text-muted {
+  font-size: 0.85rem;
 }
