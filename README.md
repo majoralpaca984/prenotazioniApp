@@ -240,9 +240,6 @@ npm run test:e2e
 ### 📱 Mobile View
 ![Mobile View](./screenshots/mobile.png)
 
-### 🌗 Tema Scuro
-![Tema Scuro](./screenshots/dark.png)
-
 ---
 
 ## 🛣️ Roadmap
