@@ -251,17 +251,12 @@ npm run test:e2e
 - [x] ✅ Sistema di prenotazione appuntamenti
 - [x] ✅ Dashboard per pazienti e medici
 - [x] ✅ Calendario interattivo
-- [x] ✅ Tema chiaro/scuro
+- [x]  Tema chiaro/scuro
 - [x] ✅ Design responsive
-- [x] ✅ Email di conferma
-- [ ] 🔄 Notifiche push
-- [ ] 📱 App mobile (React Native)
-- [ ] 💳 Sistema di pagamenti
-- [ ] 📊 Analytics avanzati
-- [ ] 🌍 Supporto multilingua
-- [ ] 📅 Integrazione Google Calendar
-- [ ] 💬 Sistema di messaggistica
-- [ ] ⭐ Sistema di recensioni
+- [x] 📧 Email di conferma
+- [x] 🔄 Notifiche push
+- [x] 📱 App mobile (React Native)
+
 
 ---
 
