@@ -238,21 +238,21 @@ npm run test:e2e
 
 
 ### 📱 Mobile View
-![Mobile View](./screenshots/mobile.jpeg)
+![Mobile View](./screenshots/mobile.png)
 
 ### 🌗 Tema Scuro
-![Tema Scuro](./screenshots/dark.jpeg)
+![Tema Scuro](./screenshots/dark.png)
 
 ---
 
 ## 🛣️ Roadmap
 
-- [x] ✅ Autenticazione utenti (classica + Google OAuth)
-- [x] ✅ Sistema di prenotazione appuntamenti
+- [x] 📲 Autenticazione utenti (classica + Google OAuth)
+- [x] 📖 Sistema di prenotazione appuntamenti
 - [x] ✅ Dashboard per pazienti e medici
-- [x] ✅ Calendario interattivo
-- [x]  Tema chiaro/scuro
-- [x] ✅ Design responsive
+- [x] 📆 Calendario interattivo
+- [x] 🌗 Tema chiaro/scuro
+- [x] 📱 Design responsive
 - [x] 📧 Email di conferma
 - [x] 🔄 Notifiche push
 - [x] 📱 App mobile (React Native)
