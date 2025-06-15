@@ -25,7 +25,12 @@ const PORT = process.env.PORT || 4000;
 // CORS: consenti chiamate da Vercel e localhost per sviluppo
 app.use(
   cors({
-    origin: ["https://prenotazioni-app.vercel.app", "http://localhost:5173"],
+    origin: [
+  "https://prenotazioni-app.vercel.app",      
+  "https://prenotazioni-online.vercel.app",    
+  "http://localhost:5173"                      
+],
+
     credentials: true,
   })
 );
