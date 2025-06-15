@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Card, Form, Button, Alert, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import GoogleRegisterButton from "./GoogleRegisterButton";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -51,89 +51,116 @@ function Register() {
     }
   };
 
-  return (
-    <Row className="justify-content-center align-items-center" style={{ minHeight: "90vh" }}>
-      <Col md={8} lg={5}>
-        <Card className="shadow">
-          <Card.Body className="p-4">
-            <h3 className="mb-4 text-center">
-              <i className="fas fa-user-plus me-2"></i>Register
-            </h3>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
+  const handleGoogleError = (err) => {
+    setError(err.message || "Errore durante la registrazione con Google");
+  };
 
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="card">
+          <div className="card-body">
+            <h3 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
+              <i className="fas fa-user-plus mr-2"></i>Register
+            </h3>
+            
+            {error && (
+              <div className="alert alert-danger mb-4">
+                <i className="fas fa-exclamation-triangle mr-2"></i>
+                {error}
+              </div>
+            )}
+            
+            {success && (
+              <div className="alert alert-success mb-4">
+                <i className="fas fa-check-circle mr-2"></i>
+                {success}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <GoogleRegisterButton onError={handleGoogleError} />
+            </div>
+
+            <div className="text-center mb-4">
+              <small className="text-gray-500 dark:text-gray-400">oppure registrati con email</small>
+              <hr className="my-2 border-gray-200 dark:border-gray-600" />
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="form-label">Name</label>
+                <input
                   type="text"
                   name="name"
                   placeholder="Enter your name"
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  className="form-control"
                 />
-              </Form.Group>
+              </div>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
+              <div>
+                <label className="form-label">Email</label>
+                <input
                   type="email"
                   name="email"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  className="form-control"
                 />
-              </Form.Group>
+              </div>
 
-              <Form.Group className="mb-4">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
+              <div>
+                <label className="form-label">Password</label>
+                <input
                   type="password"
                   name="password"
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  className="form-control"
                 />
-              </Form.Group>
+              </div>
 
-              <Button
-                variant="primary"
+              <button
                 type="submit"
                 disabled={loading}
-                className="w-100"
+                className="w-full btn btn-primary"
               >
                 {loading ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                     Registering...
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-user-plus me-2"></i>
+                    <i className="fas fa-user-plus mr-2"></i>
                     Register
                   </>
                 )}
-              </Button>
-            </Form>
-            <div className="mt-3 text-center">
-              <small>
+              </button>
+            </form>
+            
+            <div className="mt-4 text-center">
+              <small className="text-gray-600 dark:text-gray-400">
                 Already have an account?{" "}
-                <span
-                  role="button"
-                  style={{ color: "#007bff", cursor: "pointer" }}
+                <button
                   onClick={() => navigate("/login")}
+                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
                 >
                   Login
-                </span>
+                </button>
               </small>
             </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -46,7 +46,7 @@ function GoogleLoginButton() {
   };
 
   return (
-    <div id="google-login" style={{ marginBottom: "1rem", textAlign: "center" }} />
+    <div id="google-login" className="mb-4 text-center" />
   );
 }
 

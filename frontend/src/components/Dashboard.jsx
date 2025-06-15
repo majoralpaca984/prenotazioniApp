@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Card, Button, Row, Col, Alert, Modal, ListGroup, Spinner, Badge } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -19,6 +18,33 @@ function generateMonthDays() {
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   return Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
+}
+
+// Modal Component
+function Modal({ isOpen, onClose, title, children }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+        </div>
+        <div className="modal-body">{children}</div>
+        <div className="modal-footer">
+          <button onClick={onClose} className="btn btn-secondary">
+            Chiudi
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Dashboard() {
@@ -172,245 +198,243 @@ function Dashboard() {
   // 🏃‍♂️ LOADING INIZIALE
   if (loading && appointments.length === 0) {
     return (
-      <div className="text-center py-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-2">Caricamento dashboard...</p>
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Caricamento dashboard...</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <Row className="mb-4 align-items-center">
-        <Col md={6}>
-          <h2 className="main-title">
-            <i className="fas fa-tachometer-alt me-2"></i> Dashboard
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+            <i className="fas fa-tachometer-alt text-primary-500"></i> Dashboard
           </h2>
-          <small className="text-muted">
+          <small className="text-gray-500 dark:text-gray-400">
             Ultimo aggiornamento: {new Date(lastUpdate).toLocaleTimeString("it-IT")}
           </small>
-        </Col>
-        <Col md={6} className="text-end">
+        </div>
+        <div className="flex items-center gap-3">
           {/* 🔄 PULSANTE REFRESH */}
-          <Button 
-            variant="outline-primary" 
-            size="sm"
+          <button 
             onClick={handleRefresh}
             disabled={refreshing}
-            className="me-2"
+            className="btn btn-outline-primary"
             title="Aggiorna dati"
           >
             {refreshing ? (
-              <Spinner animation="border" size="sm" />
+              <div className="w-4 h-4 border-2 border-primary-300 border-t-primary-500 rounded-full animate-spin"></div>
             ) : (
               <i className="fas fa-sync-alt"></i>
             )}
-          </Button>
+          </button>
           
-          <Button as={Link} to="/appointment/new" variant="primary">
-            <i className="fas fa-plus me-2"></i> Nuovo Appuntamento
-          </Button>
-        </Col>
-      </Row>
+          <Link to="/appointment/new" className="btn btn-primary">
+            <i className="fas fa-plus"></i>
+            <span>Nuovo Appuntamento</span>
+          </Link>
+        </div>
+      </div>
 
       {/* 🚨 ERRORI */}
       {error && (
-        <Alert variant="danger" dismissible onClose={() => setError("")}>
-          <i className="fas fa-exclamation-triangle me-2"></i>
+        <div className="alert alert-danger">
+          <i className="fas fa-exclamation-triangle mr-2"></i>
           {error}
-        </Alert>
+          <button 
+            onClick={() => setError("")}
+            className="ml-auto text-danger-600 hover:text-danger-700"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+        </div>
       )}
 
       {/* ⏰ APPUNTAMENTO DOMANI */}
       {stats.appointmentTomorrow && (
-        <Alert variant="warning" className="d-flex align-items-center justify-content-between">
-          <div>
-            <i className="fas fa-bell me-2"></i>
-            Hai un appuntamento <strong>domani</strong> alle {stats.appointmentTomorrow.time} -{" "}
-            <strong>{stats.appointmentTomorrow.title}</strong>
+        <div className="alert alert-warning flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <i className="fas fa-bell"></i>
+            <span>
+              Hai un appuntamento <strong>domani</strong> alle {stats.appointmentTomorrow.time} -{" "}
+              <strong>{stats.appointmentTomorrow.title}</strong>
+            </span>
           </div>
-          <Button
-            variant="outline-warning"
-            size="sm"
+          <button
             onClick={() => navigate(`/appointment/edit/${stats.appointmentTomorrow._id}`)}
+            className="btn btn-outline-primary btn-sm"
           >
             Modifica
-          </Button>
-        </Alert>
+          </button>
+        </div>
       )}
 
-      <Row className="gy-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* 📊 CARD RIEPILOGO MIGLIORATA */}
-        <Col md={6}>
-          <Card className="summary-card p-4 h-100">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="fw-bold text-accent mb-0">📊 Riepilogo</h5>
-                {refreshing && <Spinner animation="border" size="sm" />}
+        <div className="card h-full">
+          <div className="card-body">
+            <div className="flex justify-between items-center mb-4">
+              <h5 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                📊 Riepilogo
+              </h5>
+              {refreshing && <div className="w-4 h-4 border-2 border-primary-300 border-t-primary-500 rounded-full animate-spin"></div>}
+            </div>
+            
+            {/* 📈 STATISTICHE VELOCI */}
+            <div className="grid grid-cols-3 gap-4 text-center mb-4">
+              <div>
+                <div className="text-2xl font-bold text-primary-500 mb-1">{stats.total}</div>
+                <small className="text-gray-600 dark:text-gray-400">Totali</small>
               </div>
-              
-              {/* 📈 STATISTICHE VELOCI */}
-              <Row className="text-center mb-3">
-                <Col xs={4}>
-                  <div className="h3 text-primary mb-0">{stats.total}</div>
-                  <small className="text-muted">Totali</small>
-                </Col>
-                <Col xs={4}>
-                  <div className="h3 text-success mb-0">{stats.future}</div>
-                  <small className="text-muted">Futuri</small>
-                </Col>
-                <Col xs={4}>
-                  <div className="h3 text-info mb-0">{stats.today}</div>
-                  <small className="text-muted">Oggi</small>
-                </Col>
-              </Row>
+              <div>
+                <div className="text-2xl font-bold text-success-500 mb-1">{stats.future}</div>
+                <small className="text-gray-600 dark:text-gray-400">Futuri</small>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-500 mb-1">{stats.today}</div>
+                <small className="text-gray-600 dark:text-gray-400">Oggi</small>
+              </div>
+            </div>
 
-              {/* 🕒 PROSSIMO APPUNTAMENTO */}
-              {stats.nextAppointment && (
-                <div className="border-top pt-3">
-                  <p className="mb-1">
-                    <i className="fas fa-clock text-primary me-1"></i>
-                    <strong>Prossimo:</strong>
-                  </p>
-                  <div className="ms-3">
-                    <div className="fw-bold">{stats.nextAppointment.title}</div>
-                    <small className="text-muted">
-                      {formatDate(stats.nextAppointment.date)} alle {stats.nextAppointment.time}
-                    </small>
-                  </div>
+            {/* 🕒 PROSSIMO APPUNTAMENTO */}
+            {stats.nextAppointment && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                  <i className="fas fa-clock text-primary-500"></i>
+                  Prossimo:
+                </p>
+                <div className="ml-6">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">{stats.nextAppointment.title}</div>
+                  <small className="text-gray-600 dark:text-gray-400">
+                    {formatDate(stats.nextAppointment.date)} alle {stats.nextAppointment.time}
+                  </small>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* ✅ ULTIMO APPUNTAMENTO */}
-              {stats.lastAppointment && (
-                <div className="border-top pt-3 mt-2">
-                  <p className="mb-1">
-                    <i className="fas fa-check-circle text-success me-1"></i>
-                    <strong>Ultimo:</strong>
-                  </p>
-                  <div className="ms-3">
-                    <div className="fw-bold">{stats.lastAppointment.title}</div>
-                    <small className="text-muted">
-                      {formatDate(stats.lastAppointment.date)}
-                    </small>
-                  </div>
+            {/* ✅ ULTIMO APPUNTAMENTO */}
+            {stats.lastAppointment && (
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                  <i className="fas fa-check-circle text-success-500"></i>
+                  Ultimo:
+                </p>
+                <div className="ml-6">
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">{stats.lastAppointment.title}</div>
+                  <small className="text-gray-600 dark:text-gray-400">
+                    {formatDate(stats.lastAppointment.date)}
+                  </small>
                 </div>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* 📅 TIMELINE PROSSIMI APPUNTAMENTI MIGLIORATA */}
-        <Col md={6}>
-          <Card className="calendar-card p-4 h-100">
-            <Card.Body>
-              <h5 className="fw-bold text-accent mb-4">📅 Prossimi Appuntamenti</h5>
-              {stats.futureList.length === 0 ? (
-                <div className="text-center py-4">
-                  <i className="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
-                  <p className="text-muted">Nessun appuntamento futuro</p>
-                  <Button as={Link} to="/appointment/new" variant="primary" size="sm">
-                    Prenota ora
-                  </Button>
-                </div>
-              ) : (
-                <div className="timeline-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                  {stats.futureList.slice(0, 5).map((appointment) => (
-                    <div 
-                      key={appointment._id} 
-                      className="timeline-item mb-3 cursor-pointer"
-                      onClick={() => navigate(`/appointment/edit/${appointment._id}`)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div className="flex-grow-1">
-                          <div className="small fw-bold text-muted mb-1">
-                            {formatDateTime(appointment.date)} alle {appointment.time}
-                          </div>
-                          <div className="fw-bold">{appointment.title}</div>
-                          {appointment.description && (
-                            <small className="text-muted">{appointment.description}</small>
-                          )}
+        <div className="card h-full">
+          <div className="card-body">
+            <h5 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+              📅 Prossimi Appuntamenti
+            </h5>
+            {stats.futureList.length === 0 ? (
+              <div className="text-center py-8">
+                <i className="fas fa-calendar-plus text-4xl text-gray-400 mb-4"></i>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">Nessun appuntamento futuro</p>
+                <Link to="/appointment/new" className="btn btn-primary btn-sm">
+                  Prenota ora
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-80 overflow-y-auto">
+                {stats.futureList.slice(0, 5).map((appointment) => (
+                  <div 
+                    key={appointment._id} 
+                    className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 cursor-pointer transition-colors"
+                    onClick={() => navigate(`/appointment/edit/${appointment._id}`)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-grow">
+                        <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                          {formatDateTime(appointment.date)} alle {appointment.time}
                         </div>
-                        <Badge bg="primary" className="ms-2">
-                          {appointment.status || 'scheduled'}
-                        </Badge>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100">{appointment.title}</div>
+                        {appointment.description && (
+                          <small className="text-gray-500 dark:text-gray-400">{appointment.description}</small>
+                        )}
                       </div>
+                      <span className="badge badge-primary ml-2">
+                        {appointment.status || 'scheduled'}
+                      </span>
                     </div>
-                  ))}
-                  
-                  {/* 👀 MOSTRA PIÙ */}
-                  {stats.futureList.length > 5 && (
-                    <div className="text-center mt-3">
-                      <Button variant="outline-primary" size="sm" as={Link} to="/calendar">
-                        Vedi tutti ({stats.futureList.length})
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                  </div>
+                ))}
+                
+                {/* 👀 MOSTRA PIÙ */}
+                {stats.futureList.length > 5 && (
+                  <div className="text-center mt-4">
+                    <Link to="/calendar" className="btn btn-outline-primary btn-sm">
+                      Vedi tutti ({stats.futureList.length})
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* MODAL GIORNO SELEZIONATO */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Appuntamenti del giorno</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedDayAppointments.length === 0 ? (
-            <p>Nessun appuntamento per questo giorno.</p>
-          ) : (
-            <ListGroup>
-              {selectedDayAppointments.map((a) => (
-                <ListGroup.Item key={a._id} className="d-flex justify-content-between">
-                  <div>
-                    <strong>{a.title}</strong>
-                    <div className="small text-muted">{a.time}</div>
-                  </div>
-                  <Button 
-                    variant="outline-primary" 
-                    size="sm"
-                    onClick={() => {
-                      navigate(`/appointment/edit/${a._id}`);
-                      setShowModal(false);
-                    }}
-                  >
-                    Modifica
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Chiudi
-          </Button>
-        </Modal.Footer>
+      <Modal 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="Appuntamenti del giorno"
+      >
+        {selectedDayAppointments.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-400">Nessun appuntamento per questo giorno.</p>
+        ) : (
+          <div className="space-y-3">
+            {selectedDayAppointments.map((a) => (
+              <div key={a._id} className="flex justify-between items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">{a.title}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{a.time}</div>
+                </div>
+                <button 
+                  onClick={() => {
+                    navigate(`/appointment/edit/${a._id}`);
+                    setShowModal(false);
+                  }}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  Modifica
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </Modal>
 
       {/* FOOTER FISSO MIGLIORATO */}
       <footer className="dashboard-footer">
-        <Link to="/">
+        <Link to="/" title="Home">
           <i className="fas fa-home"></i>
         </Link>
-        <Link to="/calendar">
+        <Link to="/calendar" title="Calendario">
           <i className="fas fa-calendar-alt"></i>
         </Link>
         <button 
           onClick={handleRefresh}
-          style={{ background: "none", border: "none" }}
           disabled={refreshing}
           title="Aggiorna"
         >
-          <i className={`fas fa-sync-alt ${refreshing ? 'fa-spin' : ''}`}></i>
+          <i className={`fas fa-sync-alt ${refreshing ? 'animate-spin' : ''}`}></i>
         </button>
-        <button disabled style={{ background: "none", border: "none", opacity: 0.4 }}>
+        {/* Da button disabilitato a Link al profilo */}
+        <Link to="/profile" title="Il Mio Profilo">
           <i className="fas fa-cog"></i>
-        </button>
+        </Link>
       </footer>
     </div>
   );

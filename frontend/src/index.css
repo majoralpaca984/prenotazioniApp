@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+@layer base {
+  body {
+    @apply font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+  
+  #root {
+    @apply min-h-screen;
+  }
+}
+
+@layer components {
+  /* Loading Screen */
+  .loading-screen {
+    @apply fixed inset-0 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center z-50;
+  }
+  
+  .loading-content {
+    @apply text-center text-white;
+  }
+  
+  .loading-spinner {
+    @apply w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4;
+  }
+
+  /* Navigation Styles */
+  .my-navbar {
+    @apply bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700;
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-500 hover:bg-primary-600 text-white shadow-md hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-500 hover:bg-secondary-600 text-white;
+  }
+  
+  .btn-success {
+    @apply bg-success-500 hover:bg-success-600 text-white;
+  }
+  
+  .btn-danger {
+    @apply bg-danger-500 hover:bg-danger-600 text-white;
+  }
+  
+  .btn-outline-primary {
+    @apply border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white;
+  }
+  
+  .btn-outline-secondary {
+    @apply border border-secondary-500 text-secondary-500 hover:bg-secondary-500 hover:text-white;
+  }
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700;
+  }
+  
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-xl;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+
+  /* Form Styles */
+  .form-control {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+  }
+  
+  .form-select {
+    @apply form-control appearance-none bg-no-repeat bg-right;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+  }
+
+  /* Alert Styles */
+  .alert {
+    @apply p-4 rounded-lg border;
+  }
+  
+  .alert-success {
+    @apply bg-success-50 border-success-200 text-success-800 dark:bg-success-900/20 dark:border-success-700 dark:text-success-200;
+  }
+  
+  .alert-danger {
+    @apply bg-danger-50 border-danger-200 text-danger-800 dark:bg-danger-900/20 dark:border-danger-700 dark:text-danger-200;
+  }
+  
+  .alert-warning {
+    @apply bg-warning-50 border-warning-200 text-warning-800 dark:bg-warning-900/20 dark:border-warning-700 dark:text-warning-200;
+  }
+  
+  .alert-info {
+    @apply bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-200;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply px-2 py-1 text-xs font-medium rounded-full;
+  }
+  
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-200;
+  }
+  
+  .badge-success {
+    @apply bg-success-100 text-success-800 dark:bg-success-900/30 dark:text-success-200;
+  }
+  
+  .badge-secondary {
+    @apply bg-secondary-100 text-secondary-800 dark:bg-secondary-900/30 dark:text-secondary-200;
+  }
+
+  /* Calendar Styles */
+  .calendar-container {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden;
+  }
+  
+  .calendar-header {
+    @apply grid grid-cols-7 bg-primary-500 text-white;
+  }
+  
+  .day-header {
+    @apply p-3 text-center font-semibold text-sm;
+  }
+  
+  .calendar-grid {
+    @apply grid grid-cols-7;
+  }
+  
+  .calendar-day {
+    @apply min-h-[80px] p-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer relative;
+  }
+  
+  .calendar-empty {
+    @apply bg-gray-50 dark:bg-gray-800 cursor-default hover:bg-gray-50 dark:hover:bg-gray-800;
+  }
+  
+  .calendar-day.today {
+    @apply bg-primary-50 dark:bg-primary-900/30 border-primary-300 dark:border-primary-600;
+  }
+  
+  .calendar-day.selected {
+    @apply bg-primary-100 dark:bg-primary-800/50;
+  }
+  
+  .calendar-day.has-appointments {
+    @apply bg-blue-50 dark:bg-blue-900/20;
+  }
+  
+  .day-number {
+    @apply font-semibold text-gray-900 dark:text-gray-100;
+  }
+  
+  .appointments-indicator {
+    @apply flex gap-1 mt-1 flex-wrap;
+  }
+  
+  .appointment-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+  
+  .more-appointments {
+    @apply text-xs text-gray-600 dark:text-gray-400 font-medium;
+  }
+  
+  .day-badges {
+    @apply absolute top-1 right-1 flex gap-1;
+  }
+  
+  .badge-today {
+    @apply text-primary-500 font-bold;
+  }
+  
+  .badge-count {
+    @apply bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
+  }
+  
+  .modal-content {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto;
+  }
+  
+  .modal-header {
+    @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between;
+  }
+  
+  .modal-body {
+    @apply p-6;
+  }
+  
+  .modal-footer {
+    @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3 justify-end;
+  }
+
+  /* Dashboard Footer */
+  .dashboard-footer {
+    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4 flex justify-around items-center shadow-lg;
+  }
+  
+  .dashboard-footer a,
+  .dashboard-footer button {
+    @apply text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors text-xl;
+  }
+
+  /* Spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-gray-200 border-t-primary-500;
+  }
+
+  /* Homepage Styles */
+  .hero-section {
+    @apply bg-gradient-to-br from-primary-500 via-purple-600 to-pink-500 text-white py-20;
+  }
+  
+  .feature-card {
+    @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+  }
+  
+  .feature-icon {
+    @apply w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-500 text-2xl mb-4;
+  }
+
+  /* Text Carousel */
+  .text-carousel-container {
+    @apply h-16 flex items-center justify-center;
+  }
+  
+  .text-carousel-text {
+    @apply text-lg font-medium text-center animate-fadeIn;
+  }
+}

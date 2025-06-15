@@ -6,7 +6,7 @@ const ThemeToggle = () => {
   });
 
   useEffect(() => {
-    const root = document.body;
+    const root = document.documentElement;
     if (isDark) {
       root.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -23,11 +23,12 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="btn btn-primary btn-sm theme-toggle-btn"
+      className="btn btn-primary btn-sm transition-all duration-300 hover:scale-105"
       type="button"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
     >
-      {isDark ? '🌞 Light' : '🌙 Dark'}
+      <span className="text-lg mr-1">{isDark ? '🌞' : '🌙'}</span>
+      <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'}</span>
     </button>
   );
 };

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Card, Form, Button, Alert, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
-import sfondoLogin from "../assets/sfondoceleste.jpg"; 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -42,91 +40,91 @@ function Login() {
   };
 
   return (
-    <div
-      style={{
-        backgroundImage: `url(${sfondoLogin})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "2rem"
-      }}
-    >
-      <Row className="justify-content-center w-100" style={{ maxWidth: "500px" }}>
-        <Col xs={12}>
-          <Card className="shadow">
-            <Card.Body className="p-4">
-              <h3 className="mb-4 text-center">
-                <i className="fas fa-sign-in-alt me-2"></i>Login
-              </h3>
-              {error && <Alert variant="danger">{error}</Alert>}
-
-              <GoogleLoginButton />
-
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    autoFocus
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-4">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={loading}
-                  className="w-100"
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2"></span>
-                      Logging in...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-sign-in-alt me-2"></i>
-                      Login
-                    </>
-                  )}
-                </Button>
-              </Form>
-              <div className="mt-3 text-center">
-                <small>
-                  Don't have an account?{" "}
-                  <span
-                    role="button"
-                    style={{ color: "#007bff", cursor: "pointer" }}
-                    onClick={() => navigate("/register")}
-                  >
-                    Register
-                  </span>
-                </small>
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-8">
+      <div className="w-full max-w-md">
+        <div className="card">
+          <div className="card-body">
+            <h3 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
+              <i className="fas fa-sign-in-alt mr-2"></i>Login
+            </h3>
+            
+            {error && (
+              <div className="alert alert-danger mb-4">
+                <i className="fas fa-exclamation-triangle mr-2"></i>
+                {error}
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            )}
+
+            <div className="mb-4">
+              <GoogleLoginButton />
+            </div>
+
+            <div className="text-center mb-4">
+              <small className="text-gray-500 dark:text-gray-400">oppure accedi con email</small>
+              <hr className="my-2 border-gray-200 dark:border-gray-600" />
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  autoFocus
+                  className="form-control"
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full btn btn-primary"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    Logging in...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-sign-in-alt mr-2"></i>
+                    Login
+                  </>
+                )}
+              </button>
+            </form>
+            
+            <div className="mt-4 text-center">
+              <small className="text-gray-600 dark:text-gray-400">
+                Don't have an account?{" "}
+                <button
+                  onClick={() => navigate("/register")}
+                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
+                >
+                  Register
+                </button>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

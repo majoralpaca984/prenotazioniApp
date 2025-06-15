@@ -1,10 +1,19 @@
 import express from "express";
 import passport from "passport";
-import { register, login, googleLogin } from "../controllers/authController.js";
+import { 
+  register, 
+  login, 
+  googleLogin, 
+  getProfile, 
+  updateProfile, 
+  changePassword, 
+  updatePreferences 
+} from "../controllers/authController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// 🔐 Login classico
+// 🔐 Autenticazione base
 router.post("/register", register);
 router.post("/login", login);
 
@@ -20,5 +29,11 @@ router.get("/google/callback", passport.authenticate("google", {
   successRedirect: "https://prenotazioni-app.vercel.app/dashboard",
   failureRedirect: "https://prenotazioni-app.vercel.app/login"
 }));
+
+// 🆕 ROTTE PROFILO (con authMiddleware) - QUESTE MANCAVANO!
+router.get("/profile", authMiddleware, getProfile);
+router.put("/profile", authMiddleware, updateProfile);
+router.put("/change-password", authMiddleware, changePassword);
+router.put("/preferences", authMiddleware, updatePreferences);
 
 export default router;

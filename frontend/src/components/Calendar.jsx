@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import "../style/theme.css";
 
 function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDate }) {
   const navigate = useNavigate();
@@ -50,10 +49,10 @@ function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDa
   // 🎨 COLORE DOT basato su status
   const getDotColor = (appointment) => {
     switch (appointment.status) {
-      case 'completed': return 'bg-success';
-      case 'cancelled': return 'bg-secondary';
+      case 'completed': return 'bg-success-500';
+      case 'cancelled': return 'bg-secondary-500';
       case 'scheduled':
-      default: return 'bg-primary';
+      default: return 'bg-primary-500';
     }
   };
 
@@ -110,7 +109,6 @@ function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDa
               key={i}
               className={dayClasses}
               onClick={() => handleDayClick(day, appts)}
-              style={{ cursor: 'pointer' }}
               title={
                 appts.length > 0 
                   ? `${appts.length} appuntament${appts.length > 1 ? 'i' : 'o'} - Clicca per vedere`
@@ -159,8 +157,8 @@ function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDa
 
       {/* 📊 STATISTICHE RAPIDE (se ci sono appuntamenti) */}
       {appointments && appointments.length > 0 && (
-        <div className="calendar-stats mt-3 text-center">
-          <small className="text-muted">
+        <div className="mt-4 text-center">
+          <small className="text-gray-500 dark:text-gray-400">
             {appointments.length} appuntament{appointments.length !== 1 ? 'i' : 'o'} in questo mese
             {appointments.filter(a => a.status === 'completed').length > 0 && 
               ` • ${appointments.filter(a => a.status === 'completed').length} completat${appointments.filter(a => a.status === 'completed').length !== 1 ? 'i' : 'o'}`

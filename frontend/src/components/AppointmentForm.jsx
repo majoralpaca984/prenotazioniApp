@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Form, Button, Alert, Row, Col, Spinner } from "react-bootstrap";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -226,6 +225,28 @@ function AppointmentForm() {
     }
   };
 
+  // 🆕 Handler per andare al pagamento
+  const handleGoToPayment = () => {
+    // Valida prima i dati base
+    if (!formData.title.trim() || !formData.date || !formData.time) {
+      setError("Compila almeno titolo, data e orario prima di procedere al pagamento");
+      return;
+    }
+
+    // Parametri per la pagina di pagamento
+    const params = new URLSearchParams({
+      doctorId: "custom",
+      doctorName: "Appuntamento Personalizzato",
+      speciality: formData.title,
+      date: formData.date,
+      time: formData.time,
+      price: "80",
+      examType: formData.title
+    });
+    
+    navigate(`/payment?${params.toString()}`);
+  };
+
   // Per generare solo le ore tra le 7:00 e le 18:00 (incluso)
   const generateTimeOptions = () => {
     const options = [];
@@ -264,42 +285,48 @@ function AppointmentForm() {
   // 🏃‍♂️ LOADING INIZIALE per edit
   if (initialLoading) {
     return (
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <div className="text-center py-5">
-            <Spinner animation="border" variant="primary" />
-            <p className="mt-2">Caricamento appuntamento...</p>
+      <div className="flex justify-center">
+        <div className="w-full max-w-2xl">
+          <div className="text-center py-20">
+            <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Caricamento appuntamento...</p>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Row className="justify-content-center">
-      <Col md={8} lg={6}>
-        <Card className="shadow">
-          <Card.Header className="bg-primary text-white">
-            <h4 className="mb-0">
-              <i className={`fas ${isEdit ? "fa-edit" : "fa-plus"} me-2`}></i>
+    <div className="flex justify-center">
+      <div className="w-full max-w-2xl">
+        <div className="card">
+          <div className="card-header bg-primary-500 text-white">
+            <h4 className="text-xl font-semibold flex items-center gap-2">
+              <i className={`fas ${isEdit ? "fa-edit" : "fa-plus"}`}></i>
               {isEdit ? "Modifica Appuntamento" : "Nuovo Appuntamento"}
             </h4>
-          </Card.Header>
-          <Card.Body className="p-4">
+          </div>
+          <div className="card-body">
             {error && (
-              <Alert variant="danger" dismissible onClose={() => setError("")}>
-                <i className="fas fa-exclamation-triangle me-2"></i>
+              <div className="alert alert-danger mb-6">
+                <i className="fas fa-exclamation-triangle mr-2"></i>
                 {error}
-              </Alert>
+                <button 
+                  onClick={() => setError("")}
+                  className="ml-auto text-danger-600 hover:text-danger-700"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
             )}
 
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <i className="fas fa-heading me-2"></i>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="form-label flex items-center gap-2">
+                  <i className="fas fa-heading"></i>
                   Titolo *
-                </Form.Label>
-                <Form.Control
+                </label>
+                <input
                   type="text"
                   name="title"
                   placeholder="Es. Visita cardiologica, Analisi del sangue..."
@@ -307,141 +334,156 @@ function AppointmentForm() {
                   onChange={handleChange}
                   required
                   maxLength={100}
+                  className="form-control"
                 />
-                <Form.Text className="text-muted">
+                <small className="text-gray-500 dark:text-gray-400">
                   {formData.title.length}/100 caratteri
-                </Form.Text>
-              </Form.Group>
+                </small>
+              </div>
 
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <i className="fas fa-align-left me-2"></i>
+              <div>
+                <label className="form-label flex items-center gap-2">
+                  <i className="fas fa-align-left"></i>
                   Descrizione
-                </Form.Label>
-                <Form.Control
-                  as="textarea"
+                </label>
+                <textarea
                   rows={3}
                   name="description"
                   placeholder="Aggiungi dettagli opzionali sull'appuntamento..."
                   value={formData.description}
                   onChange={handleChange}
                   maxLength={500}
+                  className="form-control"
                 />
-                <Form.Text className="text-muted">
+                <small className="text-gray-500 dark:text-gray-400">
                   {formData.description.length}/500 caratteri
-                </Form.Text>
-              </Form.Group>
+                </small>
+              </div>
 
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      <i className="fas fa-calendar me-2"></i>
-                      Data *
-                    </Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                      min={isEdit ? undefined : new Date().toISOString().split("T")[0]}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      <i className="fas fa-clock me-2"></i>
-                      Orario *
-                    </Form.Label>
-                    <Form.Select
-                      name="time"
-                      value={formData.time}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Seleziona orario</option>
-                      {generateTimeOptions()}
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-              </Row>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="form-label flex items-center gap-2">
+                    <i className="fas fa-calendar"></i>
+                    Data *
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    min={isEdit ? undefined : new Date().toISOString().split("T")[0]}
+                    required
+                    className="form-control"
+                  />
+                </div>
+                <div>
+                  <label className="form-label flex items-center gap-2">
+                    <i className="fas fa-clock"></i>
+                    Orario *
+                  </label>
+                  <select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Seleziona orario</option>
+                    {generateTimeOptions()}
+                  </select>
+                </div>
+              </div>
 
               {isEdit && (
-                <Form.Group className="mb-4">
-                  <Form.Label>
-                    <i className="fas fa-info-circle me-2"></i>
+                <div>
+                  <label className="form-label flex items-center gap-2">
+                    <i className="fas fa-info-circle"></i>
                     Stato
-                  </Form.Label>
-                  <Form.Select
+                  </label>
+                  <select
                     name="status"
                     value={formData.status}
                     onChange={handleChange}
+                    className="form-select"
                   >
                     <option value="scheduled">Programmato</option>
                     <option value="completed">Completato</option>
                     <option value="cancelled">Annullato</option>
-                  </Form.Select>
-                </Form.Group>
+                  </select>
+                </div>
               )}
 
               {/* 🎛️ PULSANTI AZIONE */}
-              <div className="d-flex gap-2">
-                <Button
-                  variant="primary"
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
                   type="submit"
                   disabled={loading}
-                  className="flex-grow-1"
+                  className="flex-1 btn btn-primary"
                 >
                   {loading ? (
                     <>
-                      <Spinner animation="border" size="sm" className="me-2" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       {isEdit ? "Aggiornamento..." : "Creazione..."}
                     </>
                   ) : (
                     <>
-                      <i className={`fas ${isEdit ? "fa-save" : "fa-plus"} me-2`}></i>
+                      <i className={`fas ${isEdit ? "fa-save" : "fa-plus"}`}></i>
                       {isEdit ? "Aggiorna Appuntamento" : "Crea Appuntamento"}
                     </>
                   )}
-                </Button>
+                </button>
+
+                {/* 🆕 BOTTONE PAGAMENTO - Sempre disponibile */}
+                <button
+                  type="button"
+                  onClick={handleGoToPayment}
+                  disabled={loading}
+                  className="flex-1 btn bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <i className="fas fa-credit-card mr-2"></i>
+                  {isEdit ? "Procedi al Pagamento" : "Vai al Pagamento"}
+                </button>
                 
-                <Button
-                  variant="outline-secondary"
+                <button
+                  type="button"
                   onClick={() => navigate("/calendar")}
                   disabled={loading}
+                  className="btn btn-outline-secondary"
                 >
-                  <i className="fas fa-times me-2"></i>
+                  <i className="fas fa-times mr-2"></i>
                   Annulla
-                </Button>
+                </button>
                 
                 {isEdit && (
-                  <Button
-                    variant="danger"
+                  <button
+                    type="button"
                     onClick={handleDelete}
                     disabled={loading}
                     title="Elimina appuntamento"
+                    className="btn btn-danger"
                   >
-                    <i className="fas fa-trash-alt me-2"></i>
+                    <i className="fas fa-trash-alt mr-2"></i>
                     Elimina
-                  </Button>
+                  </button>
                 )}
               </div>
-            </Form>
+            </form>
 
             {/* 💡 INFO HELPER */}
-            <div className="mt-4 p-3 bg-light rounded">
-              <small className="text-muted">
-                <i className="fas fa-info-circle me-1"></i>
-                <strong>Informazioni:</strong> Puoi prenotare dalle 7:00 alle 18:00 
-                con intervalli di 15 minuti. {!isEdit && "Non è possibile prenotare nel passato."}
+            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <small className="text-gray-600 dark:text-gray-400 flex items-start gap-2">
+                <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                <span>
+                  <strong>Informazioni:</strong> Puoi prenotare dalle 7:00 alle 18:00 
+                  con intervalli di 15 minuti. {!isEdit && "Non è possibile prenotare nel passato. "}
+                  Usa il bottone verde per completare il pagamento dell'appuntamento.
+                </span>
               </small>
             </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
