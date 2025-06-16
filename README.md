@@ -13,7 +13,7 @@ Prenota, modifica e gestisci gli appuntamenti in modo semplice e rapido.
 
 ## 📸 Anteprima
 
-![screenshot](./screenshots/homepage.png)
+![screenshot](./)
 
 > Schermata iniziale: l'utente può cercare una prestazione e selezionare una data per trovare medici disponibili. L'interfaccia è moderna, chiara e **responsive**, con **tema chiaro/scuro** attivabile.
 
@@ -22,7 +22,7 @@ Prenota, modifica e gestisci gli appuntamenti in modo semplice e rapido.
 ## 📦 Tecnologie utilizzate
 
 - ⚛️ React (Vite)
-- 🎨 Bootstrap 5
+- 🎨 Tailwind CSS
 - 🔐 JWT per l'autenticazione
 - 🌍 Node.js + Express
 - 🧾 MongoDB Atlas
@@ -45,6 +45,8 @@ Prenota, modifica e gestisci gli appuntamenti in modo semplice e rapido.
 - ✅ Ricerca per prestazione + selezione data 📅
 - ✅ Design responsive mobile-first 📱
 - ✅ Invio email conferma appuntamento 📧
+- ✅ Pagamento in app
+- ✅ Modifica del profilo utente
 
 ---
 
@@ -235,10 +237,6 @@ npm run test:e2e
 ---
 
 ## 🎨 Screenshots aggiuntivi
-
-
-### 📱 Mobile View
-![Mobile View](./screenshots/mobile.png)
 
 ---
 

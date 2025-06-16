@@ -68,7 +68,7 @@ function HomePage() {
     },
     {
       _id: "3",
-      name: "Dr. Luca Verdi",
+      name: "Dr. Lucia Verdi",
       speciality: "Neurologo", 
       image: "default",
       availability: ["21/01", "22/01", "", "24/01", "25/01"]
