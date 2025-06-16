@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 function GoogleLoginButton() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // ✅ Per gestire i parametri URL
 
   useEffect(() => {
     if (window.google) {
@@ -39,7 +40,10 @@ function GoogleLoginButton() {
 
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      
+      // ✅ GESTISCI REDIRECT anche per Google OAuth
+      const redirectPath = searchParams.get('redirect');
+      navigate(redirectPath || "/dashboard");
     } catch (err) {
       console.error("Errore login Google:", err);
     }

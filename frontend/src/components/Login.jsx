@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -10,6 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // ✅ Per gestire i parametri URL
 
   const handleChange = (e) => {
     setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -31,7 +32,10 @@ function Login() {
       }
       const data = await response.json();
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      
+      // ✅ GESTISCI REDIRECT dall'email
+      const redirectPath = searchParams.get('redirect');
+      navigate(redirectPath || "/dashboard");
     } catch (error) {
       setError(error.message || "Login failed");
     } finally {
@@ -52,6 +56,14 @@ function Login() {
               <div className="alert alert-danger mb-4">
                 <i className="fas fa-exclamation-triangle mr-2"></i>
                 {error}
+              </div>
+            )}
+
+            {/* ✅ Messaggio se viene da un link email */}
+            {searchParams.get('redirect') && (
+              <div className="alert bg-blue-50 border-blue-200 text-blue-800 mb-4">
+                <i className="fas fa-info-circle mr-2"></i>
+                Accedi per continuare alla pagina richiesta
               </div>
             )}
 

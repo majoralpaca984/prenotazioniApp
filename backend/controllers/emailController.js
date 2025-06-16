@@ -1,4 +1,4 @@
-// 📧 IMPORT SENDGRID (mancava nel tuo file!)
+// 📧 IMPORT SENDGRID
 import sgMail from '@sendgrid/mail';
 
 // Configura SendGrid con la tua API key
@@ -61,6 +61,8 @@ export const sendConfirmationEmail = async (toEmail, appointment) => {
     day: "numeric",
   });
 
+  const frontendUrl = process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app";
+
   // 🎨 Template email migliorato
   const msg = {
     to: toEmail,
@@ -109,14 +111,14 @@ export const sendConfirmationEmail = async (toEmail, appointment) => {
               </div>
             </div>
 
-            <!-- Pulsanti azione -->
+            <!-- Pulsanti azione - ✅ CON REDIRECT AL LOGIN -->
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app"}/appointment/edit/${_id}" 
+              <a href="${frontendUrl}/login?redirect=/appointment/edit/${_id}" 
                  style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px; display: inline-block; transition: all 0.3s;">
                 ✏️ Modifica Appuntamento
               </a>
               
-              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app"}/calendar" 
+              <a href="${frontendUrl}/login?redirect=/calendar" 
                  style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px; display: inline-block;">
                 📅 Vedi Calendario
               </a>
@@ -157,10 +159,10 @@ Ciao! La tua prenotazione è confermata:
 🔬 Servizio: ${doctor}
 
 Puoi modificare l'appuntamento visitando:
-${process.env.FRONTEND_URL}/appointment/edit/${_id}
+${frontendUrl}/login?redirect=/appointment/edit/${_id}
 
 Oppure visualizza il calendario:
-${process.env.FRONTEND_URL}/calendar
+${frontendUrl}/login?redirect=/calendar
 
 Riceverai un promemoria 24 ore prima dell'appuntamento.
 
@@ -185,6 +187,8 @@ export const sendReminderEmail = async (toEmail, appointment) => {
     month: "long",
   });
 
+  const frontendUrl = process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app";
+
   const msg = {
     to: toEmail,
     from: process.env.SENDER_EMAIL,
@@ -203,7 +207,7 @@ export const sendReminderEmail = async (toEmail, appointment) => {
               <p style="margin: 5px 0;"><strong>🔬 ${doctor}</strong></p>
             </div>
             <div style="text-align: center; margin-top: 25px;">
-              <a href="${process.env.FRONTEND_URL}/appointment/edit/${_id}" 
+              <a href="${frontendUrl}/login?redirect=/appointment/edit/${_id}" 
                  style="background-color: #ff9800; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
                 Modifica se necessario
               </a>
@@ -222,7 +226,7 @@ export const sendReminderEmail = async (toEmail, appointment) => {
 export const testEmailSetup = async () => {
   try {
     const testMsg = {
-      to: process.env.SENDER_EMAIL, // Invia a te stesso
+      to: process.env.SENDER_EMAIL, 
       from: process.env.SENDER_EMAIL,
       subject: "✅ Test Configurazione EasyCare",
       text: "Se ricevi questa email, SendGrid è configurato correttamente!"
