@@ -28,7 +28,7 @@ app.use(
     origin: [
   "https://prenotazioni-app.vercel.app",      
   "https://prenotazioni-online.vercel.app",    
-  "http://localhost:5173"                      
+      "http://localhost:5173"
 ],
 
     credentials: true,

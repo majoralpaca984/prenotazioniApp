@@ -51,10 +51,6 @@ function Register() {
     }
   };
 
-  const handleGoogleError = (err) => {
-    setError(err.message || "Errore durante la registrazione con Google");
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -79,7 +75,7 @@ function Register() {
             )}
 
             <div className="mb-4">
-              <GoogleRegisterButton onError={handleGoogleError} />
+              <GoogleRegisterButton />
             </div>
 
             <div className="text-center mb-4">
