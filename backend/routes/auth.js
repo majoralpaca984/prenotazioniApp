@@ -26,8 +26,8 @@ router.get("/google", passport.authenticate("google", {
 }));
 
 router.get("/google/callback", passport.authenticate("google", {
-  successRedirect: "https://prenotazioni-app.vercel.app/dashboard",
-  failureRedirect: "https://prenotazioni-app.vercel.app/login"
+  successRedirect: "https://prenotazioni-online.vercel.app/dashboard",
+  failureRedirect: "https://prenotazioni-online.vercel.app/login"
 }));
 
 // 🆕 ROTTE PROFILO (con authMiddleware) - QUESTE MANCAVANO!

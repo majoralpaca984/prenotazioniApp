@@ -49,7 +49,7 @@ export const createAppointment = async (req, res) => {
     
     // Controlla che la data non sia nel passato
     if (appointmentDate < new Date()) {
-      return res.status(400).json({ message: "Non puoi prenotare nel passato" });
+      return res.status(400).json({ message: "Non puoi prenotare nel passato"});
     }
 
     // Controlla se lo slot è già occupato (ottimizzato)

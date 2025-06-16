@@ -111,12 +111,12 @@ export const sendConfirmationEmail = async (toEmail, appointment) => {
 
             <!-- Pulsanti azione -->
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-app.vercel.app"}/appointment/edit/${_id}" 
+              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app"}/appointment/edit/${_id}" 
                  style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px; display: inline-block; transition: all 0.3s;">
                 ✏️ Modifica Appuntamento
               </a>
               
-              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-app.vercel.app"}/calendar" 
+              <a href="${process.env.FRONTEND_URL || "https://prenotazioni-online.vercel.app"}/calendar" 
                  style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px; display: inline-block;">
                 📅 Vedi Calendario
               </a>
