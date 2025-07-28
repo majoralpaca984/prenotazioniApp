@@ -13,7 +13,9 @@ Prenota, modifica e gestisci gli appuntamenti in modo semplice e rapido.
 
 ## 📸 Anteprima
 
-![screenshot](./)
+![screenshot](./screenshots/HomePage.png)
+![screenshot](./screenshots/Dashboard.png)
+![screenshot](./screenshots/Screenshot%202025-07-28%20alle%2018.28.56.png)
 
 > Schermata iniziale: l'utente può cercare una prestazione e selezionare una data per trovare medici disponibili. L'interfaccia è moderna, chiara e **responsive**, con **tema chiaro/scuro** attivabile.
 
