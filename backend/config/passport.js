@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://prenotazioni-online.vercel.app/auth/google/callback",
+      callbackURL: "https://prenotazioniapp.onrender.com/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -37,11 +37,11 @@ passport.use(
   )
 );
 
-// (Facoltativo, se usi sessioni)
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 passport.deserializeUser((id, done) => {
   User.findById(id).then((user) => done(null, user));
 });
+
 export default passport;

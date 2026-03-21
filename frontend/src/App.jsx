@@ -40,6 +40,7 @@ function App() {
           {/* Autenticazione */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           
           {/* Default: reindirizza alla homepage */}
           <Route path="*" element={<Navigate to="/" replace />} />
