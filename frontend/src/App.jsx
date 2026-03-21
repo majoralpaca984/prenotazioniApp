@@ -10,6 +10,7 @@ import Homepage from "./views/HomePage";
 import SearchResults from "./views/SearchResults";
 import UserProfile from "./views/UserProfile";
 import PaymentPage from "./views/PaymentPage";
+import AuthCallback from "./components/AuthCallback";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
