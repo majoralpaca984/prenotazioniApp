@@ -49,7 +49,7 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
-  // 🔄 FETCH OTTIMIZZATO con cache e callback
+  //  FETCH OTTIMIZZATO con cache e callback
   const fetchAppointments = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true);
     setError("");
@@ -69,31 +69,31 @@ function Dashboard() {
       setAppointments(data);
       setLastUpdate(Date.now());
     } catch (err) {
-      console.error('❌ Fetch error:', err);
+      console.error('Fetch error:', err);
       setError("Errore nel caricamento degli appuntamenti");
     } finally {
       if (showLoading) setLoading(false);
     }
   }, []);
 
-  // 🔄 AUTO-REFRESH ogni 2 minuti
+  //  AUTO-REFRESH ogni 2 minuti
   useEffect(() => {
     fetchAppointments();
     
     const interval = setInterval(() => {
-      console.log('🔄 Auto-refresh dashboard...');
+      console.log('Auto-refresh dashboard...');
       fetchAppointments(false); // Refresh silenzioso
     }, 2 * 60 * 1000); // 2 minuti
 
     return () => clearInterval(interval);
   }, [fetchAppointments]);
 
-  // 👂 ASCOLTI CAMBIAMENTI da altri componenti
+  //  ASCOLTI CAMBIAMENTI da altri componenti
   useEffect(() => {
     // Quando torni alla finestra, refresh se sono passati >30s
     const handleFocus = () => {
       if (Date.now() - lastUpdate > 30000) {
-        console.log('🔄 Window focus refresh...');
+        console.log('Window focus refresh...');
         fetchAppointments(false);
       }
     };
@@ -101,7 +101,7 @@ function Dashboard() {
     // Quando AppointmentForm crea/modifica/elimina
     const handleStorageChange = (e) => {
       if (e.key === 'appointment_updated') {
-        console.log('🔄 Storage change detected...');
+        console.log('Storage change detected...');
         fetchAppointments(false);
         localStorage.removeItem('appointment_updated'); // Cleanup
       }
@@ -116,14 +116,14 @@ function Dashboard() {
     };
   }, [fetchAppointments, lastUpdate]);
 
-  // 📊 STATISTICHE CALCOLATE con useMemo - METODO CORRETTO
+  //  STATISTICHE CALCOLATE con useMemo - METODO CORRETTO
   const stats = useMemo(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // ✅ METODO CORRETTO: Confronta solo date, non tempo
+    //  METODO CORRETTO: Confronta solo date, non tempo
     const future = appointments.filter((a) => {
       const appDate = new Date(a.date);
       return appDate >= today;
@@ -155,7 +155,7 @@ function Dashboard() {
     };
   }, [appointments]);
 
-  // 🔄 REFRESH MANUALE
+  //  REFRESH MANUALE
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchAppointments(false);
@@ -177,7 +177,7 @@ function Dashboard() {
     });
   };
 
-  // 🏃‍♂️ LOADING INIZIALE
+  // ‍ LOADING INIZIALE
   if (loading && appointments.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -199,7 +199,7 @@ function Dashboard() {
           </small>
         </div>
         <div className="flex items-center gap-3">
-          {/* 🔄 PULSANTE REFRESH */}
+          {/*  PULSANTE REFRESH */}
           <button 
             onClick={handleRefresh}
             disabled={refreshing}
@@ -220,7 +220,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* 🚨 ERRORI */}
+      {/*  ERRORI */}
       {error && (
         <div className="alert alert-danger">
           <i className="fas fa-exclamation-triangle mr-2"></i>
@@ -234,7 +234,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* ⏰ APPUNTAMENTO DOMANI */}
+      {/*  APPUNTAMENTO DOMANI */}
       {stats.appointmentTomorrow && (
         <div className="alert alert-warning flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -254,17 +254,17 @@ function Dashboard() {
       )}
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* 📊 CARD RIEPILOGO MIGLIORATA */}
+        {/*  CARD RIEPILOGO MIGLIORATA */}
         <div className="card h-full">
           <div className="card-body">
             <div className="flex justify-between items-center mb-4">
               <h5 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                📊 Riepilogo
+                 Riepilogo
               </h5>
               {refreshing && <div className="w-4 h-4 border-2 border-primary-300 border-t-primary-500 rounded-full animate-spin"></div>}
             </div>
             
-            {/* 📈 STATISTICHE VELOCI */}
+            {/*  STATISTICHE VELOCI */}
             <div className="grid grid-cols-3 gap-4 text-center mb-4">
               <div>
                 <div className="text-2xl font-bold text-primary-500 mb-1">{stats.total}</div>
@@ -280,7 +280,7 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* 🕒 PROSSIMO APPUNTAMENTO */}
+            {/*  PROSSIMO APPUNTAMENTO */}
             {stats.nextAppointment && (
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
@@ -296,7 +296,7 @@ function Dashboard() {
               </div>
             )}
 
-            {/* ✅ ULTIMO APPUNTAMENTO */}
+            {/*  ULTIMO APPUNTAMENTO */}
             {stats.lastAppointment && (
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
@@ -314,11 +314,11 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* 📅 TIMELINE PROSSIMI APPUNTAMENTI MIGLIORATA */}
+        {/*  TIMELINE PROSSIMI APPUNTAMENTI MIGLIORATA */}
         <div className="card h-full">
           <div className="card-body">
             <h5 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-              📅 Prossimi Appuntamenti
+               Prossimi Appuntamenti
             </h5>
             {stats.futureList.length === 0 ? (
               <div className="text-center py-8">
@@ -353,7 +353,7 @@ function Dashboard() {
                   </div>
                 ))}
                 
-                {/* 👀 MOSTRA PIÙ */}
+                {/*  MOSTRA PIÙ */}
                 {stats.futureList.length > 5 && (
                   <div className="text-center mt-4">
                     <Link to="/calendar" className="btn btn-outline-primary btn-sm">

@@ -7,7 +7,7 @@ function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLogged = !!localStorage.getItem("token");
 
-  // 🧠 Estrai nome dal token
+  //  Estrai nome dal token
   const getUserName = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -61,7 +61,7 @@ function Navigation() {
                   <i className="fas fa-calendar"></i>
                   <span>Calendario</span>
                 </Link>
-                {/* ✅ AGGIUNTO LINK PROFILO - DESKTOP */}
+                {/*  AGGIUNTO LINK PROFILO - DESKTOP */}
                 <Link
                   to="/profile"
                   className="text-primary-500 hover:text-primary-600 font-medium transition-colors flex items-center space-x-2"
@@ -75,7 +75,7 @@ function Navigation() {
             <div className="flex items-center space-x-4">
               {isLogged && (
                 <span className="text-primary-500 font-semibold">
-                  👋 Ciao, {userName}
+                   Ciao, {userName}
                 </span>
               )}
 
@@ -125,7 +125,7 @@ function Navigation() {
               {isLogged && (
                 <>
                   <span className="text-primary-500 font-semibold px-4">
-                    👋 Ciao, {userName}
+                     Ciao, {userName}
                   </span>
                   <Link
                     to="/dashboard"
@@ -143,7 +143,7 @@ function Navigation() {
                     <i className="fas fa-calendar"></i>
                     <span>Calendario</span>
                   </Link>
-                  {/* ✅ AGGIUNTO LINK PROFILO - MOBILE */}
+                  {/*  AGGIUNTO LINK PROFILO - MOBILE */}
                   <Link
                     to="/profile"
                     onClick={() => setIsMenuOpen(false)}

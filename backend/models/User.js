@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema({
   googleId: { type: String },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   
-  // 🆕 CAMPI AGGIUNTIVI per il profilo - QUESTI MANCAVANO!
+  //  CAMPI AGGIUNTIVI per il profilo - QUESTI MANCAVANO!
   phone: { type: String },
   birthDate: { type: Date },
   address: { type: String },
   avatar: { type: String }, // URL dell'immagine
   
-  // 🆕 PREFERENZE utente - QUESTE MANCAVANO!
+  //  PREFERENZE utente - QUESTE MANCAVANO!
   preferences: {
     emailNotifications: { type: Boolean, default: true },
     smsNotifications: { type: Boolean, default: false },

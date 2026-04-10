@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
     // Se vuoto, restituisce 200 comunque (vuoto è valido)
     res.status(200).json(doctors);
   } catch (error) {
-    console.error("❌ Errore durante la ricerca dei medici:", error);
+    console.error("Errore durante la ricerca dei medici:", error);
     res.status(500).json({
       error: "Errore del server durante il recupero dei medici",
       details: error.message,

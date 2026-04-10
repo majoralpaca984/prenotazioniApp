@@ -139,7 +139,7 @@ function UserProfile() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage('✅ Profilo aggiornato con successo!');
+        setMessage('Profilo aggiornato con successo!');
         setEditingPersonal(false);
         
         // Aggiorna token se fornito
@@ -191,7 +191,7 @@ function UserProfile() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage('✅ Password cambiata con successo!');
+        setMessage('Password cambiata con successo!');
         setPasswordData({
           currentPassword: '',
           newPassword: '',
@@ -226,7 +226,7 @@ function UserProfile() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage('✅ Preferenze salvate con successo!');
+        setMessage('Preferenze salvate con successo!');
       } else {
         throw new Error(result.message || 'Errore nel salvataggio');
       }

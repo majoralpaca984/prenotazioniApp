@@ -2,7 +2,7 @@ import Appointment from '../models/Appointment.js';
 import { sendConfirmationEmail } from './emailController.js'; 
 import User from '../models/User.js';
 
-// 🚀 CACHE SEMPLICE per velocizzare le chiamate
+//  CACHE SEMPLICE per velocizzare le chiamate
 const cache = new Map();
 const CACHE_TIME = 3 * 60 * 1000; // 3 minuti
 const VALID_STATUSES = new Set(["scheduled", "completed", "cancelled"]);
@@ -73,7 +73,7 @@ export const getAppointments = async (req, res) => {
       return res.json(cached.data);
     }
 
-    // 📈 Query ottimizzata: ordina per data e usa .lean() per performance
+    //  Query ottimizzata: ordina per data e usa .lean() per performance
     const appointments = await Appointment
       .find({ user: req.user.userId })
       .sort({ date: 1 })
@@ -87,7 +87,7 @@ export const getAppointments = async (req, res) => {
 
     res.json(appointments);
   } catch (err) {
-    console.error('❌ Error fetching appointments:', err);
+    console.error('Error fetching appointments:', err);
     res.status(500).json({ message: "Error fetching appointments" });
   }
 };
@@ -124,7 +124,7 @@ export const createAppointment = async (req, res) => {
 
     await appointment.save();
 
-    // 🗑️ Pulisci cache quando crei nuovo appuntamento
+    //  Pulisci cache quando crei nuovo appuntamento
     cache.delete(`appointments_${req.user.userId}`);
 
     // Recupera email utente (dal token oppure dal DB)
@@ -135,26 +135,26 @@ export const createAppointment = async (req, res) => {
       userEmail = user.email;
     }
 
-    // 📧 Invia email di conferma (asincrono per non bloccare la risposta)
+    //  Invia email di conferma (asincrono per non bloccare la risposta)
     if (userEmail) {
       sendConfirmationEmail(userEmail, {
         date: req.body.date,
         time: payload.time,
         doctor: appointment.title,
         _id: appointment._id // Aggiungo l'ID per l'email
-      }).catch(err => console.error('❌ Email error:', err));
+      }).catch(err => console.error('Email error:', err));
     }
 
     res.status(201).json(appointment);
   } catch (err) {
-    console.error("❌ Errore creazione appuntamento:", err);
+    console.error("Errore creazione appuntamento:", err);
     res.status(500).json({ message: "Errore creazione appuntamento" });
   }
 };
 
 export const getAppointmentById = async (req, res) => {
   try {
-    // 🔒 Sicurezza: solo il proprietario può vedere il suo appuntamento
+    //  Sicurezza: solo il proprietario può vedere il suo appuntamento
     const appointment = await Appointment
       .findOne({ 
         _id: req.params.id, 
@@ -168,7 +168,7 @@ export const getAppointmentById = async (req, res) => {
     
     res.json(appointment);
   } catch (err) {
-    console.error('❌ Get appointment error:', err);
+    console.error('Get appointment error:', err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -192,7 +192,7 @@ export const updateAppointment = async (req, res) => {
       return res.status(400).json({ message: "Slot già occupato!" });
     }
 
-    // 🔒 Sicurezza: solo il proprietario può modificare
+    //  Sicurezza: solo il proprietario può modificare
     const appointment = await Appointment.findOneAndUpdate(
       { 
         _id: req.params.id, 
@@ -206,12 +206,12 @@ export const updateAppointment = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    // 🗑️ Pulisci cache quando modifichi
+    //  Pulisci cache quando modifichi
     cache.delete(`appointments_${req.user.userId}`);
     
     res.json(appointment);
   } catch (err) {
-    console.error('❌ Update appointment error:', err);
+    console.error('Update appointment error:', err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -219,7 +219,7 @@ export const updateAppointment = async (req, res) => {
 // Delete by ID
 export const deleteAppointment = async (req, res) => {
   try {
-    // 🔒 Sicurezza: solo il proprietario può eliminare
+    //  Sicurezza: solo il proprietario può eliminare
     const appointment = await Appointment.findOneAndDelete({
       _id: req.params.id,
       user: req.user.userId
@@ -229,12 +229,12 @@ export const deleteAppointment = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    // 🗑️ Pulisci cache quando elimini
+    //  Pulisci cache quando elimini
     cache.delete(`appointments_${req.user.userId}`);
     
     res.json({ message: "Appointment deleted successfully" });
   } catch (err) {
-    console.error('❌ Delete appointment error:', err);
+    console.error('Delete appointment error:', err);
     res.status(500).json({ message: "Server error" });
   }
 };

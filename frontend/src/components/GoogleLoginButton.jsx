@@ -27,7 +27,7 @@ function GoogleLoginButton() {
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
-        ux_mode: "popup",               // ✅ Forza popup per compatibilità
+        ux_mode: "popup",               //  Forza popup per compatibilità
         auto_select: false,
         cancel_on_tap_outside: true,
       });

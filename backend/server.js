@@ -38,7 +38,7 @@ app.use(
 // Middleware per body JSON
 app.use(express.json());
 
-// ✅ Registra tutte le rotte
+//  Registra tutte le rotte
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/doctors", doctorRoutes); 
@@ -51,9 +51,9 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`✅ Backend running on http://localhost:${PORT}`);
+      console.log(` Backend running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+    console.error("MongoDB connection error:", err);
   });

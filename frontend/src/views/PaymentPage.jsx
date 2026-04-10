@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PaymentPage() {
-  const navigate = useNavigate(); // ✅ Navigazione reale invece di simulata
+  const navigate = useNavigate(); //  Navigazione reale invece di simulata
 
-  // 🔗 Leggi parametri URL per dati dinamici dell'esame
+  //  Leggi parametri URL per dati dinamici dell'esame
   const getExamDataFromURL = () => {
     // In un'app reale useresti useSearchParams() di react-router-dom
     const params = new URLSearchParams(window.location.search);
@@ -36,7 +36,7 @@ function PaymentPage() {
     };
   };
 
-  // 📋 Dati esame dinamici basati sui parametri URL
+  //  Dati esame dinamici basati sui parametri URL
   const examData = getExamDataFromURL();
   // Stati per step del pagamento
   const [currentStep, setCurrentStep] = useState(1);
@@ -185,10 +185,10 @@ function PaymentPage() {
       // });
 
       setPaymentComplete(true);
-      setMessage('✅ Pagamento completato con successo!');
+      setMessage('Pagamento completato con successo!');
 
     } catch {
-      setMessage('❌ Errore nel pagamento. Riprova.');
+      setMessage('Errore nel pagamento. Riprova.');
     } finally {
       setPaymentProcessing(false);
     }
@@ -326,7 +326,7 @@ function PaymentPage() {
                 </div>
 
                 <div className="mt-4 text-xs text-center text-gray-400 bg-blue-50 p-3 rounded-lg">
-                  💡 <strong>Info per sviluppatori:</strong> I dati dell'esame vengono letti dai parametri URL. 
+                   <strong>Info per sviluppatori:</strong> I dati dell'esame vengono letti dai parametri URL. 
                   Questo pagamento è collegato al DoctorCard che hai selezionato!
                 </div>
               </div>
@@ -378,7 +378,7 @@ function PaymentPage() {
                   {/* Messaggi */}
                   {message && (
                     <div className={`mb-6 p-4 rounded-lg ${
-                      message.includes('✅') ? 'bg-green-50 text-green-700 border border-green-200' :
+                      paymentComplete ? 'bg-green-50 text-green-700 border border-green-200' :
                       'bg-red-50 text-red-700 border border-red-200'
                     }`}>
                       {message}

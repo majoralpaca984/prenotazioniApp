@@ -27,7 +27,7 @@ const ThemeToggle = () => {
       type="button"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
     >
-      <span className="text-lg mr-1">{isDark ? '🌞' : '🌙'}</span>
+      <span className="text-lg mr-1">{isDark ? '' : ''}</span>
       <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'}</span>
     </button>
   );

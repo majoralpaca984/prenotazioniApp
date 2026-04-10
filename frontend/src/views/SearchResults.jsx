@@ -18,13 +18,13 @@ function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // 🔍 OTTIENI QUERY DAI PARAMETRI URL
+  //  OTTIENI QUERY DAI PARAMETRI URL
   useEffect(() => {
     const query = searchParams.get("q") || "";
     setSearchQuery(query);
   }, [searchParams]);
 
-  // 📊 FETCH TUTTI GLI APPUNTAMENTI
+  //  FETCH TUTTI GLI APPUNTAMENTI
   useEffect(() => {
     fetchAppointments();
   }, []);
@@ -53,18 +53,18 @@ function SearchResults() {
       const data = await response.json();
       setAppointments(data);
     } catch (err) {
-      console.error("❌ Errore fetch appointments:", err);
+      console.error("Errore fetch appointments:", err);
       setError("Errore nel caricamento degli appuntamenti");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔍 FILTRA E CERCA APPUNTAMENTI
+  //  FILTRA E CERCA APPUNTAMENTI
   useEffect(() => {
     let filtered = [...appointments];
 
-    // 🔍 RICERCA TESTUALE
+    //  RICERCA TESTUALE
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(apt => 
@@ -73,12 +73,12 @@ function SearchResults() {
       );
     }
 
-    // 📊 FILTRO STATUS
+    //  FILTRO STATUS
     if (filters.status !== "all") {
       filtered = filtered.filter(apt => apt.status === filters.status);
     }
 
-    // 📅 FILTRO RANGE DATE
+    //  FILTRO RANGE DATE
     const now = new Date();
     if (filters.dateRange !== "all") {
       switch (filters.dateRange) {
@@ -115,7 +115,7 @@ function SearchResults() {
       }
     }
 
-    // 🔄 ORDINAMENTO
+    //  ORDINAMENTO
     switch (filters.sortBy) {
       case "date":
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -131,7 +131,7 @@ function SearchResults() {
     setFilteredAppointments(filtered);
   }, [appointments, searchQuery, filters]);
 
-  // 🎯 GESTIONE RICERCA
+  //  GESTIONE RICERCA
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchParams({ q: searchQuery });
@@ -141,7 +141,7 @@ function SearchResults() {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  // 🎨 COLORE BADGE STATUS
+  //  COLORE BADGE STATUS
   const getStatusBadge = (status) => {
     switch (status) {
       case 'completed': return 'badge-success';
@@ -164,7 +164,7 @@ function SearchResults() {
 
   return (
     <div className="space-y-6">
-      {/* 🔍 HEADER E RICERCA */}
+      {/*  HEADER E RICERCA */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
@@ -182,7 +182,7 @@ function SearchResults() {
         </Link>
       </div>
 
-      {/* 🚨 ERRORI */}
+      {/*  ERRORI */}
       {error && (
         <div className="alert alert-danger">
           <i className="fas fa-exclamation-triangle mr-2"></i>
@@ -196,7 +196,7 @@ function SearchResults() {
         </div>
       )}
 
-      {/* 🔍 BARRA DI RICERCA */}
+      {/*  BARRA DI RICERCA */}
       <div className="card">
         <div className="card-body">
           <form onSubmit={handleSearch} className="mb-4">
@@ -218,7 +218,7 @@ function SearchResults() {
             </div>
           </form>
 
-          {/* 🎛️ FILTRI */}
+          {/*  FILTRI */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="form-label">Stato</label>
@@ -266,7 +266,7 @@ function SearchResults() {
         </div>
       </div>
 
-      {/* 📊 CONTATORE RISULTATI */}
+      {/*  CONTATORE RISULTATI */}
       <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
         <span className="text-gray-600 dark:text-gray-400">
           {filteredAppointments.length === 0 ? (
@@ -290,7 +290,7 @@ function SearchResults() {
         )}
       </div>
 
-      {/* 📋 RISULTATI */}
+      {/*  RISULTATI */}
       {filteredAppointments.length > 0 ? (
         <div className="space-y-4">
           {filteredAppointments.map((appointment) => (
@@ -345,7 +345,7 @@ function SearchResults() {
           ))}
         </div>
       ) : !loading && (
-        /* 📭 STATO VUOTO */
+        /*  STATO VUOTO */
         <div className="text-center py-12">
           <div className="max-w-md mx-auto">
             <i className="fas fa-search text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>

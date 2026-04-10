@@ -87,7 +87,7 @@ export const register = async (req, res) => {
   res.status(201).json({ message: "Registrazione ok!" });
 };
 
-// 🆕 ---- GET PROFILO UTENTE ----
+//  ---- GET PROFILO UTENTE ----
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password -googleId');
@@ -98,23 +98,23 @@ export const getProfile = async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error("❌ Get profile error:", err);
+    console.error("Get profile error:", err);
     res.status(500).json({ message: "Errore del server" });
   }
 };
 
-// 🆕 ---- AGGIORNA PROFILO UTENTE ----
+//  ---- AGGIORNA PROFILO UTENTE ----
 export const updateProfile = async (req, res) => {
   try {
     const { name, email, phone, birthDate, address, avatar, preferences } = req.body;
     const userId = req.user.userId;
 
-    // 🛡️ Validazione base
+    //  Validazione base
     if (!name || !email) {
       return res.status(400).json({ message: "Nome e email sono obbligatori" });
     }
 
-    // 📧 Controlla se email già esiste (se diversa da quella attuale)
+    //  Controlla se email già esiste (se diversa da quella attuale)
     const currentUser = await User.findById(userId);
     if (email !== currentUser.email) {
       const emailExists = await User.findOne({ email, _id: { $ne: userId } });
@@ -123,12 +123,12 @@ export const updateProfile = async (req, res) => {
       }
     }
 
-    // 📱 Validazione telefono (se presente)
+    //  Validazione telefono (se presente)
     if (phone && !/^[\+]?[0-9\s\-\(\)]{8,}$/.test(phone)) {
       return res.status(400).json({ message: "Formato telefono non valido" });
     }
 
-    // 📅 Validazione data di nascita (se presente)
+    //  Validazione data di nascita (se presente)
     if (birthDate) {
       const date = new Date(birthDate);
       const now = new Date();
@@ -137,7 +137,7 @@ export const updateProfile = async (req, res) => {
       }
     }
 
-    // 🔄 Aggiorna i dati
+    //  Aggiorna i dati
     const updatedFields = {
       name,
       email,
@@ -154,7 +154,7 @@ export const updateProfile = async (req, res) => {
       { new: true, runValidators: true }
     ).select('-password -googleId');
 
-    // 🔄 Genera nuovo token con dati aggiornati
+    //  Genera nuovo token con dati aggiornati
     const newToken = jwt.sign(
       {
         userId: updatedUser._id,
@@ -173,18 +173,18 @@ export const updateProfile = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Update profile error:", err);
+    console.error("Update profile error:", err);
     res.status(500).json({ message: "Errore nell'aggiornamento del profilo" });
   }
 };
 
-// 🆕 ---- CAMBIA PASSWORD ----
+//  ---- CAMBIA PASSWORD ----
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.userId;
 
-    // 🛡️ Validazioni
+    //  Validazioni
     if (!currentPassword || !newPassword) {
       return res.status(400).json({ message: "Password attuale e nuova sono obbligatorie" });
     }
@@ -193,13 +193,13 @@ export const changePassword = async (req, res) => {
       return res.status(400).json({ message: "La nuova password deve essere di almeno 6 caratteri" });
     }
 
-    // 👤 Trova utente
+    //  Trova utente
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "Utente non trovato" });
     }
 
-    // 🔐 Verifica password attuale (skip per utenti Google OAuth)
+    //  Verifica password attuale (skip per utenti Google OAuth)
     if (user.password !== "google-oauth") {
       const isValidPassword = await bcrypt.compare(currentPassword, user.password);
       if (!isValidPassword) {
@@ -207,21 +207,21 @@ export const changePassword = async (req, res) => {
       }
     }
 
-    // 🔄 Hash nuova password
+    //  Hash nuova password
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // 💾 Aggiorna password
+    //  Aggiorna password
     await User.findByIdAndUpdate(userId, { password: hashedNewPassword });
 
     res.json({ message: "Password cambiata con successo" });
 
   } catch (err) {
-    console.error("❌ Change password error:", err);
+    console.error("Change password error:", err);
     res.status(500).json({ message: "Errore nel cambio password" });
   }
 };
 
-// 🆕 ---- AGGIORNA SOLO PREFERENZE ----
+//  ---- AGGIORNA SOLO PREFERENZE ----
 export const updatePreferences = async (req, res) => {
   try {
     const { preferences } = req.body;
@@ -232,7 +232,7 @@ export const updatePreferences = async (req, res) => {
       return res.status(404).json({ message: "Utente non trovato" });
     }
 
-    // 🔄 Merge delle preferenze esistenti con quelle nuove
+    //  Merge delle preferenze esistenti con quelle nuove
     const updatedPreferences = { ...user.preferences, ...preferences };
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -247,7 +247,7 @@ export const updatePreferences = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Update preferences error:", err);
+    console.error("Update preferences error:", err);
     res.status(500).json({ message: "Errore nell'aggiornamento delle preferenze" });
   }
 };

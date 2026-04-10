@@ -10,7 +10,14 @@ const formatDateInputValue = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-// 🔔 FUNZIONE per notificare altri componenti dei cambiamenti
+const isValidTimeSlot = (time) => {
+  if (!/^\d{2}:\d{2}$/.test(time || "")) return false;
+
+  const [hour, minute] = time.split(":").map(Number);
+  return hour >= 7 && hour <= 18 && minute % 15 === 0 && !(hour === 18 && minute > 0);
+};
+
+//  FUNZIONE per notificare altri componenti dei cambiamenti
 const notifyAppointmentChange = (action, appointmentId = null) => {
   // Notifica Dashboard e Calendar tramite localStorage
   localStorage.setItem('appointment_updated', JSON.stringify({
@@ -19,7 +26,7 @@ const notifyAppointmentChange = (action, appointmentId = null) => {
     timestamp: Date.now()
   }));
   
-  console.log(`🔔 Notified other components: ${action}`, appointmentId);
+  console.log(` Notified other components: ${action}`, appointmentId);
   
   // Rimuovi dopo un po' per evitare accumulo
   setTimeout(() => {
@@ -44,7 +51,7 @@ function AppointmentForm() {
   const { id } = useParams();
   const location = useLocation();
 
-  // 🔄 API HELPER ottimizzato
+  //  API HELPER ottimizzato
   const apiCall = useCallback(async (url, options = {}) => {
     const token = localStorage.getItem("token");
     
@@ -86,7 +93,7 @@ function AppointmentForm() {
         status: appointment.status || "scheduled",
       });
     } catch (error) {
-      console.error('❌ Failed to fetch appointment:', error);
+      console.error('Failed to fetch appointment:', error);
       setError(error.message || "Failed to fetch appointment");
       
       // Mantieni form vuoto in caso di errore
@@ -109,14 +116,17 @@ function AppointmentForm() {
       fetchAppointment();
     } else {
       setIsEdit(false);
-      const queryDate = new URLSearchParams(location.search).get("date");
+      const searchParams = new URLSearchParams(location.search);
+      const queryDate = searchParams.get("date");
+      const queryTime = searchParams.get("time");
       const today = formatDateInputValue(new Date());
       const initialDate = /^\d{4}-\d{2}-\d{2}$/.test(queryDate || "") ? queryDate : today;
-      setFormData(prev => ({ ...prev, date: initialDate }));
+      const initialTime = isValidTimeSlot(queryTime) ? queryTime : "";
+      setFormData(prev => ({ ...prev, date: initialDate, time: initialTime }));
     }
   }, [fetchAppointment, id, location.search]);
 
-  // 🛡️ VALIDAZIONE MIGLIORATA
+  //  VALIDAZIONE MIGLIORATA
   const validateForm = () => {
     const { title, date, time } = formData;
     
@@ -178,18 +188,18 @@ function AppointmentForm() {
           method: "PUT",
           body: JSON.stringify(appointmentData),
         });
-        // 🔔 Notifica modifica
+        //  Notifica modifica
         notifyAppointmentChange('updated', id);
       } else {
         result = await apiCall("/appointments", {
           method: "POST",
           body: JSON.stringify(appointmentData),
         });
-        // 🔔 Notifica creazione
+        //  Notifica creazione
         notifyAppointmentChange('created', result._id);
       }
 
-      // 🎉 Redirect con messaggio di successo
+      //  Redirect con messaggio di successo
       navigate("/calendar", { 
         state: { 
           message: isEdit ? "Appuntamento aggiornato con successo!" : "Appuntamento creato con successo!",
@@ -198,7 +208,7 @@ function AppointmentForm() {
       });
     } catch (error) {
       setError(error.message || "Failed to save appointment");
-      console.error("❌ Error saving appointment:", error);
+      console.error("Error saving appointment:", error);
     } finally {
       setLoading(false);
     }
@@ -216,7 +226,7 @@ function AppointmentForm() {
     try {
       await apiCall(`/appointments/${id}`, { method: "DELETE" });
       
-      // 🔔 Notifica eliminazione
+      //  Notifica eliminazione
       notifyAppointmentChange('deleted', id);
       
       navigate("/calendar", { 
@@ -227,13 +237,13 @@ function AppointmentForm() {
       });
     } catch (error) {
       setError(error.message || "Errore durante l'eliminazione.");
-      console.error("❌ Delete error:", error);
+      console.error("Delete error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // 🆕 Handler per andare al pagamento
+  //  Handler per andare al pagamento
   const handleGoToPayment = () => {
     // Valida prima i dati base
     if (!formData.title.trim() || !formData.date || !formData.time) {
@@ -286,11 +296,11 @@ function AppointmentForm() {
       [name]: value,
     }));
     
-    // 🧹 Pulisci errore quando l'utente inizia a digitare
+    //  Pulisci errore quando l'utente inizia a digitare
     if (error) setError("");
   };
 
-  // 🏃‍♂️ LOADING INIZIALE per edit
+  // ‍ LOADING INIZIALE per edit
   if (initialLoading) {
     return (
       <div className="flex justify-center">
@@ -421,7 +431,7 @@ function AppointmentForm() {
                 </div>
               )}
 
-              {/* 🎛️ PULSANTI AZIONE */}
+              {/*  PULSANTI AZIONE */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="submit"
@@ -441,7 +451,7 @@ function AppointmentForm() {
                   )}
                 </button>
 
-                {/* 🆕 BOTTONE PAGAMENTO - Sempre disponibile */}
+                {/*  BOTTONE PAGAMENTO - Sempre disponibile */}
                 <button
                   type="button"
                   onClick={handleGoToPayment}
@@ -477,7 +487,7 @@ function AppointmentForm() {
               </div>
             </form>
 
-            {/* 💡 INFO HELPER */}
+            {/*  INFO HELPER */}
             <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <small className="text-gray-600 dark:text-gray-400 flex items-start gap-2">
                 <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>

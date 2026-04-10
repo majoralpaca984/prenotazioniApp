@@ -14,14 +14,14 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-// 🔐 Autenticazione base
+//  Autenticazione base
 router.post("/register", register);
 router.post("/login", login);
 
-// ✅ Login da Google One Tap (POST con token) — flusso principale
+//  Login da Google One Tap (POST con token) — flusso principale
 router.post("/google-login", googleLogin);
 
-// 🔁 Login classico via redirect Google OAuth (backup)
+//  Login classico via redirect Google OAuth (backup)
 router.get("/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
@@ -44,7 +44,7 @@ router.get("/google/callback", passport.authenticate("google", {
   res.redirect(`https://prenotazioni-online.vercel.app/auth/callback?token=${token}`);
 });
 
-// 🆕 ROTTE PROFILO
+//  ROTTE PROFILO
 router.get("/profile", authMiddleware, getProfile);
 router.put("/profile", authMiddleware, updateProfile);
 router.put("/change-password", authMiddleware, changePassword);

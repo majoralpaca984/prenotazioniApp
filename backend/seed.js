@@ -46,10 +46,10 @@ const seedDB = async () => {
     await mongoose.connect(MONGO_URL);
     await Doctor.deleteMany(); 
     await Doctor.insertMany(seedDoctors);
-    console.log("✅ Medici inseriti con successo!");
+    console.log("Medici inseriti con successo!");
     process.exit();
   } catch (error) {
-    console.error("❌ Errore nel seed:", error);
+    console.error("Errore nel seed:", error);
     process.exit(1);
   }
 };

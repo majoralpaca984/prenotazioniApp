@@ -10,19 +10,19 @@ const doctorImages = {
 
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
-  const isLogged = !!localStorage.getItem("token"); // ✅ Esattamente come il tuo originale!
+  const isLogged = !!localStorage.getItem("token"); //  Esattamente come il tuo originale!
   const weekDays = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
 
-  // ✅ Logica IDENTICA al tuo file originale
-  const handleSlotClick = (date, time) => {
+  //  Logica IDENTICA al tuo file originale
+  const handleSlotClick = (slot, time) => {
     if (!isLogged) {
       navigate("/login");
     } else {
-      navigate(`/appointment/new?doctor=${doctor._id}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`);
+      navigate(`/appointment/new?doctor=${doctor._id}&date=${encodeURIComponent(slot.value)}&time=${encodeURIComponent(time)}`);
     }
   };
 
-  // ✅ Stesso bottone "Prenota Appuntamento" del tuo originale
+  //  Stesso bottone "Prenota Appuntamento" del tuo originale
   const handleBookAppointment = () => {
     if (!isLogged) {
       navigate("/login");
@@ -77,7 +77,7 @@ const DoctorCard = ({ doctor }) => {
               {/* Grid responsive - equivalente alla tua availability-grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                 {weekDays.map((day, i) => {
-                  const date = doctor.availability?.[i];
+                  const slot = doctor.availability?.[i];
                   return (
                     <div key={day} className="bg-gray-50 dark:bg-gray-700 rounded-xl p-3 min-h-[140px] hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
                       
@@ -87,16 +87,16 @@ const DoctorCard = ({ doctor }) => {
                           {day}
                         </div>
                         <div className="text-xs text-gray-600 dark:text-gray-400 mb-3">
-                          {date || "-"}
+                          {slot?.label || "-"}
                         </div>
                         
-                        {/* Time slots - ✅ IDENTICA logica del tuo originale */}
-                        {date && (
+                        {/* Time slots -  IDENTICA logica del tuo originale */}
+                        {slot && (
                           <div className="space-y-1">
-                            {["10:20", "10:40", "11:00", "11:20"].map((time) => (
+                            {["10:15", "10:30", "10:45", "11:00"].map((time) => (
                               <button
                                 key={time}
-                                onClick={() => handleSlotClick(date, time)}
+                                onClick={() => handleSlotClick(slot, time)}
                                 className="w-full bg-blue-500 hover:bg-blue-600 text-white text-xs py-1.5 px-2 rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium shadow-sm hover:shadow-md cursor-pointer"
                               >
                                 {time}
@@ -136,7 +136,7 @@ const DoctorCard = ({ doctor }) => {
               </div>
             </div>
 
-            {/* Bottone Prenota - ✅ IDENTICA logica del tuo originale */}
+            {/* Bottone Prenota -  IDENTICA logica del tuo originale */}
             <button
               onClick={handleBookAppointment}
               className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center"

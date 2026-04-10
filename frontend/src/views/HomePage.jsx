@@ -1,10 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DoctorCard from "./DoctorCard"; // ✅ Import del DoctorCard separato
+import DoctorCard from "./DoctorCard"; //  Import del DoctorCard separato
+
+const formatDateLabel = (date) =>
+  date.toLocaleDateString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+
+const formatDateInputValue = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const buildUpcomingAvailability = (offsets = []) =>
+  offsets.map((offset) => {
+    if (offset === null) return null;
+
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+
+    return {
+      label: formatDateLabel(date),
+      value: formatDateInputValue(date),
+    };
+  });
 
 function HomePage() {
-  const navigate = useNavigate(); // ✅ Navigazione reale
-  const isLogged = !!localStorage.getItem("token"); // ✅ CORRETTO - non più hardcoded!
+  const navigate = useNavigate(); //  Navigazione reale
+  const isLogged = !!localStorage.getItem("token"); //  CORRETTO - non più hardcoded!
   
   // Stati per la ricerca esami e medici
   const [prestazione, setPrestazione] = useState("");
@@ -47,7 +73,7 @@ function HomePage() {
 
   // Handler per la navigazione
   const handleNavigation = (path) => {
-    navigate(path); // ✅ Navigazione reale
+    navigate(path); //  Navigazione reale
   };
 
   // Dati di esempio per i dottori
@@ -57,21 +83,21 @@ function HomePage() {
       name: "Dr. Mario Rossi",
       speciality: "Cardiologo",
       image: "dott.rossi.jpg",
-      availability: ["21/01", "22/01", "23/01", "24/01", "25/01"]
+      availability: buildUpcomingAvailability([0, 1, 2, 3, 4])
     },
     {
       _id: "2", 
       name: "Dr.ssa Sofia Bianchi",
       speciality: "Dermatologa",
       image: "dott.sa.jpg",
-      availability: ["21/01", "", "23/01", "24/01", "25/01"]
+      availability: buildUpcomingAvailability([0, null, 2, 3, 4])
     },
     {
       _id: "3",
       name: "Dr. Lucia Verdi",
       speciality: "Neurologo", 
       image: "default",
-      availability: ["21/01", "22/01", "", "24/01", "25/01"]
+      availability: buildUpcomingAvailability([0, 1, null, 3, 4])
     }
   ];
 
@@ -226,7 +252,7 @@ function HomePage() {
               </div>
             </div>
             
-            {/* ✅ USA IL DOCTORCARD SEPARATO - non più integrato */}
+            {/*  USA IL DOCTORCARD SEPARATO - non più integrato */}
             <div className="space-y-6">
               {sampleDoctors.map((doctor) => (
                 <DoctorCard key={doctor._id} doctor={doctor} />

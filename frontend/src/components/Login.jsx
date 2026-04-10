@@ -10,7 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams(); // ✅ Per gestire i parametri URL
+  const [searchParams] = useSearchParams(); //  Per gestire i parametri URL
 
   const handleChange = (e) => {
     setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -33,7 +33,7 @@ function Login() {
       const data = await response.json();
       localStorage.setItem("token", data.token);
       
-      // ✅ GESTISCI REDIRECT dall'email
+      //  GESTISCI REDIRECT dall'email
       const redirectPath = searchParams.get('redirect');
       navigate(redirectPath || "/dashboard");
     } catch (error) {
@@ -59,7 +59,7 @@ function Login() {
               </div>
             )}
 
-            {/* ✅ Messaggio se viene da un link email */}
+            {/*  Messaggio se viene da un link email */}
             {searchParams.get('redirect') && (
               <div className="alert bg-blue-50 border-blue-200 text-blue-800 mb-4">
                 <i className="fas fa-info-circle mr-2"></i>

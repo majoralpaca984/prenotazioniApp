@@ -15,7 +15,7 @@ function CalendarPage() {
 
   const location = useLocation();
 
-  // 🎉 MOSTRA MESSAGGIO DI SUCCESSO dal form
+  //  MOSTRA MESSAGGIO DI SUCCESSO dal form
   useEffect(() => {
     if (location.state?.message) {
       setMessage(location.state.message);
@@ -31,7 +31,7 @@ function CalendarPage() {
     }
   }, [location.state]);
 
-  // 🔄 FETCH APPOINTMENTS con callback ottimizzato
+  //  FETCH APPOINTMENTS con callback ottimizzato
   const fetchAppointments = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -55,23 +55,23 @@ function CalendarPage() {
       const data = await response.json();
       setAppointments(data);
     } catch (err) {
-      console.error("❌ Errore fetch appointments:", err);
+      console.error("Errore fetch appointments:", err);
       setError("Errore nel caricamento degli appuntamenti");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // 🔄 CARICAMENTO INIZIALE
+  //  CARICAMENTO INIZIALE
   useEffect(() => {
     fetchAppointments();
   }, [fetchAppointments]);
 
-  // 👂 ASCOLTA CAMBIAMENTI da AppointmentForm
+  //  ASCOLTA CAMBIAMENTI da AppointmentForm
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'appointment_updated') {
-        console.log('🔄 Calendar: Rilevato cambiamento appuntamento');
+        console.log('Calendar: Rilevato cambiamento appuntamento');
         fetchAppointments();
         localStorage.removeItem('appointment_updated'); // Cleanup
       }
@@ -81,7 +81,7 @@ function CalendarPage() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [fetchAppointments]);
 
-  // 📅 NAVIGAZIONE MESE
+  //  NAVIGAZIONE MESE
   const goToPreviousMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
@@ -95,12 +95,12 @@ function CalendarPage() {
     setSelectedDate(new Date());
   };
 
-  // 🎯 GESTIONE SELEZIONE DATA
+  //  GESTIONE SELEZIONE DATA
   const handleDateSelect = (date) => {
     setSelectedDate(date);
   };
 
-  // 📊 FILTRA APPUNTAMENTI per il mese corrente
+  //  FILTRA APPUNTAMENTI per il mese corrente
   const currentMonthAppointments = appointments.filter(appointment => {
     const appointmentDate = new Date(appointment.date);
     return (
@@ -109,7 +109,7 @@ function CalendarPage() {
     );
   });
 
-  // 📈 STATISTICHE RAPIDE
+  //  STATISTICHE RAPIDE
   const stats = {
     total: currentMonthAppointments.length,
     completed: currentMonthAppointments.filter(a => a.status === 'completed').length,
@@ -135,7 +135,7 @@ function CalendarPage() {
 
   return (
     <div className="space-y-6">
-      {/* 🎉 MESSAGGIO DI SUCCESSO */}
+      {/*  MESSAGGIO DI SUCCESSO */}
       {message && (
         <div className={`alert ${messageType === 'success' ? 'alert-success' : messageType === 'info' ? 'alert-info' : 'alert-danger'} animate-slideUp`}>
           <i className={`fas ${messageType === 'success' ? 'fa-check-circle' : messageType === 'info' ? 'fa-info-circle' : 'fa-exclamation-triangle'} mr-2`}></i>
@@ -149,7 +149,7 @@ function CalendarPage() {
         </div>
       )}
 
-      {/* 🚨 ERRORI */}
+      {/*  ERRORI */}
       {error && (
         <div className="alert alert-danger">
           <i className="fas fa-exclamation-triangle mr-2"></i>
@@ -163,7 +163,7 @@ function CalendarPage() {
         </div>
       )}
 
-      {/* 📅 HEADER CALENDARIO */}
+      {/*  HEADER CALENDARIO */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
@@ -191,7 +191,7 @@ function CalendarPage() {
         </div>
       </div>
 
-      {/* 📊 STATISTICHE RAPIDE */}
+      {/*  STATISTICHE RAPIDE */}
       {stats.total > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
@@ -213,7 +213,7 @@ function CalendarPage() {
         </div>
       )}
 
-      {/* 🗓️ CONTROLLI NAVIGAZIONE MESE */}
+      {/*  CONTROLLI NAVIGAZIONE MESE */}
       <div className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
         <button
           onClick={goToPreviousMonth}
@@ -236,7 +236,7 @@ function CalendarPage() {
         </button>
       </div>
 
-      {/* 📅 COMPONENTE CALENDARIO */}
+      {/*  COMPONENTE CALENDARIO */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
         <Calendar
           year={currentDate.getFullYear()}
@@ -247,7 +247,7 @@ function CalendarPage() {
         />
       </div>
 
-      {/* 📋 LISTA APPUNTAMENTI DEL MESE (se ci sono) */}
+      {/*  LISTA APPUNTAMENTI DEL MESE (se ci sono) */}
       {currentMonthAppointments.length > 0 && (
         <div className="card">
           <div className="card-header">
@@ -308,7 +308,7 @@ function CalendarPage() {
         </div>
       )}
 
-      {/* 📭 STATO VUOTO */}
+      {/*  STATO VUOTO */}
       {currentMonthAppointments.length === 0 && !loading && (
         <div className="text-center py-12">
           <div className="max-w-md mx-auto">

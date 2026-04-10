@@ -11,7 +11,7 @@ const formatDateInputValue = (date) => {
 function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
   const navigate = useNavigate();
 
-  // 📊 CALCOLI OTTIMIZZATI con useMemo (performance!)
+  //  CALCOLI OTTIMIZZATI con useMemo (performance!)
   const calendarData = useMemo(() => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDay = new Date(year, month, 1).getDay();
@@ -36,7 +36,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
     return { daysArray, apptsByDay };
   }, [year, month, appointments]);
 
-  // 📅 HELPER FUNZIONI
+  //  HELPER FUNZIONI
   const today = new Date();
   const isToday = (day) =>
     day &&
@@ -53,7 +53,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
     );
   };
 
-  // 🎨 COLORE DOT basato su status
+  // COLORE DOT basato su status
   const getDotColor = (appointment) => {
     switch (appointment.status) {
       case 'completed': return 'bg-success-500';
@@ -63,7 +63,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
     }
   };
 
-  // 🖱️ CLICK HANDLER migliorato
+  //  CLICK HANDLER migliorato
   const handleDayClick = (day, appts) => {
     if (!day) return;
 
@@ -86,14 +86,14 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
 
   return (
     <div className="calendar-container">
-      {/* 📅 HEADER GIORNI SETTIMANA */}
+      {/* HEADER GIORNI SETTIMANA */}
       <div className="calendar-header">
         {["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"].map((d, i) => (
           <div className="day-header" key={i}>{d}</div>
         ))}
       </div>
 
-      {/* 📊 GRIGLIA CALENDARIO */}
+      {/*  GRIGLIA CALENDARIO */}
       <div className="calendar-grid">
         {calendarData.daysArray.map((day, i) => {
           if (!day) {
@@ -103,7 +103,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
           const dateKey = `${year}-${month}-${day}`;
           const appts = calendarData.apptsByDay[dateKey] || [];
           
-          // 🎨 CLASSI CSS DINAMICHE
+          //  CLASSI CSS DINAMICHE
           const dayClasses = [
             "calendar-day",
             isToday(day) && "today",
@@ -122,17 +122,17 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
                   : 'Clicca per creare un appuntamento'
               }
             >
-              {/* 🔢 NUMERO GIORNO */}
+              {/*  NUMERO GIORNO */}
               <div className="day-number">{day}</div>
               
-              {/* 🎯 INDICATORI APPUNTAMENTI */}
+              {/*  INDICATORI APPUNTAMENTI */}
               <div className="appointments-indicator">
                 {/* Mostra max 3 dot */}
                 {appts.slice(0, 3).map((appt, idx) => (
                   <div
                     key={appt._id || idx}
                     className={`appointment-dot ${getDotColor(appt)}`}
-                    title={`📅 ${new Date(appt.date).toLocaleDateString("it-IT")} ⏰ ${appt.time}\n🔔 ${appt.title}\n📊 Status: ${appt.status || 'scheduled'}`}
+                    title={` ${new Date(appt.date).toLocaleDateString("it-IT")}  ${appt.time}\n ${appt.title}\n Status: ${appt.status || 'scheduled'}`}
                   ></div>
                 ))}
                 
@@ -144,7 +144,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
                 )}
               </div>
 
-              {/* 🎯 BADGE SPECIALI */}
+              {/*  BADGE SPECIALI */}
               <div className="day-badges">
                 {isToday(day) && (
                   <span className="badge-today" title="Oggi">
@@ -162,7 +162,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
         })}
       </div>
 
-      {/* 📊 STATISTICHE RAPIDE (se ci sono appuntamenti) */}
+      {/*  STATISTICHE RAPIDE (se ci sono appuntamenti) */}
       {appointments && appointments.length > 0 && (
         <div className="mt-4 text-center">
           <small className="text-gray-500 dark:text-gray-400">
