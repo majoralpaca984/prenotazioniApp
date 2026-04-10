@@ -88,7 +88,7 @@ function SearchResults() {
             return aptDate.toDateString() === now.toDateString();
           });
           break;
-        case "week":
+        case "week": {
           const weekStart = new Date(now);
           weekStart.setDate(now.getDate() - now.getDay());
           const weekEnd = new Date(weekStart);
@@ -98,6 +98,7 @@ function SearchResults() {
             return aptDate >= weekStart && aptDate <= weekEnd;
           });
           break;
+        }
         case "month":
           filtered = filtered.filter(apt => {
             const aptDate = new Date(apt.date);

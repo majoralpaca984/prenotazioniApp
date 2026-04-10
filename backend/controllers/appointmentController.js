@@ -5,6 +5,63 @@ import User from '../models/User.js';
 // 🚀 CACHE SEMPLICE per velocizzare le chiamate
 const cache = new Map();
 const CACHE_TIME = 3 * 60 * 1000; // 3 minuti
+const VALID_STATUSES = new Set(["scheduled", "completed", "cancelled"]);
+
+const buildAppointmentPayload = ({ title, description = "", date, time, status = "scheduled" }) => {
+  const trimmedTitle = title?.trim();
+  const trimmedDescription = description?.trim() || "";
+
+  if (!trimmedTitle || !date || !time) {
+    return { error: "Titolo, data e ora sono obbligatori" };
+  }
+
+  if (trimmedTitle.length < 3) {
+    return { error: "Il titolo deve essere di almeno 3 caratteri" };
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
+    return { error: "Data o orario non validi" };
+  }
+
+  const appointmentDate = new Date(`${date}T${time}`);
+  if (Number.isNaN(appointmentDate.getTime())) {
+    return { error: "Data o orario non validi" };
+  }
+
+  const [hour, minute] = time.split(":").map(Number);
+  const isValidWorkingSlot = hour >= 7 && hour <= 18 && minute % 15 === 0 && !(hour === 18 && minute > 0);
+  if (!isValidWorkingSlot) {
+    return { error: "Puoi prenotare solo dalle 7:00 alle 18:00 con intervalli di 15 minuti" };
+  }
+
+  if (!VALID_STATUSES.has(status)) {
+    return { error: "Stato appuntamento non valido" };
+  }
+
+  return {
+    payload: {
+      title: trimmedTitle,
+      description: trimmedDescription,
+      date: appointmentDate,
+      time,
+      status,
+    },
+  };
+};
+
+const isSlotTaken = async ({ userId, appointmentDate, excludeAppointmentId }) => {
+  const query = {
+    user: userId,
+    date: appointmentDate,
+    status: { $ne: "cancelled" },
+  };
+
+  if (excludeAppointmentId) {
+    query._id = { $ne: excludeAppointmentId };
+  }
+
+  return Appointment.findOne(query).lean();
+};
 
 export const getAppointments = async (req, res) => {
   try {
@@ -38,25 +95,22 @@ export const getAppointments = async (req, res) => {
 // Create a new appointment
 export const createAppointment = async (req, res) => {
   try {
-    const { title, description, date, time, status } = req.body;
-
-    // 🛡️ Validazione migliorata
-    if (!title || !date || !time) {
-      return res.status(400).json({ message: "Titolo, data e ora sono obbligatori" });
+    const { payload, error } = buildAppointmentPayload(req.body);
+    
+    if (error) {
+      return res.status(400).json({ message: error });
     }
 
-    const appointmentDate = new Date(`${date}T${time}`);
-    
     // Controlla che la data non sia nel passato
-    if (appointmentDate < new Date()) {
+    if (payload.date < new Date()) {
       return res.status(400).json({ message: "Non puoi prenotare nel passato"});
     }
 
     // Controlla se lo slot è già occupato (ottimizzato)
-    const slotTaken = await Appointment.findOne({
-      date: appointmentDate,
-      status: { $ne: 'cancelled' } // Ignora appuntamenti cancellati
-    }).lean();
+    const slotTaken = await isSlotTaken({
+      userId: req.user.userId,
+      appointmentDate: payload.date,
+    });
 
     if (slotTaken) {
       return res.status(400).json({ message: "Slot già occupato!" });
@@ -64,11 +118,7 @@ export const createAppointment = async (req, res) => {
 
     // Crea nuovo appuntamento
     const appointment = new Appointment({
-      title,
-      description,
-      date: appointmentDate,
-      time,
-      status: status || 'scheduled', // Default se non specificato
+      ...payload,
       user: req.user.userId,
     });
 
@@ -88,8 +138,8 @@ export const createAppointment = async (req, res) => {
     // 📧 Invia email di conferma (asincrono per non bloccare la risposta)
     if (userEmail) {
       sendConfirmationEmail(userEmail, {
-        date,
-        time,
+        date: req.body.date,
+        time: payload.time,
         doctor: appointment.title,
         _id: appointment._id // Aggiungo l'ID per l'email
       }).catch(err => console.error('❌ Email error:', err));
@@ -126,13 +176,29 @@ export const getAppointmentById = async (req, res) => {
 // Update by ID
 export const updateAppointment = async (req, res) => {
   try {
+    const { payload, error } = buildAppointmentPayload(req.body);
+
+    if (error) {
+      return res.status(400).json({ message: error });
+    }
+
+    const slotTaken = await isSlotTaken({
+      userId: req.user.userId,
+      appointmentDate: payload.date,
+      excludeAppointmentId: req.params.id,
+    });
+
+    if (slotTaken) {
+      return res.status(400).json({ message: "Slot già occupato!" });
+    }
+
     // 🔒 Sicurezza: solo il proprietario può modificare
     const appointment = await Appointment.findOneAndUpdate(
       { 
         _id: req.params.id, 
         user: req.user.userId 
       },
-      req.body,
+      payload,
       { new: true, runValidators: true }
     );
     

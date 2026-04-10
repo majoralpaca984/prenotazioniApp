@@ -3,6 +3,13 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
+const formatDateInputValue = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // 🔔 FUNZIONE per notificare altri componenti dei cambiamenti
 const notifyAppointmentChange = (action, appointmentId = null) => {
   // Notifica Dashboard e Calendar tramite localStorage
@@ -62,27 +69,14 @@ function AppointmentForm() {
     return await response.json();
   }, []);
 
-  // Se c'è un id, carica i dati dell'appuntamento da backend
-  useEffect(() => {
-    if (id) {
-      setIsEdit(true);
-      fetchAppointment();
-    } else {
-      setIsEdit(false);
-      // 📅 PRE-POPOLA la data con oggi per UX migliore
-      const today = new Date().toISOString().split("T")[0];
-      setFormData(prev => ({ ...prev, date: today }));
-    }
-  }, [id]);
-
-  const fetchAppointment = async () => {
+  const fetchAppointment = useCallback(async () => {
     setInitialLoading(true);
     try {
       const appointment = await apiCall(`/appointments/${id}`);
       
       // Format date for input
       const date = new Date(appointment.date);
-      const formattedDate = date.toISOString().split("T")[0];
+      const formattedDate = formatDateInputValue(date);
 
       setFormData({
         title: appointment.title || "",
@@ -106,7 +100,21 @@ function AppointmentForm() {
     } finally {
       setInitialLoading(false);
     }
-  };
+  }, [apiCall, id]);
+
+  // Se c'è un id, carica i dati dell'appuntamento da backend
+  useEffect(() => {
+    if (id) {
+      setIsEdit(true);
+      fetchAppointment();
+    } else {
+      setIsEdit(false);
+      const queryDate = new URLSearchParams(location.search).get("date");
+      const today = formatDateInputValue(new Date());
+      const initialDate = /^\d{4}-\d{2}-\d{2}$/.test(queryDate || "") ? queryDate : today;
+      setFormData(prev => ({ ...prev, date: initialDate }));
+    }
+  }, [fetchAppointment, id, location.search]);
 
   // 🛡️ VALIDAZIONE MIGLIORATA
   const validateForm = () => {
@@ -371,7 +379,7 @@ function AppointmentForm() {
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                    min={isEdit ? undefined : new Date().toISOString().split("T")[0]}
+                    min={isEdit ? undefined : formatDateInputValue(new Date())}
                     required
                     className="form-control"
                   />

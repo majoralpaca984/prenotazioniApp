@@ -11,15 +11,6 @@ function isSameDay(d1, d2) {
   );
 }
 
-function generateMonthDays() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  return Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
-}
-
 // Modal Component
 function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
@@ -51,13 +42,12 @@ function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedDayAppointments, setSelectedDayAppointments] = useState([]);
+  const [selectedDayAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   const navigate = useNavigate();
-  const monthDays = generateMonthDays();
 
   // 🔄 FETCH OTTIMIZZATO con cache e callback
   const fetchAppointments = useCallback(async (showLoading = true) => {
@@ -179,20 +169,12 @@ function Dashboard() {
       year: "numeric",
     });
 
-  const formatDateTime = (date, time) => {
+  const formatDateTime = (date) => {
     return new Date(date).toLocaleDateString("it-IT", {
       weekday: "long",
       day: "2-digit",
       month: "long",
     });
-  };
-
-  const handleDayClick = (day) => {
-    const found = appointments.filter((a) =>
-      isSameDay(new Date(a.date), day)
-    );
-    setSelectedDayAppointments(found);
-    setShowModal(true);
   };
 
   // 🏃‍♂️ LOADING INIZIALE

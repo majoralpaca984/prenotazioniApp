@@ -1,7 +1,14 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDate }) {
+const formatDateInputValue = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
   const navigate = useNavigate();
 
   // 📊 CALCOLI OTTIMIZZATI con useMemo (performance!)
@@ -72,7 +79,7 @@ function Calendar({ year, month, appointments, isAdmin, onDateSelect, selectedDa
       navigate(`/appointment/edit/${appts[0]._id}`);
     } else {
       // Se non ci sono appuntamenti, vai alla creazione con data pre-impostata
-      const dateString = clickedDate.toISOString().split('T')[0];
+      const dateString = formatDateInputValue(clickedDate);
       navigate(`/appointment/new?date=${dateString}`);
     }
   };

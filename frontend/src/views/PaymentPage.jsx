@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PaymentPage() {
@@ -187,7 +187,7 @@ function PaymentPage() {
       setPaymentComplete(true);
       setMessage('✅ Pagamento completato con successo!');
 
-    } catch (error) {
+    } catch {
       setMessage('❌ Errore nel pagamento. Riprova.');
     } finally {
       setPaymentProcessing(false);

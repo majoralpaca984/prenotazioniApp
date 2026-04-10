@@ -21,7 +21,7 @@ function UserProfile() {
   const [activeTab, setActiveTab] = useState('personal');
   
   // Stati per i dati utente
-  const [user, setUser] = useState(getUserFromToken());
+  const [user] = useState(getUserFromToken());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -269,6 +269,11 @@ function UserProfile() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const deleteDocument = (documentId) => {
+    setDocuments(documents.filter((doc) => doc.id !== documentId));
+    setMessage('Documento eliminato con successo.');
   };
 
   // Handler per logout
