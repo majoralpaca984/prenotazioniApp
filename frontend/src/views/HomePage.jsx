@@ -69,6 +69,10 @@ function HomePage() {
     setSpecializzazione("");
     setCitta("");
     setSearchQuery("");
+    navigate("/", { replace: true });
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   };
 
   // Handler per la navigazione
@@ -138,7 +142,9 @@ function HomePage() {
   const styles = `
     .hero-section {
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background:
+        linear-gradient(90deg, rgba(238, 247, 251, 0.92) 0%, rgba(238, 247, 251, 0) 14%, rgba(238, 247, 251, 0) 86%, rgba(238, 247, 251, 0.92) 100%),
+        linear-gradient(135deg, #7f8ff4 0%, #7180eb 48%, #64cfd0 100%);
       display: flex;
       align-items: center;
       position: relative;
@@ -154,6 +160,31 @@ function HomePage() {
       bottom: 0;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="500" cy="100" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="800" cy="300" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="300" cy="600" r="4" fill="rgba(255,255,255,0.1)"/><circle cx="700" cy="700" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
       animation: float 20s ease-in-out infinite;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 9rem;
+      background: linear-gradient(180deg, rgba(239, 246, 255, 0) 0%, #eef7fb 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-section > .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark .hero-section {
+      background: linear-gradient(135deg, #111827 0%, #164e63 56%, #0f766e 100%);
+    }
+
+    .dark .hero-section::after {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0) 0%, #1f2937 100%);
     }
 
     @keyframes float {
@@ -604,58 +635,58 @@ function HomePage() {
           </div>
         </section>
 
-        <footer className="bg-gray-900 text-white py-12">
+        <footer className="bg-gradient-to-br from-slate-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 text-gray-700 dark:text-gray-300 py-12 border-t border-teal-100 dark:border-gray-700">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-teal-600 dark:bg-teal-500 rounded-lg flex items-center justify-center">
                     <i className="fas fa-calendar-check text-white"></i>
                   </div>
-                  <span className="text-2xl font-bold">EasyCare</span>
+                  <span className="text-2xl font-bold text-gray-950 dark:text-white">EasyCare</span>
                 </div>
-                <p className="text-gray-400 mb-4 max-w-md">
+                <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-md">
                   La soluzione definitiva per la gestione professionale degli appuntamenti. 
                   Semplice, veloce e sempre affidabile.
                 </p>
                 <div className="flex space-x-4">
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors">
                     <i className="fab fa-facebook-f text-xl"></i>
                   </a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors">
                     <i className="fab fa-twitter text-xl"></i>
                   </a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors">
                     <i className="fab fa-linkedin-in text-xl"></i>
                   </a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors">
                     <i className="fab fa-instagram text-xl"></i>
                   </a>
                 </div>
               </div>
               
               <div>
-                <h4 className="font-semibold mb-4">Visite Richieste</h4>
-                <ul className="space-y-2 text-gray-400">
-                  <li><a href="#" className="hover:text-white transition-colors">Visita Ginecologica</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Visita Cardiologica</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Visita Dermatologica</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Visita Neurologica</a></li>
+                <h4 className="font-semibold mb-4 text-gray-950 dark:text-white">Visite Richieste</h4>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Visita Ginecologica</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Visita Cardiologica</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Visita Dermatologica</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Visita Neurologica</a></li>
                 </ul>
               </div>
               
               <div>
-                <h4 className="font-semibold mb-4">Esami Richiesti</h4>
-                <ul className="space-y-2 text-gray-400">
-                  <li><a href="#" className="hover:text-white transition-colors">Ecografia Addome</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">RMN Ginocchio</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">TC Torace</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Mammografia</a></li>
+                <h4 className="font-semibold mb-4 text-gray-950 dark:text-white">Esami Richiesti</h4>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Ecografia Addome</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">RMN Ginocchio</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">TC Torace</a></li>
+                  <li><a href="#" className="hover:text-teal-700 dark:hover:text-teal-300 transition-colors">Mammografia</a></li>
                 </ul>
               </div>
             </div>
             
-            <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+            <div className="border-t border-teal-100 dark:border-gray-700 mt-12 pt-8 text-center text-gray-500 dark:text-gray-400">
               <p>&copy; 2025 EasyCare - P.IVA 01234567890 - info@easycare.it</p>
             </div>
           </div>
