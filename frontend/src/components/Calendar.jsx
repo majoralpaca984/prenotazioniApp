@@ -165,7 +165,7 @@ function Calendar({ year, month, appointments, onDateSelect, selectedDate }) {
       {/*  STATISTICHE RAPIDE (se ci sono appuntamenti) */}
       {appointments && appointments.length > 0 && (
         <div className="mt-4 text-center">
-          <small className="text-gray-500 dark:text-gray-400">
+          <small className="text-gray-500">
             {appointments.length} appuntament{appointments.length !== 1 ? 'i' : 'o'} in questo mese
             {appointments.filter(a => a.status === 'completed').length > 0 && 
               ` • ${appointments.filter(a => a.status === 'completed').length} completat${appointments.filter(a => a.status === 'completed').length !== 1 ? 'i' : 'o'}`

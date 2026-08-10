@@ -154,8 +154,8 @@ function UserProfile() {
       <section className="card">
         <div className="card-header flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dati personali</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Aggiorna le informazioni del tuo account.</p>
+            <h2 className="text-xl font-bold text-gray-900">Dati personali</h2>
+            <p className="text-sm text-gray-500">Aggiorna le informazioni del tuo account.</p>
           </div>
           <button type="button" onClick={() => setEditing((value) => !value)} className="btn btn-outline-primary">
             <i className={`fas ${editing ? "fa-times" : "fa-edit"}`} />{editing ? "Annulla" : "Modifica"}
@@ -176,7 +176,7 @@ function UserProfile() {
                   className="form-control"
                 />
               ) : (
-                <p className="rounded-lg bg-gray-50 p-3 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
+                <p className="rounded-lg bg-gray-50 p-3 text-gray-900">
                   {profile[field.name] || "Non specificato"}
                 </p>
               )}
@@ -195,8 +195,8 @@ function UserProfile() {
 
       <section className="card">
         <div className="card-header">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Sicurezza</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Scegli una password di almeno 8 caratteri.</p>
+          <h2 className="text-xl font-bold text-gray-900">Sicurezza</h2>
+          <p className="text-sm text-gray-500">Scegli una password di almeno 8 caratteri.</p>
         </div>
         <form onSubmit={changePassword} className="card-body grid gap-5 md:grid-cols-3">
           {[

@@ -204,7 +204,7 @@ function AppointmentForm() {
         <div className="w-full max-w-2xl">
           <div className="text-center py-20">
             <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Caricamento appuntamento...</p>
+            <p className="text-gray-600">Caricamento appuntamento...</p>
           </div>
         </div>
       </div>
@@ -251,7 +251,7 @@ function AppointmentForm() {
                   maxLength={100}
                   className="form-control"
                 />
-                <small className="text-gray-500 dark:text-gray-400">
+                <small className="text-gray-500">
                   {formData.title.length}/100 caratteri
                 </small>
               </div>
@@ -270,7 +270,7 @@ function AppointmentForm() {
                   maxLength={500}
                   className="form-control"
                 />
-                <small className="text-gray-500 dark:text-gray-400">
+                <small className="text-gray-500">
                   {formData.description.length}/500 caratteri
                 </small>
               </div>
@@ -376,8 +376,8 @@ function AppointmentForm() {
             </form>
 
             {/*  INFO HELPER */}
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <small className="text-gray-600 dark:text-gray-400 flex items-start gap-2">
+            <div className="mt-6 rounded-lg bg-gray-50 p-4">
+              <small className="flex items-start gap-2 text-gray-600">
                 <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
                 <span>
                   <strong>Informazioni:</strong> Puoi prenotare dalle 7:00 alle 18:00 

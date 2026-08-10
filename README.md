@@ -16,7 +16,7 @@ Applicazione full stack dimostrativa per creare e gestire appuntamenti. Il proge
 - calendario mensile e stati `scheduled`, `completed`, `cancelled`;
 - aggiornamento del profilo e cambio password;
 - email di conferma opzionale tramite SendGrid;
-- tema chiaro/scuro e interfaccia responsive.
+- interfaccia responsive ottimizzata per desktop e dispositivi mobili.
 
 I profili dei medici e le disponibilità mostrati nella home sono dati dimostrativi. Il progetto non elabora pagamenti e non archivia documenti sanitari.
 
