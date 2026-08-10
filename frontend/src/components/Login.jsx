@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import GoogleAuthButton from "./GoogleAuthButton";
 import { apiRequest } from "../services/api";
 import { getSafeRedirectPath, setToken } from "../utils/auth";
@@ -8,17 +8,16 @@ function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams(); //  Per gestire i parametri URL
+  const [searchParams] = useSearchParams();
   const redirectPath = getSafeRedirectPath(searchParams.get("redirect"));
 
-  const handleChange = (e) => {
-    setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (event) => {
+    setFormData((current) => ({ ...current, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
     setLoading(true);
     try {
@@ -27,111 +26,49 @@ function Login() {
         body: JSON.stringify(formData),
       });
       setToken(data.token);
-      
-      //  GESTISCI REDIRECT dall'email
       navigate(redirectPath);
-    } catch (error) {
-      setError(error.message || "Login failed");
+    } catch (requestError) {
+      setError(requestError.message || "Accesso non riuscito");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <div className="card">
-          <div className="card-body">
-            <h3 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
-              <i className="fas fa-sign-in-alt mr-2"></i>Login
-            </h3>
-            
-            {error && (
-              <div className="alert alert-danger mb-4">
-                <i className="fas fa-exclamation-triangle mr-2"></i>
-                {error}
-              </div>
-            )}
+    <main className="auth-page">
+      <aside className="auth-visual" aria-hidden="true">
+        <span className="brand-mark"><i className="fas fa-stethoscope" /></span>
+        <p className="home-eyebrow">Area personale</p>
+        <h1>La tua salute,<br /><em>organizzata meglio.</em></h1>
+        <p>Tutti gli appuntamenti in un unico posto, sempre disponibili.</p>
+      </aside>
 
-            {/*  Messaggio se viene da un link email */}
-            {searchParams.get('redirect') && (
-              <div className="alert bg-blue-50 border-blue-200 text-blue-800 mb-4">
-                <i className="fas fa-info-circle mr-2"></i>
-                Accedi per continuare alla pagina richiesta
-              </div>
-            )}
+      <section className="auth-panel" aria-labelledby="login-title">
+        <p className="home-eyebrow">Bentornata</p>
+        <h1 id="login-title">Accedi al tuo account</h1>
+        <p className="auth-subtitle">Gestisci visite, esami e appuntamenti dalla tua dashboard.</p>
 
-            <div className="mb-4">
-              <GoogleAuthButton redirectTo={redirectPath} />
-            </div>
+        {error && <div className="alert alert-danger"><i className="fas fa-triangle-exclamation" />{error}</div>}
+        {searchParams.get("redirect") && <div className="alert alert-info">Accedi per continuare alla pagina richiesta.</div>}
 
-            <div className="text-center mb-4">
-              <small className="text-gray-500 dark:text-gray-400">oppure accedi con email</small>
-              <hr className="my-2 border-gray-200 dark:border-gray-600" />
-            </div>
+        <GoogleAuthButton redirectTo={redirectPath} />
+        <div className="auth-divider"><span>oppure accedi con email</span></div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Inserisci la tua email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  autoFocus
-                  className="form-control"
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <label className="form-label">Email
+            <input type="email" name="email" placeholder="nome@email.it" value={formData.email} onChange={handleChange} required autoFocus className="form-control" />
+          </label>
+          <label className="form-label">Password
+            <input type="password" name="password" placeholder="Inserisci la password" value={formData.password} onChange={handleChange} required className="form-control" />
+          </label>
+          <button type="submit" disabled={loading} className="btn btn-primary w-full">
+            {loading ? <><span className="spinner h-4 w-4" />Accesso...</> : <>Accedi<i className="fas fa-arrow-right" /></>}
+          </button>
+        </form>
 
-              <div>
-                <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Inserisci la password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="form-control"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full btn btn-primary"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    Accesso...
-                  </>
-                ) : (
-                  <>
-                    <i className="fas fa-sign-in-alt mr-2"></i>
-                    Accedi
-                  </>
-                )}
-              </button>
-            </form>
-            
-            <div className="mt-4 text-center">
-              <small className="text-gray-600 dark:text-gray-400">
-                Non hai un account?{" "}
-                <button
-                  onClick={() => navigate("/register")}
-                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
-                >
-                  Registrati
-                </button>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <p className="auth-switch">Non hai un account? <Link to="/register">Registrati</Link></p>
+      </section>
+    </main>
   );
 }
 
