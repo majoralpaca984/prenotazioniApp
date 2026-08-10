@@ -3,10 +3,12 @@ import { isAuthenticated } from "../utils/auth";
 
 const doctorImages = {
   cardiologo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&crop=face",
-  dermatologa: "https://images.unsplash.com/photo-1594824483286-e3e50e1fff8a?w=300&h=300&fit=crop&crop=face",
+  dermatologa: "/assets/doctor-sofia.webp",
   default: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
   radiologo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
 };
+
+const fallbackDoctorImage = "/assets/doctor-sofia.webp";
 
 const timeSlots = ["10:15", "10:30", "10:45", "11:00"];
 
@@ -40,6 +42,10 @@ function DoctorCard({ doctor, requestedService = "" }) {
           src={image}
           alt={`Foto dimostrativa di ${doctor.name}`}
           loading="lazy"
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = fallbackDoctorImage;
+          }}
           className="doctor-photo"
         />
 
