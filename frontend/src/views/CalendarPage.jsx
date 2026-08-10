@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Calendar from "../components/Calendar";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+import { apiRequest } from "../services/api";
 
 function CalendarPage() {
   const [appointments, setAppointments] = useState([]);
@@ -37,22 +36,7 @@ function CalendarPage() {
     setError("");
     
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Token non trovato");
-      }
-
-      const response = await fetch(`${API_URL}/appointments`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await apiRequest("/appointments", { auth: true });
       setAppointments(data);
     } catch (err) {
       console.error("Errore fetch appointments:", err);
@@ -65,20 +49,6 @@ function CalendarPage() {
   //  CARICAMENTO INIZIALE
   useEffect(() => {
     fetchAppointments();
-  }, [fetchAppointments]);
-
-  //  ASCOLTA CAMBIAMENTI da AppointmentForm
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'appointment_updated') {
-        console.log('Calendar: Rilevato cambiamento appuntamento');
-        fetchAppointments();
-        localStorage.removeItem('appointment_updated'); // Cleanup
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, [fetchAppointments]);
 
   //  NAVIGAZIONE MESE

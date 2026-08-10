@@ -1,59 +1,47 @@
-import express from "express";
-import passport from "passport";
+import "dotenv/config";
 import cors from "cors";
+import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-
-// Importa le routes
-import "./config/passport.js"; // Configurazione Passport per Google OAuth
-import authRoutes from "./routes/auth.js";
 import appointmentRoutes from "./routes/appointments.js";
-import doctorRoutes from "./routes/doctors.js"; 
-
-// Path assoluto della cartella backend
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Carica .env
-dotenv.config({ path: join(__dirname, ".env") });
+import authRoutes from "./routes/auth.js";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const port = Number(process.env.PORT) || 4000;
+const defaultOrigins = [
+  "https://prenotazioni-app.vercel.app",
+  "https://prenotazioni-online.vercel.app",
+  "http://localhost:5173",
+];
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
+  : defaultOrigins;
 
-// CORS: consenti chiamate da Vercel e localhost per sviluppo
-app.use(
-  cors({
-    origin: [
-  "https://prenotazioni-app.vercel.app",      
-  "https://prenotazioni-online.vercel.app",    
-      "http://localhost:5173"
-],
+app.disable("x-powered-by");
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(express.json({ limit: "100kb" }));
 
-    credentials: true,
-  })
-);
-
-// Middleware per body JSON
-app.use(express.json());
-
-//  Registra tutte le rotte
+app.get("/ping", (req, res) => res.json({ message: "pong" }));
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
-app.use("/doctors", doctorRoutes); 
 
-// Rotta di test
-app.get("/ping", (req, res) => res.json({ message: "pong!" }));
+app.use((req, res) => res.status(404).json({ message: "Risorsa non trovata" }));
+app.use((error, req, res, next) => {
+  console.error("Unhandled error:", error);
+  res.status(500).json({ message: "Errore del server" });
+});
 
-// Connessione a MongoDB + avvio server
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(` Backend running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
+async function startServer() {
+  if (!process.env.MONGO_URL || !process.env.JWT_SECRET) {
+    throw new Error("MONGO_URL e JWT_SECRET sono obbligatori");
+  }
+
+  await mongoose.connect(process.env.MONGO_URL);
+  app.listen(port, () => console.log(`Backend attivo sulla porta ${port}`));
+}
+
+startServer().catch((error) => {
+  console.error("Avvio non riuscito:", error.message);
+  process.exit(1);
+});
+
+export default app;

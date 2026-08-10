@@ -201,27 +201,6 @@
     @apply bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center;
   }
 
-  /* Modal Styles */
-  .modal-overlay {
-    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
-  }
-  
-  .modal-content {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto;
-  }
-  
-  .modal-header {
-    @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between;
-  }
-  
-  .modal-body {
-    @apply p-6;
-  }
-  
-  .modal-footer {
-    @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3 justify-end;
-  }
-
   /* Dashboard Footer */
   .dashboard-footer {
     @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4 flex justify-around items-center shadow-lg;
@@ -237,9 +216,14 @@
     @apply animate-spin rounded-full border-2 border-gray-200 border-t-primary-500;
   }
 
-  /* Homepage Styles */
+  /* Homepage */
   .hero-section {
-    @apply bg-gradient-to-br from-primary-500 via-purple-600 to-pink-500 text-white py-20;
+    @apply relative flex min-h-[78vh] items-center overflow-hidden bg-gradient-to-br from-primary-600 via-indigo-600 to-teal-500 py-20 text-white;
+  }
+
+  .hero-section::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent;
   }
   
   .feature-card {
@@ -250,12 +234,7 @@
     @apply w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-500 text-2xl mb-4;
   }
 
-  /* Text Carousel */
-  .text-carousel-container {
-    @apply h-16 flex items-center justify-center;
-  }
-  
-  .text-carousel-text {
-    @apply text-lg font-medium text-center animate-fadeIn;
+  .profile-header {
+    @apply bg-gradient-to-br from-primary-600 via-indigo-600 to-teal-500;
   }
 }

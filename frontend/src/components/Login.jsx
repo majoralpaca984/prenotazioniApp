@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import GoogleLoginButton from "./GoogleLoginButton";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+import GoogleAuthButton from "./GoogleAuthButton";
+import { apiRequest } from "../services/api";
+import { getSafeRedirectPath, setToken } from "../utils/auth";
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -11,6 +11,7 @@ function Login() {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams(); //  Per gestire i parametri URL
+  const redirectPath = getSafeRedirectPath(searchParams.get("redirect"));
 
   const handleChange = (e) => {
     setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -21,21 +22,14 @@ function Login() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const data = await apiRequest("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Login failed");
-      }
-      const data = await response.json();
-      localStorage.setItem("token", data.token);
+      setToken(data.token);
       
       //  GESTISCI REDIRECT dall'email
-      const redirectPath = searchParams.get('redirect');
-      navigate(redirectPath || "/dashboard");
+      navigate(redirectPath);
     } catch (error) {
       setError(error.message || "Login failed");
     } finally {
@@ -68,7 +62,7 @@ function Login() {
             )}
 
             <div className="mb-4">
-              <GoogleLoginButton />
+              <GoogleAuthButton redirectTo={redirectPath} />
             </div>
 
             <div className="text-center mb-4">
@@ -82,7 +76,7 @@ function Login() {
                 <input
                   type="email"
                   name="email"
-                  placeholder="Enter your email"
+                  placeholder="Inserisci la tua email"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -96,7 +90,7 @@ function Login() {
                 <input
                   type="password"
                   name="password"
-                  placeholder="Enter your password"
+                  placeholder="Inserisci la password"
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -112,12 +106,12 @@ function Login() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    Logging in...
+                    Accesso...
                   </>
                 ) : (
                   <>
                     <i className="fas fa-sign-in-alt mr-2"></i>
-                    Login
+                    Accedi
                   </>
                 )}
               </button>
@@ -125,12 +119,12 @@ function Login() {
             
             <div className="mt-4 text-center">
               <small className="text-gray-600 dark:text-gray-400">
-                Don't have an account?{" "}
+                Non hai un account?{" "}
                 <button
                   onClick={() => navigate("/register")}
                   className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
                 >
-                  Register
+                  Registrati
                 </button>
               </small>
             </div>

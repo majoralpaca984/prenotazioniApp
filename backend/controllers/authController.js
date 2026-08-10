@@ -1,253 +1,180 @@
+import "dotenv/config";
+import bcrypt from "bcryptjs";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import bcrypt from "bcryptjs";
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// ---- GOOGLE LOGIN ----
-export const googleLogin = async (req, res) => {
+const normalizeEmail = (email = "") => email.trim().toLowerCase();
+const createToken = (user) =>
+  jwt.sign(
+    { userId: user._id, name: user.name, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" },
+  );
+
+const publicUserFields = "-password -googleId";
+
+export async function googleLogin(req, res) {
   try {
-    const { credential } = req.body;
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
+    if (!req.body.credential || !process.env.GOOGLE_CLIENT_ID) {
+      return res.status(400).json({ message: "Credenziali Google mancanti" });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: req.body.credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
+    const email = normalizeEmail(payload.email);
 
-    let user = await User.findOne({ email: payload.email });
+    let user = await User.findOne({ email });
     if (!user) {
       user = await User.create({
-        name: payload.given_name,
-        email: payload.email,
-        password: "google-oauth",
-        avatar: payload.picture,
-        role: "user",
+        name: payload.name || payload.given_name || "Utente",
+        email,
+        googleId: payload.sub,
+        avatar: payload.picture || "",
       });
+    } else {
+      if (!user.googleId) user.googleId = payload.sub;
+      if (!user.avatar && payload.picture) user.avatar = payload.picture;
+      await user.save();
     }
 
-    const token = jwt.sign(
-      {
-        userId: user._id,
-        name: user.name,             
-        email: user.email,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ token });
-  } catch (err) {
-    console.error("Google login error", err);
-    res.status(401).json({ message: "Google login failed" });
+    return res.json({ token: createToken(user) });
+  } catch (error) {
+    console.error("Google login error:", error.message);
+    return res.status(401).json({ message: "Accesso con Google non riuscito" });
   }
-};
+}
 
-// ---- LOGIN CLASSICO ----
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user) return res.status(401).json({ message: "Credenziali non valide" });
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(401).json({ message: "Credenziali non valide" });
-
-  const token = jwt.sign(
-    {
-      userId: user._id,
-      name: user.name,             
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  res.json({ token });
-};
-
-// ---- REGISTER ----
-export const register = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!email || !password || !name) {
-    return res.status(400).json({ message: "Tutti i campi sono obbligatori" });
-  }
-
-  let user = await User.findOne({ email });
-  if (user) {
-    return res.status(400).json({ message: "Email già registrata" });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  user = await User.create({ name, email, password: hashedPassword });
-
-  res.status(201).json({ message: "Registrazione ok!" });
-};
-
-//  ---- GET PROFILO UTENTE ----
-export const getProfile = async (req, res) => {
+export async function login(req, res) {
   try {
-    const user = await User.findById(req.user.userId).select('-password -googleId');
-    
-    if (!user) {
-      return res.status(404).json({ message: "Utente non trovato" });
+    const email = normalizeEmail(req.body.email);
+    const { password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email e password sono obbligatorie" });
     }
 
-    res.json(user);
-  } catch (err) {
-    console.error("Get profile error:", err);
-    res.status(500).json({ message: "Errore del server" });
+    const user = await User.findOne({ email });
+    if (!user?.password || user.password === "google-oauth") {
+      return res.status(401).json({ message: "Usa l'accesso con Google per questo account" });
+    }
+
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      return res.status(401).json({ message: "Credenziali non valide" });
+    }
+
+    return res.json({ token: createToken(user) });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    return res.status(500).json({ message: "Errore durante l'accesso" });
   }
-};
+}
 
-//  ---- AGGIORNA PROFILO UTENTE ----
-export const updateProfile = async (req, res) => {
+export async function register(req, res) {
   try {
-    const { name, email, phone, birthDate, address, avatar, preferences } = req.body;
-    const userId = req.user.userId;
+    const name = req.body.name?.trim();
+    const email = normalizeEmail(req.body.email);
+    const { password } = req.body;
 
-    //  Validazione base
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Tutti i campi sono obbligatori" });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ message: "La password deve contenere almeno 8 caratteri" });
+    }
+    if (await User.exists({ email })) {
+      return res.status(409).json({ message: "Email già registrata" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await User.create({ name, email, password: hashedPassword });
+    return res.status(201).json({ message: "Registrazione completata" });
+  } catch (error) {
+    console.error("Register error:", error.message);
+    return res.status(500).json({ message: "Errore durante la registrazione" });
+  }
+}
+
+export async function getProfile(req, res) {
+  try {
+    const user = await User.findById(req.user.userId).select(publicUserFields).lean();
+    if (!user) return res.status(404).json({ message: "Utente non trovato" });
+    return res.json(user);
+  } catch (error) {
+    console.error("Get profile error:", error.message);
+    return res.status(500).json({ message: "Errore nel caricamento del profilo" });
+  }
+}
+
+export async function updateProfile(req, res) {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ message: "Utente non trovato" });
+
+    const name = req.body.name?.trim();
+    const email = normalizeEmail(req.body.email);
+    const phone = req.body.phone?.trim() || "";
+    const address = req.body.address?.trim() || "";
+    const avatar = req.body.avatar?.trim() || "";
+
     if (!name || !email) {
       return res.status(400).json({ message: "Nome e email sono obbligatori" });
     }
-
-    //  Controlla se email già esiste (se diversa da quella attuale)
-    const currentUser = await User.findById(userId);
-    if (email !== currentUser.email) {
-      const emailExists = await User.findOne({ email, _id: { $ne: userId } });
-      if (emailExists) {
-        return res.status(400).json({ message: "Email già in uso da un altro utente" });
-      }
-    }
-
-    //  Validazione telefono (se presente)
-    if (phone && !/^[\+]?[0-9\s\-\(\)]{8,}$/.test(phone)) {
+    if (phone && !/^\+?[0-9\s()-]{8,}$/.test(phone)) {
       return res.status(400).json({ message: "Formato telefono non valido" });
     }
-
-    //  Validazione data di nascita (se presente)
-    if (birthDate) {
-      const date = new Date(birthDate);
-      const now = new Date();
-      if (date > now) {
-        return res.status(400).json({ message: "Data di nascita non può essere futura" });
-      }
+    if (avatar && !/^https?:\/\//i.test(avatar)) {
+      return res.status(400).json({ message: "L'immagine profilo deve essere un URL valido" });
+    }
+    if (email !== user.email && await User.exists({ email, _id: { $ne: user._id } })) {
+      return res.status(409).json({ message: "Email già in uso" });
     }
 
-    //  Aggiorna i dati
-    const updatedFields = {
-      name,
-      email,
-      ...(phone && { phone }),
-      ...(birthDate && { birthDate }),
-      ...(address && { address }),
-      ...(avatar && { avatar }),
-      ...(preferences && { preferences: { ...currentUser.preferences, ...preferences } })
-    };
+    const birthDate = req.body.birthDate ? new Date(req.body.birthDate) : null;
+    if (birthDate && (Number.isNaN(birthDate.getTime()) || birthDate > new Date())) {
+      return res.status(400).json({ message: "Data di nascita non valida" });
+    }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      updatedFields,
-      { new: true, runValidators: true }
-    ).select('-password -googleId');
+    Object.assign(user, { name, email, phone, address, avatar, birthDate });
+    await user.save();
 
-    //  Genera nuovo token con dati aggiornati
-    const newToken = jwt.sign(
-      {
-        userId: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ 
-      message: "Profilo aggiornato con successo", 
-      user: updatedUser,
-      token: newToken // Nuovo token con dati aggiornati
-    });
-
-  } catch (err) {
-    console.error("Update profile error:", err);
-    res.status(500).json({ message: "Errore nell'aggiornamento del profilo" });
+    const safeUser = await User.findById(user._id).select(publicUserFields).lean();
+    return res.json({ message: "Profilo aggiornato", user: safeUser, token: createToken(user) });
+  } catch (error) {
+    console.error("Update profile error:", error.message);
+    return res.status(500).json({ message: "Errore nell'aggiornamento del profilo" });
   }
-};
+}
 
-//  ---- CAMBIA PASSWORD ----
-export const changePassword = async (req, res) => {
+export async function changePassword(req, res) {
   try {
-    const { currentPassword, newPassword } = req.body;
-    const userId = req.user.userId;
-
-    //  Validazioni
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "Password attuale e nuova sono obbligatorie" });
+    const { currentPassword = "", newPassword = "" } = req.body;
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: "La nuova password deve contenere almeno 8 caratteri" });
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).json({ message: "La nuova password deve essere di almeno 6 caratteri" });
-    }
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ message: "Utente non trovato" });
 
-    //  Trova utente
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "Utente non trovato" });
-    }
-
-    //  Verifica password attuale (skip per utenti Google OAuth)
-    if (user.password !== "google-oauth") {
-      const isValidPassword = await bcrypt.compare(currentPassword, user.password);
-      if (!isValidPassword) {
+    const hasEmailPassword = user.password && user.password !== "google-oauth";
+    if (hasEmailPassword) {
+      const passwordMatches = currentPassword && await bcrypt.compare(currentPassword, user.password);
+      if (!passwordMatches) {
         return res.status(400).json({ message: "Password attuale non corretta" });
       }
     }
 
-    //  Hash nuova password
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
-    //  Aggiorna password
-    await User.findByIdAndUpdate(userId, { password: hashedNewPassword });
-
-    res.json({ message: "Password cambiata con successo" });
-
-  } catch (err) {
-    console.error("Change password error:", err);
-    res.status(500).json({ message: "Errore nel cambio password" });
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+    return res.json({ message: "Password aggiornata" });
+  } catch (error) {
+    console.error("Change password error:", error.message);
+    return res.status(500).json({ message: "Errore nel cambio password" });
   }
-};
-
-//  ---- AGGIORNA SOLO PREFERENZE ----
-export const updatePreferences = async (req, res) => {
-  try {
-    const { preferences } = req.body;
-    const userId = req.user.userId;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "Utente non trovato" });
-    }
-
-    //  Merge delle preferenze esistenti con quelle nuove
-    const updatedPreferences = { ...user.preferences, ...preferences };
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { preferences: updatedPreferences },
-      { new: true }
-    ).select('-password -googleId');
-
-    res.json({ 
-      message: "Preferenze aggiornate con successo", 
-      preferences: updatedUser.preferences 
-    });
-
-  } catch (err) {
-    console.error("Update preferences error:", err);
-    res.status(500).json({ message: "Errore nell'aggiornamento delle preferenze" });
-  }
-};
+}
