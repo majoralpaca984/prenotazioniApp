@@ -65,7 +65,7 @@ function Dashboard() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="spinner mb-4 h-10 w-10" />
-        <p className="text-gray-600 dark:text-gray-400">Caricamento dashboard...</p>
+        <p className="text-gray-600">Caricamento dashboard...</p>
       </div>
     );
   }
@@ -74,11 +74,11 @@ function Dashboard() {
     <main className="space-y-6 pb-20">
       <header className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900">
             <i className="fas fa-tachometer-alt text-primary-500" />Dashboard
           </h1>
           {lastUpdate && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-gray-500">
               Aggiornata alle {lastUpdate.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
             </p>
           )}
@@ -112,7 +112,7 @@ function Dashboard() {
         ].map(([label, value, color]) => (
           <div key={label} className="card p-4 text-center">
             <p className={`text-3xl font-bold ${color}`}>{value}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
+            <p className="text-sm text-gray-600">{label}</p>
           </div>
         ))}
       </section>
@@ -120,13 +120,13 @@ function Dashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="card lg:col-span-2">
           <div className="card-header">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Prossimi appuntamenti</h2>
+            <h2 className="text-xl font-bold text-gray-900">Prossimi appuntamenti</h2>
           </div>
           <div className="card-body">
             {stats.future.length === 0 ? (
               <div className="py-10 text-center">
                 <i className="fas fa-calendar-plus mb-4 text-5xl text-gray-300" />
-                <p className="mb-4 text-gray-500 dark:text-gray-400">Non hai appuntamenti futuri.</p>
+                <p className="mb-4 text-gray-500">Non hai appuntamenti futuri.</p>
                 <Link to="/appointment/new" className="btn btn-primary inline-flex">Aggiungi appuntamento</Link>
               </div>
             ) : (
@@ -136,11 +136,11 @@ function Dashboard() {
                     key={appointment._id}
                     type="button"
                     onClick={() => navigate(`/appointment/edit/${appointment._id}`)}
-                    className="flex w-full items-start justify-between rounded-lg border border-gray-200 p-4 text-left hover:border-primary-400 dark:border-gray-700"
+                    className="flex w-full items-start justify-between rounded-lg border border-gray-200 p-4 text-left hover:border-primary-400"
                   >
                     <span>
-                      <strong className="block text-gray-900 dark:text-white">{appointment.title}</strong>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <strong className="block text-gray-900">{appointment.title}</strong>
+                      <span className="text-sm text-gray-500">
                         {formatDate(appointment.date, { weekday: "long", day: "2-digit", month: "long" })} alle {appointment.time}
                       </span>
                     </span>
@@ -154,19 +154,19 @@ function Dashboard() {
         </div>
 
         <aside className="card">
-          <div className="card-header"><h2 className="text-xl font-bold text-gray-900 dark:text-white">Riepilogo</h2></div>
+          <div className="card-header"><h2 className="text-xl font-bold text-gray-900">Riepilogo</h2></div>
           <div className="card-body space-y-5">
             {stats.future[0] && (
               <div>
-                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Prossimo</p>
-                <p className="font-semibold text-gray-900 dark:text-white">{stats.future[0].title}</p>
+                <p className="text-sm font-semibold text-gray-500">Prossimo</p>
+                <p className="font-semibold text-gray-900">{stats.future[0].title}</p>
                 <p className="text-sm text-gray-500">{formatDate(stats.future[0].date)} alle {stats.future[0].time}</p>
               </div>
             )}
             {stats.last && (
-              <div className="border-t border-gray-200 pt-5 dark:border-gray-700">
-                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Ultimo</p>
-                <p className="font-semibold text-gray-900 dark:text-white">{stats.last.title}</p>
+              <div className="border-t border-gray-200 pt-5">
+                <p className="text-sm font-semibold text-gray-500">Ultimo</p>
+                <p className="font-semibold text-gray-900">{stats.last.title}</p>
                 <p className="text-sm text-gray-500">{formatDate(stats.last.date)}</p>
               </div>
             )}
