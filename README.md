@@ -10,6 +10,7 @@ Applicazione full stack dimostrativa per creare e gestire appuntamenti. Il proge
 - accesso con Google Identity Services;
 - autenticazione tramite JWT e rotte protette;
 - creazione, modifica ed eliminazione degli appuntamenti;
+- ricerca dimostrativa di visite, esami e medici con selezione dello slot;
 - controllo degli orari e prevenzione di appuntamenti sovrapposti;
 - dashboard con riepilogo e prossimi appuntamenti;
 - calendario mensile e stati `scheduled`, `completed`, `cancelled`;
