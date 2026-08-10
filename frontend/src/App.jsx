@@ -19,7 +19,7 @@ function App() {
   return (
     <Router>
       <Navigation />
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <div className="app-content">
         <Routes>
           {/* Homepage pubblica */}
           <Route path="/" element={<Homepage />} />

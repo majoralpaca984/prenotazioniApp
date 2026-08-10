@@ -1,7 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
 import { clearToken, getTokenPayload, isAuthenticated } from "../utils/auth";
+
+const publicLinks = [
+  { to: "/#prenota", label: "Prenota" },
+  { to: "/#come-funziona", label: "Come funziona" },
+];
+
+const privateLinks = [
+  { to: "/dashboard", label: "Dashboard", icon: "fa-chart-simple" },
+  { to: "/calendar", label: "Calendario", icon: "fa-calendar-days" },
+  { to: "/profile", label: "Profilo", icon: "fa-user" },
+];
 
 function Navigation() {
   const navigate = useNavigate();
@@ -9,173 +19,80 @@ function Navigation() {
   const isLogged = isAuthenticated();
   const userName = getTokenPayload()?.name || "Utente";
 
+  const closeMenu = () => setIsMenuOpen(false);
+
   const handleLogout = () => {
     clearToken();
+    closeMenu();
     navigate("/login");
-    setIsMenuOpen(false);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav className="my-navbar sticky top-0 z-40">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* LOGO + BRAND */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="h-10 w-10 bg-primary-500 rounded-lg flex items-center justify-center">
-              <i className="fas fa-calendar-check text-white"></i>
-            </div>
-            <span className="text-2xl font-bold text-primary-500">EasyCare</span>
-          </Link>
+    <header className="my-navbar sticky top-0 z-40">
+      <div className="nav-shell">
+        <Link to="/" onClick={closeMenu} className="brand-link" aria-label="EasyCare, torna alla homepage">
+          <span className="brand-mark"><i className="fas fa-stethoscope" /></span>
+          <span>EasyCare</span>
+        </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
-            {isLogged && (
-              <div className="flex items-center space-x-6">
-                <Link
-                  to="/dashboard"
-                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors flex items-center space-x-2"
-                >
-                  <i className="fas fa-tachometer-alt"></i>
-                  <span>Dashboard</span>
-                </Link>
-                <Link
-                  to="/calendar"
-                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors flex items-center space-x-2"
-                >
-                  <i className="fas fa-calendar"></i>
-                  <span>Calendario</span>
-                </Link>
-                {/*  AGGIUNTO LINK PROFILO - DESKTOP */}
-                <Link
-                  to="/profile"
-                  className="text-primary-500 hover:text-primary-600 font-medium transition-colors flex items-center space-x-2"
-                >
-                  <i className="fas fa-user"></i>
-                  <span>Il Mio Profilo</span>
-                </Link>
-              </div>
-            )}
+        <nav className="desktop-nav" aria-label="Navigazione principale">
+          {!isLogged && publicLinks.map((link) => (
+            <a key={link.to} href={link.to} className="nav-link">{link.label}</a>
+          ))}
 
-            <div className="flex items-center space-x-4">
-              {isLogged && (
-                <span className="text-primary-500 font-semibold">
-                   Ciao, {userName}
-                </span>
-              )}
+          {isLogged && privateLinks.map((link) => (
+            <Link key={link.to} to={link.to} className="nav-link">
+              <i className={`fas ${link.icon}`} />{link.label}
+            </Link>
+          ))}
+        </nav>
 
-              {!isLogged ? (
-                <div className="flex items-center space-x-4">
-                  <Link
-                    to="/login"
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-1"
-                  >
-                    <i className="fas fa-sign-in-alt"></i>
-                    <span>Login</span>
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="btn btn-primary"
-                  >
-                    <i className="fas fa-user-plus"></i>
-                    <span>Registrati</span>
-                  </Link>
-                </div>
-              ) : (
-                <button onClick={handleLogout} className="btn btn-primary">
-                  <i className="fas fa-sign-out-alt"></i>
-                  <span>Esci</span>
-                </button>
-              )}
-              <ThemeToggle />
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-3">
-            <ThemeToggle />
-            <button
-              onClick={toggleMenu}
-              className="text-gray-600 dark:text-gray-300 hover:text-primary-500 focus:outline-none"
-            >
-              <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
-            </button>
-          </div>
+        <div className="desktop-actions">
+          {isLogged ? (
+            <>
+              <span className="welcome-copy">Ciao, {userName}</span>
+              <button type="button" onClick={handleLogout} className="btn btn-outline-primary">Esci</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="nav-link"><i className="fas fa-arrow-right-to-bracket" />Accedi</Link>
+              <Link to="/register" className="btn btn-primary">Registrati</Link>
+            </>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4">
-            <div className="flex flex-col space-y-4">
-              {isLogged && (
-                <>
-                  <span className="text-primary-500 font-semibold px-4">
-                     Ciao, {userName}
-                  </span>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
-                  >
-                    <i className="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/calendar"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
-                  >
-                    <i className="fas fa-calendar"></i>
-                    <span>Calendario</span>
-                  </Link>
-                  {/*  AGGIUNTO LINK PROFILO - MOBILE */}
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
-                  >
-                    <i className="fas fa-user"></i>
-                    <span>Il Mio Profilo</span>
-                  </Link>
-                </>
-              )}
-
-              {!isLogged ? (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
-                  >
-                    <i className="fas fa-sign-in-alt"></i>
-                    <span>Login</span>
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
-                  >
-                    <i className="fas fa-user-plus"></i>
-                    <span>Registrati</span>
-                  </Link>
-                </>
-              ) : (
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2 text-left"
-                >
-                  <i className="fas fa-sign-out-alt"></i>
-                  <span>Esci</span>
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+        <button
+          type="button"
+          className="mobile-menu-button"
+          onClick={() => setIsMenuOpen((value) => !value)}
+          aria-expanded={isMenuOpen}
+          aria-label={isMenuOpen ? "Chiudi menu" : "Apri menu"}
+        >
+          <i className={`fas ${isMenuOpen ? "fa-xmark" : "fa-bars"}`} />
+        </button>
       </div>
-    </nav>
+
+      {isMenuOpen && (
+        <nav className="mobile-nav" aria-label="Navigazione mobile">
+          {(isLogged ? privateLinks : []).map((link) => (
+            <Link key={link.to} to={link.to} onClick={closeMenu} className="mobile-nav-link">
+              <i className={`fas ${link.icon}`} />{link.label}
+            </Link>
+          ))}
+          {!isLogged && publicLinks.map((link) => (
+            <a key={link.to} href={link.to} onClick={closeMenu} className="mobile-nav-link">{link.label}</a>
+          ))}
+          {isLogged ? (
+            <button type="button" onClick={handleLogout} className="mobile-nav-link"><i className="fas fa-arrow-right-from-bracket" />Esci</button>
+          ) : (
+            <>
+              <Link to="/login" onClick={closeMenu} className="mobile-nav-link">Accedi</Link>
+              <Link to="/register" onClick={closeMenu} className="btn btn-primary">Registrati</Link>
+            </>
+          )}
+        </nav>
+      )}
+    </header>
   );
 }
 
