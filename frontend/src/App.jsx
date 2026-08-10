@@ -7,6 +7,7 @@ import AppointmentForm from "./components/AppointmentForm";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Homepage from "./views/HomePage";
+import SearchResults from "./views/SearchResults";
 import UserProfile from "./views/UserProfile";
 import { isAuthenticated } from "./utils/auth";
 
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           {/* Homepage pubblica */}
           <Route path="/" element={<Homepage />} />
+          <Route path="/search" element={<SearchResults />} />
           
           {/* Rotte protette */}
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
