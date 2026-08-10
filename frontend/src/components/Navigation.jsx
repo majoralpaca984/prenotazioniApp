@@ -1,28 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import { clearToken, getTokenPayload, isAuthenticated } from "../utils/auth";
 
 function Navigation() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isLogged = !!localStorage.getItem("token");
-
-  //  Estrai nome dal token
-  const getUserName = () => {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.name || "Utente";
-    } catch {
-      return "Utente";
-    }
-  };
-
-  const userName = getUserName();
+  const isLogged = isAuthenticated();
+  const userName = getTokenPayload()?.name || "Utente";
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    clearToken();
     navigate("/login");
     setIsMenuOpen(false);
   };
@@ -93,13 +81,13 @@ function Navigation() {
                     className="btn btn-primary"
                   >
                     <i className="fas fa-user-plus"></i>
-                    <span>Register</span>
+                    <span>Registrati</span>
                   </Link>
                 </div>
               ) : (
                 <button onClick={handleLogout} className="btn btn-primary">
                   <i className="fas fa-sign-out-alt"></i>
-                  <span>Logout</span>
+                  <span>Esci</span>
                 </button>
               )}
               <ThemeToggle />
@@ -171,7 +159,7 @@ function Navigation() {
                     className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2"
                   >
                     <i className="fas fa-user-plus"></i>
-                    <span>Register</span>
+                    <span>Registrati</span>
                   </Link>
                 </>
               ) : (
@@ -180,7 +168,7 @@ function Navigation() {
                   className="text-gray-600 dark:text-gray-300 hover:text-primary-500 transition-colors flex items-center space-x-2 px-4 py-2 text-left"
                 >
                   <i className="fas fa-sign-out-alt"></i>
-                  <span>Logout</span>
+                  <span>Esci</span>
                 </button>
               )}
             </div>

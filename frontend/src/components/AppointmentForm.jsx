@@ -1,38 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { apiRequest } from "../services/api";
+import { getTimeSlots, isValidTimeSlot, toDateInputValue } from "../utils/date";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
-
-const formatDateInputValue = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-const isValidTimeSlot = (time) => {
-  if (!/^\d{2}:\d{2}$/.test(time || "")) return false;
-
-  const [hour, minute] = time.split(":").map(Number);
-  return hour >= 7 && hour <= 18 && minute % 15 === 0 && !(hour === 18 && minute > 0);
-};
-
-//  FUNZIONE per notificare altri componenti dei cambiamenti
-const notifyAppointmentChange = (action, appointmentId = null) => {
-  // Notifica Dashboard e Calendar tramite localStorage
-  localStorage.setItem('appointment_updated', JSON.stringify({
-    action,
-    appointmentId,
-    timestamp: Date.now()
-  }));
-  
-  console.log(` Notified other components: ${action}`, appointmentId);
-  
-  // Rimuovi dopo un po' per evitare accumulo
-  setTimeout(() => {
-    localStorage.removeItem('appointment_updated');
-  }, 5000);
-};
+const TIME_SLOTS = getTimeSlots();
 
 function AppointmentForm() {
   const [formData, setFormData] = useState({
@@ -51,29 +22,8 @@ function AppointmentForm() {
   const { id } = useParams();
   const location = useLocation();
 
-  //  API HELPER ottimizzato
   const apiCall = useCallback(async (url, options = {}) => {
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      throw new Error("Session expired, please login again.");
-    }
-
-    const response = await fetch(`${API_URL}${url}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP ${response.status}`);
-    }
-
-    return await response.json();
+    return apiRequest(url, { ...options, auth: true });
   }, []);
 
   const fetchAppointment = useCallback(async () => {
@@ -83,7 +33,7 @@ function AppointmentForm() {
       
       // Format date for input
       const date = new Date(appointment.date);
-      const formattedDate = formatDateInputValue(date);
+      const formattedDate = toDateInputValue(date);
 
       setFormData({
         title: appointment.title || "",
@@ -119,10 +69,11 @@ function AppointmentForm() {
       const searchParams = new URLSearchParams(location.search);
       const queryDate = searchParams.get("date");
       const queryTime = searchParams.get("time");
-      const today = formatDateInputValue(new Date());
+      const queryTitle = searchParams.get("title")?.trim() || "";
+      const today = toDateInputValue(new Date());
       const initialDate = /^\d{4}-\d{2}-\d{2}$/.test(queryDate || "") ? queryDate : today;
       const initialTime = isValidTimeSlot(queryTime) ? queryTime : "";
-      setFormData(prev => ({ ...prev, date: initialDate, time: initialTime }));
+      setFormData(prev => ({ ...prev, title: queryTitle, date: initialDate, time: initialTime }));
     }
   }, [fetchAppointment, id, location.search]);
 
@@ -182,21 +133,16 @@ function AppointmentForm() {
     };
 
     try {
-      let result;
       if (isEdit) {
-        result = await apiCall(`/appointments/${id}`, {
+        await apiCall(`/appointments/${id}`, {
           method: "PUT",
           body: JSON.stringify(appointmentData),
         });
-        //  Notifica modifica
-        notifyAppointmentChange('updated', id);
       } else {
-        result = await apiCall("/appointments", {
+        await apiCall("/appointments", {
           method: "POST",
           body: JSON.stringify(appointmentData),
         });
-        //  Notifica creazione
-        notifyAppointmentChange('created', result._id);
       }
 
       //  Redirect con messaggio di successo
@@ -226,9 +172,6 @@ function AppointmentForm() {
     try {
       await apiCall(`/appointments/${id}`, { method: "DELETE" });
       
-      //  Notifica eliminazione
-      notifyAppointmentChange('deleted', id);
-      
       navigate("/calendar", { 
         state: { 
           message: "Appuntamento eliminato con successo",
@@ -241,52 +184,6 @@ function AppointmentForm() {
     } finally {
       setLoading(false);
     }
-  };
-
-  //  Handler per andare al pagamento
-  const handleGoToPayment = () => {
-    // Valida prima i dati base
-    if (!formData.title.trim() || !formData.date || !formData.time) {
-      setError("Compila almeno titolo, data e orario prima di procedere al pagamento");
-      return;
-    }
-
-    // Parametri per la pagina di pagamento
-    const params = new URLSearchParams({
-      doctorId: "custom",
-      doctorName: "Appuntamento Personalizzato",
-      speciality: formData.title,
-      date: formData.date,
-      time: formData.time,
-      price: "80",
-      examType: formData.title
-    });
-    
-    navigate(`/payment?${params.toString()}`);
-  };
-
-  // Per generare solo le ore tra le 7:00 e le 18:00 (incluso)
-  const generateTimeOptions = () => {
-    const options = [];
-    for (let hour = 7; hour <= 18; hour++) {
-      for (let minute = 0; minute < 60; minute += 15) {
-        // Non aggiungere minuti > 0 per l'ultima ora (le 18:00, non 18:15 ecc)
-        if (hour === 18 && minute > 0) break;
-
-        const timeValue = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-        const displayTime = new Date(`2000-01-01T${timeValue}`).toLocaleTimeString("it-IT", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        options.push(
-          <option key={timeValue} value={timeValue}>
-            {displayTime}
-          </option>
-        );
-      }
-    }
-    return options;
   };
 
   const handleChange = (e) => {
@@ -389,7 +286,7 @@ function AppointmentForm() {
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                    min={isEdit ? undefined : formatDateInputValue(new Date())}
+                    min={isEdit ? undefined : toDateInputValue(new Date())}
                     required
                     className="form-control"
                   />
@@ -407,7 +304,9 @@ function AppointmentForm() {
                     className="form-select"
                   >
                     <option value="">Seleziona orario</option>
-                    {generateTimeOptions()}
+                    {TIME_SLOTS.map((time) => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -451,17 +350,6 @@ function AppointmentForm() {
                   )}
                 </button>
 
-                {/*  BOTTONE PAGAMENTO - Sempre disponibile */}
-                <button
-                  type="button"
-                  onClick={handleGoToPayment}
-                  disabled={loading}
-                  className="flex-1 btn bg-green-600 hover:bg-green-700 text-white"
-                >
-                  <i className="fas fa-credit-card mr-2"></i>
-                  {isEdit ? "Procedi al Pagamento" : "Vai al Pagamento"}
-                </button>
-                
                 <button
                   type="button"
                   onClick={() => navigate("/calendar")}
@@ -493,8 +381,7 @@ function AppointmentForm() {
                 <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
                 <span>
                   <strong>Informazioni:</strong> Puoi prenotare dalle 7:00 alle 18:00 
-                  con intervalli di 15 minuti. {!isEdit && "Non è possibile prenotare nel passato. "}
-                  Usa il bottone verde per completare il pagamento dell'appuntamento.
+                  con intervalli di 15 minuti. {!isEdit && "Non è possibile prenotare nel passato."}
                 </span>
               </small>
             </div>

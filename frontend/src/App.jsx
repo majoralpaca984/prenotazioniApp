@@ -7,14 +7,11 @@ import AppointmentForm from "./components/AppointmentForm";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Homepage from "./views/HomePage";
-import SearchResults from "./views/SearchResults";
 import UserProfile from "./views/UserProfile";
-import PaymentPage from "./views/PaymentPage";
-import AuthCallback from "./components/AuthCallback";
+import { isAuthenticated } from "./utils/auth";
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/login" replace />;
+  return isAuthenticated() ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
@@ -30,18 +27,12 @@ function App() {
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-          <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
           <Route path="/appointment/new" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
           <Route path="/appointment/edit/:id" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
-          
-          
-          {/* Rotte pubbliche */}
-          <Route path="/search" element={<SearchResults />} />
           
           {/* Autenticazione */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
           
           {/* Default: reindirizza alla homepage */}
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -2,9 +2,6 @@ import Appointment from '../models/Appointment.js';
 import { sendConfirmationEmail } from './emailController.js'; 
 import User from '../models/User.js';
 
-//  CACHE SEMPLICE per velocizzare le chiamate
-const cache = new Map();
-const CACHE_TIME = 3 * 60 * 1000; // 3 minuti
 const VALID_STATUSES = new Set(["scheduled", "completed", "cancelled"]);
 
 const buildAppointmentPayload = ({ title, description = "", date, time, status = "scheduled" }) => {
@@ -65,30 +62,15 @@ const isSlotTaken = async ({ userId, appointmentDate, excludeAppointmentId }) =>
 
 export const getAppointments = async (req, res) => {
   try {
-    // Controlla se abbiamo già i dati in cache
-    const cacheKey = `appointments_${req.user.userId}`;
-    const cached = cache.get(cacheKey);
-    
-    if (cached && Date.now() - cached.time < CACHE_TIME) {
-      return res.json(cached.data);
-    }
-
-    //  Query ottimizzata: ordina per data e usa .lean() per performance
     const appointments = await Appointment
       .find({ user: req.user.userId })
       .sort({ date: 1 })
-      .lean(); // 40% più veloce!
-
-    // Salva in cache
-    cache.set(cacheKey, {
-      data: appointments,
-      time: Date.now()
-    });
+      .lean();
 
     res.json(appointments);
   } catch (err) {
     console.error('Error fetching appointments:', err);
-    res.status(500).json({ message: "Error fetching appointments" });
+    res.status(500).json({ message: "Errore nel caricamento degli appuntamenti" });
   }
 };
 
@@ -124,9 +106,6 @@ export const createAppointment = async (req, res) => {
 
     await appointment.save();
 
-    //  Pulisci cache quando crei nuovo appuntamento
-    cache.delete(`appointments_${req.user.userId}`);
-
     // Recupera email utente (dal token oppure dal DB)
     let userEmail = req.user.email;
     if (!userEmail) {
@@ -142,7 +121,7 @@ export const createAppointment = async (req, res) => {
         time: payload.time,
         doctor: appointment.title,
         _id: appointment._id // Aggiungo l'ID per l'email
-      }).catch(err => console.error('Email error:', err));
+      }).catch(err => console.error('Email error:', err.message));
     }
 
     res.status(201).json(appointment);
@@ -163,13 +142,13 @@ export const getAppointmentById = async (req, res) => {
       .lean();
       
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
+      return res.status(404).json({ message: "Appuntamento non trovato" });
     }
     
     res.json(appointment);
   } catch (err) {
     console.error('Get appointment error:', err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Errore del server" });
   }
 };
 
@@ -180,6 +159,10 @@ export const updateAppointment = async (req, res) => {
 
     if (error) {
       return res.status(400).json({ message: error });
+    }
+
+    if (payload.date < new Date()) {
+      return res.status(400).json({ message: "Non puoi spostare un appuntamento nel passato" });
     }
 
     const slotTaken = await isSlotTaken({
@@ -203,16 +186,13 @@ export const updateAppointment = async (req, res) => {
     );
     
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
+      return res.status(404).json({ message: "Appuntamento non trovato" });
     }
-
-    //  Pulisci cache quando modifichi
-    cache.delete(`appointments_${req.user.userId}`);
     
     res.json(appointment);
   } catch (err) {
     console.error('Update appointment error:', err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Errore del server" });
   }
 };
 
@@ -226,15 +206,12 @@ export const deleteAppointment = async (req, res) => {
     });
     
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
+      return res.status(404).json({ message: "Appuntamento non trovato" });
     }
 
-    //  Pulisci cache quando elimini
-    cache.delete(`appointments_${req.user.userId}`);
-    
-    res.json({ message: "Appointment deleted successfully" });
+    res.json({ message: "Appuntamento eliminato" });
   } catch (err) {
     console.error('Delete appointment error:', err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Errore del server" });
   }
 };
